@@ -1,0 +1,167 @@
+version: '3'
+
+services:
+  # Apache, php 5.6
+  ap56:
+    build:          apache-2.4_php-5.6/
+    image:          apache-2.4_php-5.6-my
+    container_name: ap56
+
+    environment:
+      - TERM=xterm
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /home:/home
+      - /var/run/mariadb:/var/lib/mysql
+      - ${DOCKER_ROOT}/apache/sites-enabled:/etc/httpd/sites-enabled
+      - ${DOCKER_ROOT}/log/ap56:/var/log/httpd
+
+    logging:
+      driver: syslog
+      options:
+        tag: ap56
+
+    network_mode: host
+
+    ports:
+      - "8080:8080"
+
+    restart:
+      unless-stopped
+  # End Apache
+
+  # Apache, php 7.0
+  ap70:
+    build:          apache-2.4_php-7.0/
+    image:          apache-2.4_php-7.0-my
+    container_name: ap70
+
+    environment:
+      - TERM=xterm
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /home:/home
+      - /var/run/mariadb:/var/lib/mysql
+      - ${DOCKER_ROOT}/apache/sites-enabled:/etc/httpd/sites-enabled
+      - ${DOCKER_ROOT}/log/ap70:/var/log/httpd
+
+    logging:
+      driver: syslog
+      options:
+        tag: ap70
+
+    network_mode: host
+
+    ports:
+      - "7070:7070"
+
+    restart:
+      unless-stopped
+  # End Apache php 7.0
+
+  # Tengine
+  tengine:
+    build:          tengine-2.2.0/
+    image:          tengine-2.2.0-my
+    container_name: tengine
+
+    environment:
+      - TERM=xterm
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /home:/home
+      - ${DOCKER_ROOT}/nginx/sites-enabled:/etc/nginx/sites-enabled
+      - ${DOCKER_ROOT}/letsencrypt:/etc/letsencrypt
+      - ${DOCKER_ROOT}/log/nginx:/var/log/nginx
+      - ${DOCKER_ROOT}/log/letsencrypt:/var/log/letsencrypt
+
+    logging:
+      driver: syslog
+      options:
+        tag: tengine
+
+    network_mode: host
+
+    ports:
+      - "80:80"
+      - "443:443"
+
+    restart:
+      unless-stopped
+  # End Tengine
+
+  # MySQL
+  mysql:
+    build:          mariadb-10.1/
+    image:          mariadb-10.1-my
+    container_name: mysql
+
+    environment:
+      - TERM=xterm
+
+    logging:
+      driver: syslog
+      options:
+        tag: mysql
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/mariadb:/var/run/mariadb
+      - ${DOCKER_ROOT}/mysql:/var/lib/mysql
+      - /tmp:/tmp
+
+    network_mode: host
+
+    ports:
+      - "3306:3306"
+
+    restart:
+      unless-stopped
+  # End MySQL
+
+  # Fail2Ban
+  fail2ban:
+    build:          fail2ban/
+    image:          fail2ban-my
+    container_name: fail2ban
+
+    environment:
+      - TERM=xterm
+
+    logging:
+      driver: syslog
+      options:
+        tag: fail2ban
+
+    network_mode: host
+
+    privileged: true
+
+    volumes:
+      - /lib/modules:/lib/modules
+      - /etc/localtime:/etc/localtime:ro
+      - /var/log/secure:/var/log/secure:ro
+      - ${DOCKER_ROOT}/log/nginx:/var/log/nginx:ro
+      - ${DOCKER_ROOT}/log/ap56:/var/log/httpd:ro
+      - ${DOCKER_ROOT}/log/ap70:/var/log/httpd7:ro
+      - ${DOCKER_ROOT}/log/fail2ban:/var/log/fail2ban
+
+    depends_on:
+      - tengine
+      # - ap56
+      # - ap70
+
+    restart:
+      unless-stopped
+  # End Fail2Ban
