@@ -41,7 +41,7 @@ Next script will create 3 system users:
  - apache
  - nginx
  - mysql
-and 2 web users:
+ - 2 web users (www_site1, www_site2):
 ~~~
 docker/lamp/create_users_and_set_perms.sh
 ~~~
@@ -89,6 +89,6 @@ Status for the jail: sshd
 
 Fail2Ban log messages are in the `/var/log/fail2ban/fail2ban.log` file.
 
-
+---
 Good luck!  
 Alexey Tsarev, Tsarev.Alexey at gmail.com

@@ -3,7 +3,7 @@
 # Default values
 DEFAULT_NGINX_SITES_DIR=/etc/nginx/sites-enabled
 DEFAULT_EMAIL=no@email.net
-DEFAULT_CERTBOT_TMPL="certbot certonly --quiet --webroot --expand --agree-tos --email EMAIL2"
+DEFAULT_CERTBOT_TMPL="certbot certonly --quiet --webroot --expand --agree-tos --email EMAIL"
 # End Default values
 
 . /etc/letsencrypt/certbot.conf

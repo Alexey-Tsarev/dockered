@@ -1,9 +1,14 @@
 FROM centos7-base-my
 
+# Original repo:
+#   https://github.com/fail2ban/fail2ban/archive/0.10.zip
+# Serbes fork repo:
+#   https://github.com/sebres/fail2ban/archive/0.10-full.zip
+
 RUN yum -y install systemd-python python-inotify gamin-python gamin iptables wget unzip && \
     mkdir -p /root/temp && \
     cd /root/temp && \
-        wget "https://github.com/sebres/fail2ban/archive/0.10-full.zip" && \
+        wget https://github.com/sebres/fail2ban/archive/0.10-full.zip && \
         unzip *.zip && \
         cd fail2ban-* && \
         python setup.py install && \

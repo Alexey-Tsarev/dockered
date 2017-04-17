@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
 BASE_IMAGE_DIR=centos7-base-my
 BASE_IMAGE_NAME="$BASE_IMAGE_DIR"
