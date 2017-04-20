@@ -51,7 +51,7 @@ Build base image:
 docker/build_base_image.sh
 ~~~
 
-There are ways to point at your DOCKER_ROOT (a place there your store your containers data). Use this way to point at your docker root directly:
+There are ways to point at your `DOCKER_ROOT` (a place there your store your containers data). Use this way to point at your docker root directly:
 ~~~
 DOCKER_ROOT=`pwd`/lamp_example docker/lamp/docker-compose-wrapper.sh up -d --build
 ~~~
