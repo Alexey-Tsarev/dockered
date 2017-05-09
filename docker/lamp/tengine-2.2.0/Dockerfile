@@ -39,6 +39,7 @@ VOLUME /var/log/nginx /etc/letsencrypt /var/log/letsencrypt
 COPY rootfs/ /
 
 RUN chmod 755 /etc && \
+    chmod 644 /etc/logrotate.d/nginx && \
     crontab /var/spool/cron/root && \
     chmod +x /certbot.sh && \
     mkdir -p -m 700 /var/log/letsencrypt
