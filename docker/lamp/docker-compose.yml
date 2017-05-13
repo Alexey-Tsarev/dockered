@@ -107,6 +107,8 @@ services:
 
     environment:
       - TERM=xterm
+      - MYSQL_USER
+      - MYSQL_MAX_CONNECTIONS
 
     logging:
       driver: syslog

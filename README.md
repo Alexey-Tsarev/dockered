@@ -26,7 +26,7 @@ The following services: both Apache servers, Tengine are automatically rotate lo
 Main settings placed to the separated directory (`/docker` by default).  
 There is an example with settings in the `lamp-example` directory.
 
-To run this `lamp` stack, place your configs in a config directory (`/docker` by default) or use `lamp-example` as a start point.  
+To run this `LAMP` stack, place your configs in a config directory (`/docker` by default) or use `lamp-example` as a start point.  
 For this, put some web related data for two domains from the example  
 (this example implies that web user names are starting with the `www_`):
 ~~~
@@ -53,20 +53,23 @@ docker/build_base_image.sh
 
 There are ways to point at your `DOCKER_ROOT` (a place there your store your containers data). Use this way to point at your docker root directly:
 ~~~
-DOCKER_ROOT=`pwd`/lamp_example docker/lamp/docker-compose-wrapper.sh up -d --build
+cd docker/lamp
+DOCKER_ROOT=`realpath ../../lamp_example` docker-compose up -d --build
 ~~~
 
 Other way is a symlink using (`/docker` is a default place there data stored):
 ~~~
 ln -s `pwd`/lamp_example /docker
-docker/lamp/docker-compose-wrapper.sh up -d --build
+cd docker/lamp
+docker-compose up -d --build
 ~~~
 
 There is a way for using Fail2Ban container alone.  
 For instance I have one host with a "real" (not as a Docker container) Nginx installation.
 To use Fail2Ban for Nginx and SSHD protection run the command:
 ~~~
-DOCKER_ROOT=/var docker/lamp/docker-compose-wrapper.sh up -d --no-deps --build fail2ban
+cd docker/lamp
+DOCKER_ROOT=/var docker-compose up -d --no-deps --build fail2ban
 ~~~
 
 After a while, you may run the command:
