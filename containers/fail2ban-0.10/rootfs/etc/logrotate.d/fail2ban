@@ -1,0 +1,11 @@
+/var/log/fail2ban/fail2ban.log {
+    daily
+    rotate 365
+    missingok
+    compress
+    postrotate
+        fail2ban-client set logtarget /var/log/fail2ban/fail2ban.tmp > /dev/null
+        fail2ban-client set logtarget /var/log/fail2ban/fail2ban.log > /dev/null
+        rm -f                         /var/log/fail2ban/fail2ban.tmp
+    endscript
+}
