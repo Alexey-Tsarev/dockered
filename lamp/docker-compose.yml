@@ -1,0 +1,270 @@
+version: '3'
+
+services:
+  # Apache, php 5
+  ap5:
+    build:
+      context: ../images/apache-2.4_php-5.6/
+      args:
+        - http_proxy
+        - https_proxy
+
+    image:          alexeysofree/apache_php:2.4_5.6
+    container_name: ap5
+    network_mode:   host
+    restart:        unless-stopped
+
+    environment:
+      - TERM=xterm
+
+    labels:
+      - SERVICE_NAME=ap5
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /home:/home
+      - /var/run/mysql:/var/lib/mysql
+      - ${DOCKER_ROOT}/apache/sites-enabled:/etc/httpd/sites-enabled
+      - ${DOCKER_ROOT}/log/ap5:/var/log/httpd
+
+    logging:
+      driver: journald
+      options:
+        tag: ap5
+
+    ports:
+      - 8080:8080
+  # End Apache, php 5
+
+  # Apache, php 7
+  ap7:
+    build:
+      context: ../images/apache-2.4_php-7.0/
+      args:
+        - http_proxy
+        - https_proxy
+
+    image:          alexeysofree/apache_php:2.4_7.0
+    container_name: ap7
+    network_mode:   host
+    restart:        unless-stopped
+
+    environment:
+      - TERM=xterm
+
+    labels:
+      - SERVICE_NAME=ap7
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /home:/home
+      - /var/run/mysql:/var/lib/mysql
+      - ${DOCKER_ROOT}/apache/sites-enabled:/etc/httpd/sites-enabled
+      - ${DOCKER_ROOT}/log/ap7:/var/log/httpd
+
+    logging:
+      driver: journald
+      options:
+        tag: ap7
+
+    ports:
+      - 7070:7070
+  # End Apache php 7
+
+  # Tengine
+  nginx:
+    build:
+      context: ../images/tengine-2.2.0/
+      args:
+        - http_proxy
+        - https_proxy
+
+    image:          alexeysofree/tengine:2.2.0
+    container_name: nginx
+    network_mode:   host
+    restart:        unless-stopped
+
+    environment:
+      - TERM=xterm
+
+    labels:
+      - SERVICE_NAME=nginx
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /home:/home
+      - ${DOCKER_ROOT}/nginx/sites-enabled:/etc/nginx/sites-enabled
+      - ${DOCKER_ROOT}/letsencrypt:/etc/letsencrypt
+      - ${DOCKER_ROOT}/log/nginx:/var/log/nginx
+      - ${DOCKER_ROOT}/log/letsencrypt:/var/log/letsencrypt
+
+    logging:
+      driver: journald
+      options:
+        tag: nginx
+
+    ports:
+      - 80:80
+      - 443:443
+  # End Tengine
+
+  # MariaDB 10.2
+  mysql:
+    build:
+      context: ../images/mariadb-10.2/
+      args:
+        - http_proxy
+        - https_proxy
+
+    image:          alexeysofree/mariadb:10.2
+    container_name: mysql
+    network_mode:   host
+    restart:        unless-stopped
+
+    environment:
+      - TERM=xterm
+      - MYSQL_USER
+      - MYSQL_MAX_CONNECTIONS
+      - MYSQL_RUN_BEFORE
+
+    labels:
+      - SERVICE_NAME=mysql
+
+    logging:
+      driver: journald
+      options:
+        tag: mysql
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/mysql:/var/run/mysql
+      - /tmp:/tmp
+      - ${DOCKER_ROOT}/mysql:/etc/my.cnf.d
+      - ${DOCKER_ROOT}/mysql_db:/var/lib/mysql
+      - ${DOCKER_ROOT}/log/mysql:/var/log/mysql
+
+    ports:
+      - 3306:3306
+  # End MariaDB 10.2
+
+  # Fail2Ban
+  fail2ban:
+    build:
+      context: ../images/fail2ban-0.10/
+      args:
+        - http_proxy
+        - https_proxy
+
+    image:          alexeysofree/fail2ban:0.10
+    container_name: fail2ban
+    network_mode:   host
+    privileged:     true
+    restart:        unless-stopped
+
+    environment:
+      - TERM=xterm
+
+    labels:
+      - SERVICE_NAME=fail2ban
+
+    logging:
+      driver: journald
+      options:
+        tag: fail2ban
+
+    volumes:
+      - /lib/modules:/lib/modules
+      - /etc/localtime:/etc/localtime:ro
+      - ${DOCKER_ROOT}/log/fail2ban:/var/log/fail2ban
+      - ${DOCKER_ROOT}/log/nginx:/var/log/nginx:ro
+      - ${DOCKER_ROOT}/log/ap5:/var/log/httpd:ro
+      - ${DOCKER_ROOT}/log/ap7:/var/log/httpd7:ro
+      - /var/log:/var/log
+
+    depends_on:
+      - nginx
+      # - ap5
+      # - ap7
+  # End Fail2Ban
+
+  # Consul
+  consul:
+    build:
+      context: ../images/consul-0.9.3/
+      args:
+        - http_proxy
+        - https_proxy
+
+    image:          alexeysofree/consul:0.9.3
+    container_name: consul
+    network_mode:   host
+    restart:        unless-stopped
+
+    environment:
+      - TERM=xterm
+      - CONSUL_ADVERTISE_PUBLIC_IP
+#      - CONSUL_ADVERTISE_PUBLIC_IP=1
+#      - DEBUG=1
+
+    command: -server -ui
+#    command: -server -ui -bootstrap
+
+    labels:
+      - SERVICE_NAME=consul
+
+    logging:
+      driver: journald
+      options:
+        tag: consul
+
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${DOCKER_ROOT}/consul/data:/etc/consul/data
+      - ${DOCKER_ROOT}/consul/config:/etc/consul/config
+
+    ports:
+      - 8300:8300               # Server RPC    (Default 8300). This is used by servers to handle incoming requests from other agents. TCP only.
+      - 8301:8301               # Serf LAN      (Default 8301). This is used to handle gossip in the LAN. Required by all agents. TCP and UDP.
+      - 8301:8301/udp
+      - 8302:8302               # Serf WAN      (Default 8302). This is used by servers to gossip over the WAN to other servers. TCP and UDP.
+      - 8302:8302/udp
+      - 127.0.0.1:8500:8500     # HTTP API      (Default 8500). This is used by clients to talk to the HTTP API. TCP only.
+      - 127.0.0.1:8600:8600     # DNS Interface (Default 8600). Used to resolve DNS queries. TCP and UDP.
+      - 127.0.0.1:8600:8600/udp
+  # End Consul
+
+  # Registrator
+  registrator:
+    image:          gliderlabs/registrator:latest
+    container_name: registrator
+    network_mode:   host
+    restart:        unless-stopped
+
+    environment:
+      - TERM  =xterm
+
+    command: consul://127.0.0.1:8500
+
+    labels:
+      - SERVICE_NAME=registrator
+
+    logging:
+      driver: journald
+      options:
+        tag: registrator
+
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/tmp/docker.sock
+
+    depends_on:
+      - consul
+  # End Registrator
