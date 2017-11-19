@@ -78,12 +78,12 @@ services:
   # Tengine
   nginx:
     build:
-      context: ../images/tengine-2.2.0/
+      context: ../images/tengine-2.2.1/
       args:
         - http_proxy
         - https_proxy
 
-    image:          alexeysofree/tengine:2.2.0
+    image:          alexeysofree/tengine:2.2.1
     container_name: nginx
     network_mode:   host
     restart:        unless-stopped
@@ -158,12 +158,12 @@ services:
   # Fail2Ban
   fail2ban:
     build:
-      context: ../images/fail2ban-0.10/
+      context: ../images/fail2ban-0.10.1/
       args:
         - http_proxy
         - https_proxy
 
-    image:          alexeysofree/fail2ban:0.10
+    image:          alexeysofree/fail2ban:0.10.1
     container_name: fail2ban
     network_mode:   host
     privileged:     true
@@ -185,8 +185,8 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ${DOCKER_ROOT}/log/fail2ban:/var/log/fail2ban
       - ${DOCKER_ROOT}/log/nginx:/var/log/nginx:ro
-      - ${DOCKER_ROOT}/log/ap5:/var/log/httpd:ro
-      - ${DOCKER_ROOT}/log/ap7:/var/log/httpd7:ro
+      - ${DOCKER_ROOT}/log/ap5:/var/log/httpd5:ro
+      - ${DOCKER_ROOT}/log/ap7:/var/log/httpd:ro
       - /var/log:/var/log
 
     depends_on:
@@ -198,12 +198,12 @@ services:
   # Consul
   consul:
     build:
-      context: ../images/consul-0.9.3/
+      context: ../images/consul-1.0.0/
       args:
         - http_proxy
         - https_proxy
 
-    image:          alexeysofree/consul:0.9.3
+    image:          alexeysofree/consul:1.0.0
     container_name: consul
     network_mode:   host
     restart:        unless-stopped
@@ -216,6 +216,8 @@ services:
 
     command: -server -ui
 #    command: -server -ui -bootstrap
+#    command: -server -ui -advertise=\'{{ GetInterfaceIP \"eth0\" }}\'
+#    command: -server -ui -bootstrap -advertise=\'{{ GetInterfaceIP \"eth0\" }}\'
 
     labels:
       - SERVICE_NAME=consul

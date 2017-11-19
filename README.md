@@ -9,16 +9,17 @@ It contains the containers:
  - Apache 2.4 with PHP 5.6
  - Apache 2.4 with PHP 7.0
  - MariaDB 10.2
- - Tenginx 2.2.0 (Nginx fork)
- - Fail2Ban 0.10 (with some features from `sebres`: https://github.com/sebres/fail2ban/)
- - Consul 0.9.3
+ - Tenginx 2.2.1 (Nginx fork)
+ - Fail2Ban 0.10.1
+ - Consul 1.0.0
  - Registrator
 
 Tenginx uses as a frontend server: http://tengine.taobao.org  
 It listens on 80 and 443 (`HTTP/2` and `ALPN` are supported) ports and forwards traffic to backend servers:
 Apache servers with different PHP versions.
 
-Fail2Ban built with the `incremental ban` feature: https://habrahabr.ru/post/238303/
+Fail2Ban may be built with the `incremental ban` feature: https://habrahabr.ru/post/238303/  
+(you need to change a repo link in the Fail2Ban Dockerfile)
 
 The Tengine container has a `Let's encrypt` update script
 (for updating your domains SSL certificate), which runs periodically via cron.
@@ -50,35 +51,35 @@ docker/lamp/create_users_and_set_perms.sh
 
 Build base image:
 ~~~
-docker/build_base_image.sh
+./build_base_image.sh
 ~~~
 
 There are ways to point at your `DOCKER_ROOT` (a place there your store your containers data). Use this way to point at your docker root directly:
 ~~~
-cd docker/lamp
-DOCKER_ROOT=`realpath ../../lamp_example` docker-compose up -d --build
+cd lamp
+DOCKER_ROOT=`realpath lamp_example` docker-compose up -d --build
 ~~~
 
 Other way is a symlink using (`/docker` is a default place there data stored):
 ~~~
+cd lamp
 ln -s `pwd`/lamp_example /docker
-cd docker/lamp
 docker-compose up -d --build
 ~~~
 ___
 
 Consul and Registrator are used for services registration.  
-Consul has WebUI. It listened by default on 127.0.0.1:8500.  
+Consul has WebUI. It listen by default on 127.0.0.1:8500.  
 To obtain a temporary access use this command:  
 `socat tcp-l:8501,fork,reuseaddr tcp:127.0.0.1:8500`  
-and then use browser: http://IP:8501
+and then use a browser: http://IP:8501
 ___
 
 There is a way for using Fail2Ban container alone.  
 For instance I have one host with a "real" (not as a Docker container) Nginx installation.
 To use Fail2Ban for Nginx and SSHD protection run the command:
 ~~~
-cd docker/lamp
+cd lamp
 DOCKER_ROOT=/var docker-compose up -d --no-deps --build fail2ban
 ~~~
 

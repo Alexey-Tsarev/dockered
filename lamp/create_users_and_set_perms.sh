@@ -51,7 +51,6 @@ create_user_if_it_not_exists() {
 
             cmd="useradd --no-create-home ${2}${user_group} ${1}"
             log "Run: ${cmd}"
-            #!!!
             ${cmd}
         fi
     fi

@@ -1,1 +1,0 @@
-# LAMP stack in Docker

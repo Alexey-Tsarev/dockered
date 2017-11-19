@@ -9,8 +9,8 @@ Usage:
 ${0} DIR_WITH_GZIPPED_DUMPS [mysql] [mysqladmin]
 
 Examples:
-${0} /tmp/mysql
-${0} /tmp/mysql \"docker exec -i mysql mysql\" \"docker exec -i mysql mysqladmin\""
+${0} ~/temp
+${0} ~/temp \"docker exec -i mysql mysql\" \"docker exec -i mysql mysqladmin\""
     exit 1
 fi
 
@@ -25,12 +25,10 @@ if [ -n "${gz_files}" ]; then
     do
         cmd="gunzip < ${gz} | ${MYSQL}"
         echo "Run: ${cmd}"
-        #!!!
-        eval ${cmd}
+        eval "${cmd}"
     done
 
     cmd="${MYSQLADMIN} reload"
     echo "Run: ${cmd}"
-    #!!!
-    eval ${cmd}
+    ${cmd}
 fi
