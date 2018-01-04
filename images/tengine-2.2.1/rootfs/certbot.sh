@@ -38,7 +38,7 @@ while read site; do
 
     site_conf="$(cat "${NGINX_SITES_DIR}/${site}")"
     site_root="$(echo "${site_conf}" | awk '/root/ {print $2}' | head -n 1 | awk -F ';' '{print $1}')"
-    site_domains="$(echo "$site_conf" | awk '/server_name/ {$1=""; print $0}' | awk -F ';' '{print $1}' | xargs)"
+    site_domains="$(echo "$site_conf" | awk '/server_name\s/ {$1=""; print $0}' | awk -F ';' '{print $1}' | xargs)"
     skip="$(echo "${site_domains}" | grep "${SKIP_SITES_MASK}")"
 
     if [ -n "${site_root}" ] && [ -n "${site_domains}" ] && [ -z "${skip}" ]; then

@@ -1,6 +1,6 @@
 # Dockered
 This repository contains applications which were dockered by me.  
-Docker and docker-compose are required to build containers!
+Docker and docker-compose are required to build and run these images...
 
 ## Content
 ### LAMP
