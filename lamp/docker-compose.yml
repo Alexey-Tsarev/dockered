@@ -211,6 +211,7 @@ services:
     environment:
       - TERM=xterm
       - CONSUL_ADVERTISE_PUBLIC_IP
+      - CONSUL_ADVERTISE_FIRST_IP
 #      - CONSUL_ADVERTISE_PUBLIC_IP=1
 #      - DEBUG=1
 

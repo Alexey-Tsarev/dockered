@@ -126,6 +126,18 @@ if [ -n "${CONSUL_ADVERTISE_PUBLIC_IP}" ]; then
 fi
 # End Public IP
 
+# First IP
+if [ -n "${CONSUL_ADVERTISE_FIRST_IP}" ]; then
+    interfaces="$(ip link show | grep ": <" | grep -v "lo: <" | grep -v "docker0: <")"
+    log "Found interfaces:
+${interfaces}"
+    first_interface="$(echo "${interfaces}" | head -n 1 | awk -F ": " '{print $2}')"
+    log "First interface: ${first_interface}"
+
+    consul_cmd="${CONSUL} -advertise='{{ GetInterfaceIP \"${first_interface}\" }}'"
+fi
+# End First IP
+
 if [ "${CONSUL_ADVERTISE_PUBLIC_IP}" -gt "1" ] 2> /dev/null; then
     log "Check public IP every ${CONSUL_ADVERTISE_PUBLIC_IP} seconds"
 
