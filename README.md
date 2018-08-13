@@ -8,10 +8,12 @@ In the `lamp` directory there is a LAMP stack (Linux, Apache, MySQL, PHP).
 It contains the containers:
  - Apache 2.4 with PHP 5.6
  - Apache 2.4 with PHP 7.0
- - MariaDB 10.2
- - Tenginx 2.2.1 (Nginx fork)
- - Fail2Ban 0.10.1
- - Consul 1.0.0
+ - Apache 2.4 with PHP 7.1
+ - Apache 2.4 with PHP 7.2
+ - MariaDB 10.3
+ - Tenginx 2.2.2 (Nginx fork)
+ - Fail2Ban 0.10.3
+ - Consul 1.2.2
  - Registrator
 
 Tenginx uses as a frontend server: http://tengine.taobao.org  
@@ -102,6 +104,10 @@ Status for the jail: sshd
 ~~~
 
 Fail2Ban log messages are in the `/var/log/fail2ban/fail2ban.log` file.
+
+### uTorrent
+In the `uTorrent` directory there is a uTorrent for Linux.  
+
 
 ---
 Good luck!  

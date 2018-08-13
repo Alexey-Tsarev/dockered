@@ -1,8 +1,8 @@
 version: '3'
 
 services:
-  # Apache, php 5
-  ap5:
+  # Apache, php 5.6
+  ap56:
     build:
       context: ../images/apache-2.4_php-5.6/
       args:
@@ -10,7 +10,7 @@ services:
         - https_proxy
 
     image:          alexeysofree/apache_php:2.4_5.6
-    container_name: ap5
+    container_name: ap56
     network_mode:   host
     restart:        unless-stopped
 
@@ -18,7 +18,7 @@ services:
       - TERM=xterm
 
     labels:
-      - SERVICE_NAME=ap5
+      - SERVICE_NAME=ap56
 
     volumes:
       - /etc/passwd:/etc/passwd:ro
@@ -27,19 +27,19 @@ services:
       - /home:/home
       - /var/run/mysql:/var/lib/mysql
       - ${DOCKER_ROOT}/apache/sites-enabled:/etc/httpd/sites-enabled
-      - ${DOCKER_ROOT}/log/ap5:/var/log/httpd
+      - ${DOCKER_ROOT}/log/ap56:/var/log/httpd
 
     logging:
       driver: journald
       options:
-        tag: ap5
+        tag: ap56
 
     ports:
-      - 8080:8080
-  # End Apache, php 5
+      - 8056:8056
+  # End Apache, php 5.6
 
-  # Apache, php 7
-  ap7:
+  # Apache, php 7.0
+  ap70:
     build:
       context: ../images/apache-2.4_php-7.0/
       args:
@@ -47,7 +47,7 @@ services:
         - https_proxy
 
     image:          alexeysofree/apache_php:2.4_7.0
-    container_name: ap7
+    container_name: ap70
     network_mode:   host
     restart:        unless-stopped
 
@@ -55,7 +55,7 @@ services:
       - TERM=xterm
 
     labels:
-      - SERVICE_NAME=ap7
+      - SERVICE_NAME=ap70
 
     volumes:
       - /etc/passwd:/etc/passwd:ro
@@ -64,26 +64,100 @@ services:
       - /home:/home
       - /var/run/mysql:/var/lib/mysql
       - ${DOCKER_ROOT}/apache/sites-enabled:/etc/httpd/sites-enabled
-      - ${DOCKER_ROOT}/log/ap7:/var/log/httpd
+      - ${DOCKER_ROOT}/log/ap70:/var/log/httpd
 
     logging:
       driver: journald
       options:
-        tag: ap7
+        tag: ap70
 
     ports:
-      - 7070:7070
-  # End Apache php 7
+      - 8070:8070
+  # End Apache, php 7.0
 
-  # Tengine
-  nginx:
+  # Apache, php 7.1
+  ap71:
     build:
-      context: ../images/tengine-2.2.1/
+      context: ../images/apache-2.4_php-7.1/
       args:
         - http_proxy
         - https_proxy
 
-    image:          alexeysofree/tengine:2.2.1
+    image:          alexeysofree/apache_php:2.4_7.1
+    container_name: ap71
+    network_mode:   host
+    restart:        unless-stopped
+
+    environment:
+      - TERM=xterm
+
+    labels:
+      - SERVICE_NAME=ap71
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /home:/home
+      - /var/run/mysql:/var/lib/mysql
+      - ${DOCKER_ROOT}/apache/sites-enabled:/etc/httpd/sites-enabled
+      - ${DOCKER_ROOT}/log/ap71:/var/log/httpd
+
+    logging:
+      driver: journald
+      options:
+        tag: ap71
+
+    ports:
+      - 8071:8071
+  # End Apache, php 7.1
+
+  # Apache, php 7.2
+  ap72:
+    build:
+      context: ../images/apache-2.4_php-7.2/
+      args:
+        - http_proxy
+        - https_proxy
+
+    image:          alexeysofree/apache_php:2.4_7.2
+    container_name: ap72
+    network_mode:   host
+    restart:        unless-stopped
+
+    environment:
+      - TERM=xterm
+
+    labels:
+      - SERVICE_NAME=ap72
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /home:/home
+      - /var/run/mysql:/var/lib/mysql
+      - ${DOCKER_ROOT}/apache/sites-enabled:/etc/httpd/sites-enabled
+      - ${DOCKER_ROOT}/log/ap72:/var/log/httpd
+
+    logging:
+      driver: journald
+      options:
+        tag: ap72
+
+    ports:
+      - 8072:8072
+  # End Apache, php 7.2
+
+  # Tengine
+  nginx:
+    build:
+      context: ../images/tengine-2.2.2/
+      args:
+        - http_proxy
+        - https_proxy
+
+    image:          alexeysofree/tengine:2.2.2
     container_name: nginx
     network_mode:   host
     restart:        unless-stopped
@@ -114,15 +188,15 @@ services:
       - 443:443
   # End Tengine
 
-  # MariaDB 10.2
+  # MariaDB
   mysql:
     build:
-      context: ../images/mariadb-10.2/
+      context: ../images/mariadb-10.3/
       args:
         - http_proxy
         - https_proxy
 
-    image:          alexeysofree/mariadb:10.2
+    image:          alexeysofree/mariadb:10.3
     container_name: mysql
     network_mode:   host
     restart:        unless-stopped
@@ -153,17 +227,17 @@ services:
 
     ports:
       - 3306:3306
-  # End MariaDB 10.2
+  # End MariaDB
 
   # Fail2Ban
   fail2ban:
     build:
-      context: ../images/fail2ban-0.10.1/
+      context: ../images/fail2ban-0.10.3/
       args:
         - http_proxy
         - https_proxy
 
-    image:          alexeysofree/fail2ban:0.10.1
+    image:          alexeysofree/fail2ban:0.10.3
     container_name: fail2ban
     network_mode:   host
     privileged:     true
@@ -181,29 +255,33 @@ services:
         tag: fail2ban
 
     volumes:
-      - /lib/modules:/lib/modules
       - /etc/localtime:/etc/localtime:ro
+      - /lib/modules:/lib/modules
+      - /var/log:/var/log
       - ${DOCKER_ROOT}/log/fail2ban:/var/log/fail2ban
       - ${DOCKER_ROOT}/log/nginx:/var/log/nginx:ro
-      - ${DOCKER_ROOT}/log/ap5:/var/log/httpd5:ro
-      - ${DOCKER_ROOT}/log/ap7:/var/log/httpd:ro
-      - /var/log:/var/log
+      - ${DOCKER_ROOT}/log/ap56:/var/log/httpd56:ro
+      - ${DOCKER_ROOT}/log/ap70:/var/log/httpd70:ro
+      - ${DOCKER_ROOT}/log/ap71:/var/log/httpd71:ro
+      - ${DOCKER_ROOT}/log/ap72:/var/log/httpd72:ro
 
     depends_on:
       - nginx
-      # - ap5
-      # - ap7
+      # - ap56
+      # - ap70
+      # - ap71
+      # - ap72
   # End Fail2Ban
 
   # Consul
   consul:
     build:
-      context: ../images/consul-1.0.0/
+      context: ../images/consul-1.2.2/
       args:
         - http_proxy
         - https_proxy
 
-    image:          alexeysofree/consul:1.0.0
+    image:          alexeysofree/consul:1.2.2
     container_name: consul
     network_mode:   host
     restart:        unless-stopped
@@ -212,7 +290,6 @@ services:
       - TERM=xterm
       - CONSUL_ADVERTISE_PUBLIC_IP
       - CONSUL_ADVERTISE_FIRST_IP
-#      - CONSUL_ADVERTISE_PUBLIC_IP=1
 #      - DEBUG=1
 
     command: -server -ui

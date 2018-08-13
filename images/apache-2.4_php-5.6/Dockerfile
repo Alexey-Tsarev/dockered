@@ -3,14 +3,14 @@ FROM alexeysofree/centos7-base
 RUN yum -y install http://rpms.famillecollet.com/enterprise/remi-release-7.rpm && \
     yum -y install \
         httpd \
-        php56 php56-php php56-php-bcmath php56-php-common php56-php-gd php56-php-intl php56-php-json php56-php-mbstring php56-php-mcrypt php56-php-mysqlnd php56-php-pdo php56-php-pecl-xmldiff php56-php-pecl-zip php56-php-xml php56-php-xmlrpc php56-php-opcache php56-runtime php56-php-pecl-crypto php56-php-cli \
+        php56 php56-php php56-php-bcmath php56-php-common php56-php-gd php56-php-intl php56-php-json php56-php-mbstring php56-php-mcrypt php56-php-mysqlnd php56-php-pdo php56-php-pecl-xmldiff php56-php-pecl-zip php56-php-xml php56-php-xmlrpc php56-php-opcache php56-runtime php56-php-pecl-crypto php56-php-process php56-php-cli \
         cronie logrotate \
         supervisor && \
     yum clean all
 
-EXPOSE 8080
+EXPOSE 8056
 
-VOLUME /home /var/log/httpd
+VOLUME /var/log/httpd
 
 COPY rootfs/ /
 

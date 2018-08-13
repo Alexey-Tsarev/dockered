@@ -3,12 +3,12 @@ FROM alexeysofree/centos7-base
 RUN yum -y install http://rpms.famillecollet.com/enterprise/remi-release-7.rpm && \
     yum -y install \
         httpd \
-        php70 php70-php php70-php-bcmath php70-php-common php70-php-gd php70-php-intl php70-php-json php70-php-mbstring php70-php-mcrypt php70-php-mysqlnd php70-php-pdo php70-php-pecl-mysql php70-php-pecl-xmldiff php70-php-pecl-zip php70-php-xml php70-php-xmlrpc php70-php-opcache php70-runtime php70-php-pecl-crypto php70-php-process php70-php-cli \
+        php72 php72-php php72-php-bcmath php72-php-common php72-php-gd php72-php-intl php72-php-json php72-php-mbstring php72-php-mcrypt php72-php-mysqlnd php72-php-pdo php72-php-pecl-mysql php72-php-pecl-xmldiff php72-php-pecl-zip php72-php-xml php72-php-xmlrpc php72-php-opcache php72-runtime php72-php-pecl-crypto php72-php-process php72-php-cli \
         cronie logrotate \
         supervisor && \
     yum clean all
 
-EXPOSE 8070
+EXPOSE 8072
 
 VOLUME /var/log/httpd
 

@@ -1,0 +1,12 @@
+/var/log/httpd/*log {
+    daily
+    missingok
+    rotate 90
+    compress
+    delaycompress
+    notifempty
+    sharedscripts
+    postrotate
+        /usr/sbin/httpd -k graceful > /dev/null 2>/dev/null || true
+    endscript
+}

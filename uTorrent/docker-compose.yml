@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  utorrent:
+    build:
+      context: ../images/utorrent_server-3.3/
+      args:
+        - http_proxy
+        - https_proxy
+
+    image:          alexeysofree/utorrent_server:3.3
+    container_name: utorrent
+    network_mode:   host
+    restart:        unless-stopped
+
+    environment:
+      - TERM=xterm
+      - UTORRENT_USER
+      - UTORRENT_GROUP
+
+    labels:
+      - SERVICE_NAME=utorrent
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ${DOCKER_ROOT}/utorrent/log:/opt/utorrent/log
+      - ${DOCKER_ROOT}/utorrent/data:/opt/utorrent/data
+      - ${DOCKER_ROOT}/utorrent/torrents:/opt/utorrent/torrents
+      - ${DOCKER_ROOT}/utorrent/settings:/opt/utorrent/settings
+
+    logging:
+      driver: journald
+      options:
+        tag: utorrent
