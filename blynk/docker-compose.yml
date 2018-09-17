@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  blynk:
+    build:
+      context: ../images/blynk_server-0.39.5/
+      args:
+        - http_proxy
+        - https_proxy
+
+    image:          alexeysofree/blynk_server:0.39.5
+    container_name: blynk
+    network_mode:   host
+    restart:        unless-stopped
+
+    environment:
+      - TERM=xterm
+
+    labels:
+      - SERVICE_NAME=blynk
+
+    logging:
+      driver: journald
+      options:
+        tag: blynk
+
+    volumes:
+      - ${DOCKER_ROOT}/blynk/data:/opt/blynk/data
+      - ${DOCKER_ROOT}/blynk/config:/opt/blynk/config
+      - ${DOCKER_ROOT}/log/blynk:/opt/blynk/logs
+
+    ports:
+    - 7443:7443
+    - 8080:8080
+    - 8441:8441
+    - 8442:8442
+    - 8443:8443
+    - 9443:9443
+
+    # Custom Blynk config file
+    #command: -serverConfig config/server.properties

@@ -1,5 +1,7 @@
 FROM alexeysofree/centos7-base
 
+MAINTAINER Alexey Tsarev <tsarev.alexey@gmail.com>
+
 RUN yum -y install http://rpms.famillecollet.com/enterprise/remi-release-7.rpm && \
     yum -y install \
         httpd \

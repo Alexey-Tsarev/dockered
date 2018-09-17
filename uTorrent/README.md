@@ -1,4 +1,4 @@
-# LAMP stack in Docker
+# uTorrent in Docker
 
 See:  
 https://www.utorrent.com/intl/en/downloads/linux

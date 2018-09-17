@@ -1,5 +1,7 @@
 FROM alexeysofree/centos7-base
 
+MAINTAINER Alexey Tsarev <tsarev.alexey@gmail.com>
+
 COPY rootfs/etc/yum.repos.d /etc/yum.repos.d
 
 RUN rpm --import https://yum.mariadb.org/RPM-GPG-KEY-MariaDB && \

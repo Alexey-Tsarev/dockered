@@ -1,5 +1,7 @@
 FROM alexeysofree/centos7-base
 
+MAINTAINER Alexey Tsarev <tsarev.alexey@gmail.com>
+
 ARG TENGINE_VERSION=2.2.2
 
 # https://www.openssl.org/source/

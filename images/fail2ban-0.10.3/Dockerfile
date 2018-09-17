@@ -1,5 +1,7 @@
 FROM alexeysofree/centos7-base
 
+MAINTAINER Alexey Tsarev <tsarev.alexey@gmail.com>
+
 # There are two repos:
 #   Original repo:
 #     https://github.com/fail2ban/fail2ban

@@ -1,6 +1,8 @@
 FROM alexeysofree/centos7-base:latest
 
-ARG CONSUL_VERSION=1.2.2
+MAINTAINER Alexey Tsarev <tsarev.alexey@gmail.com>
+
+ARG CONSUL_VERSION=1.2.3
 ARG UPX_VERSION=3.94
 ARG TINI_VERSION=0.18.0
 

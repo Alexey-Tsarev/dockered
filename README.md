@@ -13,7 +13,7 @@ It contains the containers:
  - MariaDB 10.3
  - Tenginx 2.2.2 (Nginx fork)
  - Fail2Ban 0.10.3
- - Consul 1.2.2
+ - Consul 1.2.3
  - Registrator
 
 Tenginx uses as a frontend server: http://tengine.taobao.org  
