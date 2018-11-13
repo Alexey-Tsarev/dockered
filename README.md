@@ -3,6 +3,14 @@ This repository contains applications which were dockered by me.
 Docker and docker-compose are required to build and run these images...
 
 ## Content
+### IoT
+In the `iot` directory:
+ - Blynk server 0.41.0
+
+### P2P
+In the `p2p` directory:
+ - uTorrent server 3.3
+
 ### LAMP
 In the `lamp` directory there is a LAMP stack (Linux, Apache, MySQL, PHP).  
 It contains the containers:
@@ -11,9 +19,9 @@ It contains the containers:
  - Apache 2.4 with PHP 7.1
  - Apache 2.4 with PHP 7.2
  - MariaDB 10.3
- - Tenginx 2.2.2 (Nginx fork)
- - Fail2Ban 0.10.3
- - Consul 1.2.3
+ - Tengine 2.2.3 (OpenSSL 1.1.0i)
+ - Fail2Ban 0.10.4
+ - Consul 1.3.0
  - Registrator
 
 Tenginx uses as a frontend server: http://tengine.taobao.org  

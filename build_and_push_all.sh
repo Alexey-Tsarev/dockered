@@ -11,12 +11,12 @@ docker-compose build
 docker-compose push
 cd -
 
-cd uTorrent
+cd p2p
 docker-compose build
 docker-compose push
 cd -
 
-cd blynk
+cd iot
 docker-compose build
 docker-compose push
 cd -

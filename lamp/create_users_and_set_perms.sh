@@ -80,4 +80,8 @@ while read user; do
 
     find "${HOME_ROOT_DIR}/${user}" -type d -exec chmod 770 {} \;
     find "${HOME_ROOT_DIR}/${user}" -type f -exec chmod 660 {} \;
+
+    # for ssh key based authentication
+    chmod 750 "${HOME_ROOT_DIR}/${user}"
+    chmod 700 "${HOME_ROOT_DIR}/${user}/.ssh" > /dev/null 2>&1 || true
 done

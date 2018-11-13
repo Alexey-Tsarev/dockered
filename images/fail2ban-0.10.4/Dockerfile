@@ -11,7 +11,7 @@ MAINTAINER Alexey Tsarev <tsarev.alexey@gmail.com>
 RUN yum -y install systemd-python python-inotify gamin-python gamin iptables wget unzip && \
     mkdir -p /root/temp && \
     cd /root/temp && \
-        wget https://github.com/fail2ban/fail2ban/archive/0.10.3.1.zip && \
+        wget https://github.com/fail2ban/fail2ban/archive/0.10.4.zip && \
         unzip *.zip && \
         cd fail2ban-* && \
         python setup.py install && \

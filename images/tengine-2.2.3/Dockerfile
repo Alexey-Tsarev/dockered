@@ -2,15 +2,22 @@ FROM alexeysofree/centos7-base
 
 MAINTAINER Alexey Tsarev <tsarev.alexey@gmail.com>
 
-ARG TENGINE_VERSION=2.2.2
+ARG TENGINE_VERSION=2.2.3
 
 # https://www.openssl.org/source/
-# The latest stable version is the 1.1.0 series.
-# The 1.0.2 series is our Long Term Support (LTS) release, supported until 31st December 2019.
-# The 0.9.8, 1.0.0 and 1.0.1 versions are now out of support and should not be used.
-#
-# ARG OPENSSL_VERSION=1.0.2o
-ARG OPENSSL_VERSION=1.1.0h
+# The latest stable version is the 1.1.1 series.
+# This is also our Long Term Support (LTS) version, supported until 11th September 2023.
+# Our previous LTS version (1.0.2 series) will continue to be supported until 31st December 2019
+# (security fixes only during the last year of support).
+# The 1.1.0 series is currently only receiving security fixes and will go out of support on 11th September 2019.
+# All users of 1.0.2 and 1.1.0 are encouraged to upgrade to 1.1.1 as soon as possible.
+
+# ARG OPENSSL_VERSION=1.1.1
+# Failed with a messages:
+# threads_pthread.c:(.text+0x16): undefined reference to `pthread_atfork'
+# collect2: error: ld returned 1 exit status
+
+ARG OPENSSL_VERSION=1.1.0i
 
 RUN echo "=> Install packages" && \
         yum -y install \
