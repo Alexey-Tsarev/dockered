@@ -20,3 +20,8 @@ cd iot
 docker-compose build
 docker-compose push
 cd -
+
+cd video_surveillance
+docker-compose build
+docker-compose push
+cd -

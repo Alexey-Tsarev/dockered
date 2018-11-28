@@ -1,0 +1,41 @@
+version: '3.7'
+
+services:
+  ivideon:
+    build:
+      context: ../images/ivideon-3.7.0/
+      args:
+        - http_proxy
+        - https_proxy
+
+    image:          alexeysofree/ivideon:3.7.0
+    container_name: ivideon
+    network_mode:   host
+    restart:        unless-stopped
+    init:           true
+
+    # environment variables:
+    # gui=0 (or "gui" variable not provided) - Start Ivideon Server only. Run GUI manually: docker exec -ti ivideon /docker-entrypoint.sh gui
+    # gui=1                                  - Start Ivideon Server and GUI
+    environment:
+      - TERM=xterm
+#      - gui=1 # See comments above
+
+    labels:
+      - SERVICE_NAME=ivideon
+
+    logging:
+      driver: journald
+      options:
+        tag: ivideon
+
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+#      - ${DOCKER_ROOT}/ivideon:/root/.IvideonServer # Keep Ivideon settings. Uncomment after initial configuration and configs copy
+      - ${DOCKER_ROOT}/ivideon_archive:/mnt/archive
+
+    ports:
+    - 8080:8080
+    - 3101:3101
+    - 443:443
+    - 80:80
