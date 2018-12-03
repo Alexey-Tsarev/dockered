@@ -113,12 +113,8 @@ Status for the jail: sshd
 
 Fail2Ban log messages are in the `/var/log/fail2ban/fail2ban.log` file.
 
-### uTorrent
-In the `p2p` directory there is a uTorrent for Linux.
-
-
-### uTorrent
-In the `video_surveillance` directory there is a Ivideon Server for Linux.  
+### Video Surveillance
+In the `video_surveillance` directory there is an Ivideon Server for Linux.  
 You don't need any X.org server. This image uses Xvfb (X virtual framebuffer),
 just run:
 ~~~
