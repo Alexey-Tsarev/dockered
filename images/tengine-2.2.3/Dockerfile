@@ -12,12 +12,15 @@ ARG TENGINE_VERSION=2.2.3
 # The 1.1.0 series is currently only receiving security fixes and will go out of support on 11th September 2019.
 # All users of 1.0.2 and 1.1.0 are encouraged to upgrade to 1.1.1 as soon as possible.
 
-# ARG OPENSSL_VERSION=1.1.1
-# Failed with a messages:
+# ARG OPENSSL_VERSION=1.1.1a
+# Failed with messages:
+# /root/temp/openssl-1.1.1a/.openssl/lib/libcrypto.a(threads_pthread.o): In function `fork_once_func':
 # threads_pthread.c:(.text+0x16): undefined reference to `pthread_atfork'
 # collect2: error: ld returned 1 exit status
+# make[1]: *** [objs/nginx] Error 1
+# See: https://github.com/alibaba/tengine/issues/967
 
-ARG OPENSSL_VERSION=1.1.0i
+ARG OPENSSL_VERSION=1.1.0j
 
 RUN echo "=> Install packages" && \
         yum -y install \

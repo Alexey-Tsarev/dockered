@@ -21,7 +21,7 @@ It contains the containers:
  - MariaDB 10.3
  - Tengine 2.2.3 (OpenSSL 1.1.0i)
  - Fail2Ban 0.10.4
- - Consul 1.3.0
+ - Consul 1.4.0
  - Registrator
 
 Tenginx uses as a frontend server: http://tengine.taobao.org  

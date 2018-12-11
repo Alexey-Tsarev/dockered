@@ -149,6 +149,43 @@ services:
       - 8072:8072
   # End Apache, php 7.2
 
+  # Apache, php 7.3
+  ap73:
+    build:
+      context: ../images/apache-2.4_php-7.3/
+      args:
+      - http_proxy
+      - https_proxy
+
+    image:          alexeysofree/apache_php:2.4_7.3
+    container_name: ap73
+    network_mode:   host
+    restart:        unless-stopped
+
+    environment:
+    - TERM=xterm
+
+    labels:
+    - SERVICE_NAME=ap73
+
+    volumes:
+    - /etc/passwd:/etc/passwd:ro
+    - /etc/group:/etc/group:ro
+    - /etc/localtime:/etc/localtime:ro
+    - /home:/home
+    - /var/run/mysql:/var/lib/mysql
+    - ${DOCKER_ROOT}/apache/sites-enabled:/etc/httpd/sites-enabled
+    - ${DOCKER_ROOT}/log/ap73:/var/log/httpd
+
+    logging:
+      driver: journald
+      options:
+        tag: ap73
+
+    ports:
+    - 8073:8073
+  # End Apache, php 7.3
+
   # Tengine
   nginx:
     build:
@@ -264,6 +301,7 @@ services:
       - ${DOCKER_ROOT}/log/ap70:/var/log/httpd70:ro
       - ${DOCKER_ROOT}/log/ap71:/var/log/httpd71:ro
       - ${DOCKER_ROOT}/log/ap72:/var/log/httpd72:ro
+      - ${DOCKER_ROOT}/log/ap73:/var/log/httpd73:ro
 
     depends_on:
       - nginx
@@ -271,17 +309,18 @@ services:
       # - ap70
       # - ap71
       # - ap72
+      # - ap73
   # End Fail2Ban
 
   # Consul
   consul:
     build:
-      context: ../images/consul-1.3.0/
+      context: ../images/consul-1.4.0/
       args:
         - http_proxy
         - https_proxy
 
-    image:          alexeysofree/consul:1.3.0
+    image:          alexeysofree/consul:1.4.0
     container_name: consul
     network_mode:   host
     restart:        unless-stopped

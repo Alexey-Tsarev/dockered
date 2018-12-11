@@ -39,8 +39,7 @@ ServerRoot "/etc/httpd"
 # prevent Apache from glomming onto all bound IP addresses.
 #
 #Listen 12.34.56.78:80
-# Listen 80
-Listen 8056
+Listen 80
 
 #
 # Dynamic Shared Object (DSO) Support
@@ -215,10 +214,7 @@ LogLevel warn
     # If you prefer a logfile with access, agent, and referer information
     # (Combined Logfile Format) you can use the following directive.
     #
-
-    # CustomLog "logs/access_log" combined
-    LogFormat "%t %a %u %v \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" vhost_my
-    CustomLog "logs/access_log" vhost_my
+    CustomLog "logs/access_log" combined
 </IfModule>
 
 <IfModule alias_module>
@@ -317,7 +313,7 @@ LogLevel warn
 # in HTML content to override this choice, comment out this
 # directive:
 #
-# AddDefaultCharset UTF-8
+AddDefaultCharset UTF-8
 
 <IfModule mime_magic_module>
     #
@@ -354,24 +350,4 @@ EnableSendfile on
 # Supplemental configuration
 #
 # Load config files in the "/etc/httpd/conf.d" directory, if any.
-
-
-<IfModule remoteip_module>
-    RemoteIPHeader X-Forwarded-For
-    RemoteIPInternalProxy 127.0.0.1
-</IfModule>
-
-<IfModule setenvif_module>
-    SetEnvIf X-Forwarded-Proto https HTTPS=on
-</IfModule>
-
-<Directory "/home/*/public_html">
-    Options -Indexes -MultiViews +FollowSymLinks
-    AllowOverride All
-    Require all granted
-</Directory>
-
-ServerName ap56
-ServerTokens Prod
 IncludeOptional conf.d/*.conf
-IncludeOptional sites-enabled/*.conf
