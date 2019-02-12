@@ -1,8 +1,8 @@
 FROM alexeysofree/centos7-base
 
-MAINTAINER Alexey Tsarev <tsarev.alexey@gmail.com>
+LABEL maintainer="Alexey Tsarev <tsarev.alexey@gmail.com>"
 
-ARG BLYNK_VERSION="0.41.0"
+ARG BLYNK_VERSION="0.41.2"
 ARG BLYNK_URL="https://github.com/blynkkk/blynk-server/releases/download/v${BLYNK_VERSION}/server-${BLYNK_VERSION}-java8.jar"
 ARG APP_DIR="/opt/blynk"
 
@@ -24,8 +24,6 @@ RUN echo "=> Install packages" && \
         yum clean all
 
 COPY rootfs/ /
-
-RUN chmod +x /docker-entrypoint.sh
 
 EXPOSE 7443 8080 8441 8442 8443 9443
 

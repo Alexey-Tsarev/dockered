@@ -1,6 +1,6 @@
 FROM alexeysofree/centos7-base
 
-MAINTAINER Alexey Tsarev <tsarev.alexey@gmail.com>
+LABEL maintainer="Alexey Tsarev <tsarev.alexey@gmail.com>"
 
 COPY rootfs/etc/yum.repos.d /etc/yum.repos.d
 
@@ -11,7 +11,6 @@ RUN rpm --import https://yum.mariadb.org/RPM-GPG-KEY-MariaDB && \
 COPY rootfs/ /
 
 RUN chmod 755 /etc && \
-    chmod +x /docker-entrypoint.sh && \
     /docker-entrypoint.sh build
 
 EXPOSE 3306

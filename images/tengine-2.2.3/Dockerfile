@@ -1,6 +1,6 @@
 FROM alexeysofree/centos7-base
 
-MAINTAINER Alexey Tsarev <tsarev.alexey@gmail.com>
+LABEL maintainer="Alexey Tsarev <tsarev.alexey@gmail.com>"
 
 ARG TENGINE_VERSION=2.2.3
 
@@ -63,7 +63,6 @@ COPY rootfs/ /
 RUN chmod 755 /etc && \
     chmod 644 /etc/logrotate.d/nginx && \
     crontab /var/spool/cron/root && \
-    chmod +x /certbot.sh && \
     mkdir -p -m 700 /var/log/letsencrypt
 
 #ENTRYPOINT ["sleep", "inf"]

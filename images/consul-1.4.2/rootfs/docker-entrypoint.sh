@@ -4,15 +4,14 @@ if [ -n "${DEBUG}" ]; then
     set -x
 fi
 
-CONSUL="consul agent -data-dir=${CONSUL_ETC_DIR}/data -config-dir=${CONSUL_ETC_DIR}/config"
+CONSUL="consul agent -data-dir=${CONSUL_CONF_DIR}/data -config-dir=${CONSUL_CONF_DIR}/config"
 CONSUL_PID_DIR='/var/run'
 CONSUL_PID_FILE="${CONSUL_PID_DIR}/consul.pid"
 
 PUBLIC_IP_URLS=(
+https://ident.me
 http://api.ipify.org
-http://myexternalip.com/raw
 http://ipv4bot.whatismyipaddress.com
-http://ifconfig.co
 http://ip-api.com/line/?fields=query
 )
 

@@ -1,4 +1,4 @@
-version: '3'
+version: '3.7'
 
 services:
   # Apache, php 5.6
@@ -154,8 +154,8 @@ services:
     build:
       context: ../images/apache-2.4_php-7.3/
       args:
-      - http_proxy
-      - https_proxy
+        - http_proxy
+        - https_proxy
 
     image:          alexeysofree/apache_php:2.4_7.3
     container_name: ap73
@@ -163,19 +163,19 @@ services:
     restart:        unless-stopped
 
     environment:
-    - TERM=xterm
+      - TERM=xterm
 
     labels:
-    - SERVICE_NAME=ap73
+      - SERVICE_NAME=ap73
 
     volumes:
-    - /etc/passwd:/etc/passwd:ro
-    - /etc/group:/etc/group:ro
-    - /etc/localtime:/etc/localtime:ro
-    - /home:/home
-    - /var/run/mysql:/var/lib/mysql
-    - ${DOCKER_ROOT}/apache/sites-enabled:/etc/httpd/sites-enabled
-    - ${DOCKER_ROOT}/log/ap73:/var/log/httpd
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /home:/home
+      - /var/run/mysql:/var/lib/mysql
+      - ${DOCKER_ROOT}/apache/sites-enabled:/etc/httpd/sites-enabled
+      - ${DOCKER_ROOT}/log/ap73:/var/log/httpd
 
     logging:
       driver: journald
@@ -183,7 +183,7 @@ services:
         tag: ap73
 
     ports:
-    - 8073:8073
+      - 8073:8073
   # End Apache, php 7.3
 
   # Tengine
@@ -266,6 +266,44 @@ services:
       - 3306:3306
   # End MariaDB
 
+  # vsftpd
+  vsftpd:
+    build:
+      context: ../images/vsftpd-3.0.2/
+      args:
+        - http_proxy
+        - https_proxy
+
+    image:          alexeysofree/vsftpd:3.0.2
+    container_name: vsftpd
+    network_mode:   host
+    restart:        unless-stopped
+    init:           true
+
+    environment:
+      - TERM=xterm
+
+    labels:
+      - SERVICE_NAME=vsftpd
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/shadow:/etc/shadow:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /home:/home
+      - ${DOCKER_ROOT}/vsftpd:/etc/vsftpd
+      - ${DOCKER_ROOT}/log/vsftpd:/var/log/vsftpd
+
+    logging:
+      driver: journald
+      options:
+        tag: vsftpd
+
+    ports:
+      - 21:21
+  # End vsftpd
+
   # Fail2Ban
   fail2ban:
     build:
@@ -315,26 +353,27 @@ services:
   # Consul
   consul:
     build:
-      context: ../images/consul-1.4.0/
+      context: ../images/consul-1.4.2/
       args:
         - http_proxy
         - https_proxy
 
-    image:          alexeysofree/consul:1.4.0
+    image:          alexeysofree/consul:1.4.2
     container_name: consul
     network_mode:   host
     restart:        unless-stopped
+    init:           true
 
     environment:
       - TERM=xterm
-      - CONSUL_ADVERTISE_PUBLIC_IP
+      # - CONSUL_ADVERTISE_PUBLIC_IP=10
       - CONSUL_ADVERTISE_FIRST_IP
-#      - DEBUG=1
+      # - DEBUG=1
 
     command: -server -ui
-#    command: -server -ui -bootstrap
-#    command: -server -ui -advertise=\'{{ GetInterfaceIP \"eth0\" }}\'
-#    command: -server -ui -bootstrap -advertise=\'{{ GetInterfaceIP \"eth0\" }}\'
+    # command: -server -ui -bootstrap
+    # command: -server -ui -advertise=\'{{ GetInterfaceIP \"eth0\" }}\'
+    # command: -server -ui -bootstrap -advertise=\'{{ GetInterfaceIP \"eth0\" }}\'
 
     labels:
       - SERVICE_NAME=consul

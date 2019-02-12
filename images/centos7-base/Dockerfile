@@ -1,6 +1,6 @@
 FROM centos:7
 
-MAINTAINER Alexey Tsarev <tsarev.alexey@gmail.com>
+LABEL maintainer="Alexey Tsarev <tsarev.alexey@gmail.com>"
 
 RUN yum -y update && \
     yum -y install epel-release && \

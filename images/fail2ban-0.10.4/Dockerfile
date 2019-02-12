@@ -1,6 +1,6 @@
 FROM alexeysofree/centos7-base
 
-MAINTAINER Alexey Tsarev <tsarev.alexey@gmail.com>
+LABEL maintainer="Alexey Tsarev <tsarev.alexey@gmail.com>"
 
 # There are two repos:
 #   Original repo:
@@ -24,7 +24,6 @@ COPY rootfs/ /
 
 RUN chmod 755 /etc && \
     chmod 644 /etc/logrotate.d/fail2ban && \
-    chmod +x /fail2ban-entrypoint.sh && \
     cd /etc/fail2ban/filter.d && \
     cp sshd.conf sshd.conf.src && \
     cat sshd.conf.src | grep -v '<F-NOFAIL>Received disconnect</F-NOFAIL>' > sshd.conf && \

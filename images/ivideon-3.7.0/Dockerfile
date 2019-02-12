@@ -1,6 +1,6 @@
 FROM debian:9
 
-MAINTAINER Alexey Tsarev <tsarev.alexey@gmail.com>
+LABEL maintainer="Alexey Tsarev <tsarev.alexey@gmail.com>"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -31,8 +31,6 @@ ENV LC_ALL=en_US.UTF-8 \
     LANGUAGE=en_US:en
 
 COPY rootfs/ /
-
-RUN chmod +x /docker-entrypoint.sh
 
 #ENTRYPOINT ["sleep", "inf"]
 ENTRYPOINT ["/docker-entrypoint.sh", "start"]

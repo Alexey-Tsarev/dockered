@@ -1,6 +1,6 @@
 FROM debian:7
 
-MAINTAINER Alexey Tsarev <tsarev.alexey@gmail.com>
+LABEL maintainer="Alexey Tsarev <tsarev.alexey@gmail.com>"
 
 # Product Version 3.3. Source Revision 30470. Build Date 2014-01-14 09:10:15 -0800
 ARG UTORRENT_URL="http://download-hr.utorrent.com/track/beta/endpoint/utserver/os/linux-x64-debian-7-0"

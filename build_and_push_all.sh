@@ -3,6 +3,8 @@
 set -e
 set -x
 
+./mark_sh_exec.sh
+
 ./build_base_image.sh
 docker push alexeysofree/centos7-base:latest
 
