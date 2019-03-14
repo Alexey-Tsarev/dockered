@@ -18,13 +18,13 @@ CERTBOT_TMPL=${CERTBOT_TMPL//EMAIL/$EMAIL}
 # $2 - (any value - yes, 0 - no) print date/time
 # $3 - (any value - yes, 0 - no) print end of line
 log() {
-    if [ "${2}" == "0" ]; then
-        msg="${1}"
+    if [ "$2" == "0" ]; then
+        msg="$1"
     else
-        msg="$(date "+%Y-%m-%d %H:%M:%S,%3N %Z") - ${1}"
+        msg="$(date "+%Y-%m-%d %H:%M:%S,%3N %Z") - $1"
     fi
 
-    if [ "${3}" == "0" ]; then
+    if [ "$3" == "0" ]; then
         echo -n "${msg}"
     else
         echo "${msg}"

@@ -353,12 +353,12 @@ services:
   # Consul
   consul:
     build:
-      context: ../images/consul-1.4.2/
+      context: ../images/consul-1.4.3/
       args:
         - http_proxy
         - https_proxy
 
-    image:          alexeysofree/consul:1.4.2
+    image:          alexeysofree/consul:1.4.3
     container_name: consul
     network_mode:   host
     restart:        unless-stopped

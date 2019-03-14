@@ -3,6 +3,7 @@ FROM debian:9
 LABEL maintainer="Alexey Tsarev <tsarev.alexey@gmail.com>"
 
 ARG DEBIAN_FRONTEND=noninteractive
+ARG IVIDEON_VERSION=3.7.2-*
 
 RUN echo "=> Install packages" && \
         apt-get update && \
@@ -12,7 +13,7 @@ RUN echo "=> Install packages" && \
         wget -O - http://packages.ivideon.com/ubuntu/keys/ivideon.key | apt-key add - && \
         apt-get update && \
         apt-get -y install \
-            ivideon-video-server xvfb x11vnc xterm jwm firefox-esr locales procps net-tools less mc && \
+            ivideon-video-server=${IVIDEON_VERSION} xvfb x11vnc xterm jwm firefox-esr locales procps net-tools less mc && \
     echo "=> Make sleep_infinity" && \
         apt install -y \
             gcc make && \

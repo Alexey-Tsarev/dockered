@@ -2,7 +2,7 @@
 
 # set -x
 
-if [ -z "${1}" ]; then
+if [ -z "$1" ]; then
     echo "Error: no required parameter
 
 Usage:
@@ -15,7 +15,7 @@ ${0} ~/temp \"docker exec -i mysql mysql\" \"docker exec -i mysql mysqladmin rel
     exit 1
 fi
 
-DB_DIR="${1}"
+DB_DIR="$1"
 MYSQL="${2:-mysql}"
 
 gz_files="$(ls -1 "${DB_DIR}"/*.gz)"

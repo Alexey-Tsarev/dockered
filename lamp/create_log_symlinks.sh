@@ -6,9 +6,9 @@ ENV_FILE="$(dirname ${0})/.env"
 
 
 symlink_if_it_not_exists() {
-    if [ -n "${1}" ] && [ -n "${2}" ]; then
-        if [ ! -h "${1}" ] && [ ! -e "${2}" ]; then
-            cmd="ln -s ${1} ${2}"
+    if [ -n "$1" ] && [ -n "$2" ]; then
+        if [ ! -h "$1" ] && [ ! -e "$2" ]; then
+            cmd="ln -s $1 $2"
             echo "${cmd}"
             ${cmd}
         fi

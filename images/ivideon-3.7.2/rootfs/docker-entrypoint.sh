@@ -10,13 +10,13 @@ MAIN_CONF="main.conf"
 # $2 - (any value - yes, 0 - no) print date/time
 # $3 - (any value - yes, 0 - no) print end of line
 log() {
-    if [ "${2}" == "0" ]; then
+    if [ "$2" == "0" ]; then
         msg="$1"
     else
         msg="$(date "+%Y-%m-%d %H:%M:%S,%3N %Z") - $1"
     fi
 
-    if [ "${3}" == "0" ]; then
+    if [ "$3" == "0" ]; then
         echo -n "${msg}"
     else
         echo "${msg}"
@@ -28,18 +28,18 @@ log() {
 # $2 - (default=1s) delay
 # $3 - (default 1) kill -9
 pid_killer() {
-    if [ -n "${1}" ] ; then
-        log "=> Kill PID: ${1}"
-        kill "${1}" > /dev/null 2>&1
+    if [ -n "$1" ] ; then
+        log "=> Kill PID: $1"
+        kill "$1" > /dev/null 2>&1
 
-        if [ -n "${2}" ]; then
-            sleep "${2}"
+        if [ -n "$2" ]; then
+            sleep "$2"
         else
             sleep 1s
         fi
 
-        if [ "${3}" != "0" ]; then
-            kill -9 "${1}" > /dev/null 2>&1
+        if [ "$3" != "0" ]; then
+            kill -9 "$1" > /dev/null 2>&1
         fi
     fi
 }
@@ -47,7 +47,7 @@ pid_killer() {
 
 # $1 - pid file
 pidfile_killer() {
-    if [ -f "${1}" ]; then
+    if [ -f "$1" ]; then
         PID="$(cat "$1")"
 
         ps "${PID}" > /dev/null
@@ -64,25 +64,25 @@ pidfile_killer() {
 # $2 - PID file
 # $3 - change user
 bg_runner() {
-    if [ -n "${1}" ]; then
+    if [ -n "$1" ]; then
         PRE_CMD=
         POST_CMD=
 
-        if [ -n "${2}" ]; then
-            pidfile_killer "${2}"
+        if [ -n "$2" ]; then
+            pidfile_killer "$2"
             POST_CMD=" echo \$! > $2"
         fi
 
-        if [ -n "${3}" ]; then
-            PRE_CMD="su ${3} -c '"
+        if [ -n "$3" ]; then
+            PRE_CMD="su $3 -c '"
             POST_CMD="${POST_CMD}'"
         fi
 
-        CMD="${PRE_CMD}nohup ${1} > /dev/null 2>&1 &${POST_CMD}"
+        CMD="${PRE_CMD}nohup $1 > /dev/null 2>&1 &${POST_CMD}"
         eval "${CMD}"
 
-        if [ -n "${2}" ]; then
-            PID=" (PID: $(cat ${2}))"
+        if [ -n "$2" ]; then
+            PID=" (PID: $(cat $2))"
         else
             PID=
         fi
@@ -121,7 +121,7 @@ else
 fi
 
 # Start Ivideon video server
-if [ "${1}" == "start" ]; then
+if [ "$1" == "start" ]; then
     if [ ! -f "${IVIDEON_VIDEO_SERVER_CONF_FILE}" ]; then
         log "Create empty Ivideon Server config file: ${IVIDEON_VIDEO_SERVER_CONF_FILE}"
         echo "{}" > "${IVIDEON_VIDEO_SERVER_CONF_FILE}"
@@ -141,7 +141,7 @@ fi
 # End Start Ivideon video server
 
 # Start Xvfb (X virtual framebuffer) and Ivideon GUI
-if [ "${1}" == "gui" ] || [ "${gui}" == "1" ]; then
+if [ "$1" == "gui" ] || [ "${gui}" == "1" ]; then
     # X related
     export DISPLAY="${VNC_DISPLAY}"
 
@@ -174,7 +174,7 @@ if [ "${1}" == "gui" ] || [ "${gui}" == "1" ]; then
     log "Start Ivideon Server GUI"
 
     # Ivideon GUI
-    if [ "${1}" == "gui" ]; then
+    if [ "$1" == "gui" ]; then
         trap 'log "Trapping"; trapper; log "Trapped"; exit 0' EXIT
 
         log "Startup completed

@@ -16,8 +16,8 @@ MYSQL_USER="${MYSQL_USER:-mysql}"
 MYSQL_MAX_CONNECTIONS="${MYSQL_MAX_CONNECTIONS:-551}"
 # End Cfg
 
-if [ -n "${1}" ]; then
-    case "${1}" in
+if [ -n "$1" ]; then
+    case "$1" in
         build)
             if [ -d "${MYSQL_DB_DIR}" ]; then
                 echo "=> If the next command failed, perhaps you are using XFS + overlay. See the link:"

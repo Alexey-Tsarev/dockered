@@ -3,12 +3,12 @@ version: '3.7'
 services:
   blynk:
     build:
-      context: ../images/blynk_server-0.41.2/
+      context: ../images/blynk_server-0.41.4/
       args:
         - http_proxy
         - https_proxy
 
-    image:          alexeysofree/blynk_server:0.41.2
+    image:          alexeysofree/blynk_server:0.41.4
     container_name: blynk
     network_mode:   host
     restart:        unless-stopped
