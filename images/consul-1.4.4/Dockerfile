@@ -2,7 +2,7 @@ FROM alexeysofree/centos7-base:latest
 
 LABEL maintainer="Alexey Tsarev <tsarev.alexey@gmail.com>"
 
-ARG CONSUL_VERSION=1.4.3
+ARG CONSUL_VERSION=1.4.4
 ARG BIN_DIR_IN_PATH=/usr/local/bin
 
 ENV CONSUL_CONF_DIR=/etc/consul

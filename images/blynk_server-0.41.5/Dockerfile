@@ -2,7 +2,7 @@ FROM alexeysofree/centos7-base
 
 LABEL maintainer="Alexey Tsarev <tsarev.alexey@gmail.com>"
 
-ARG BLYNK_VERSION="0.41.4"
+ARG BLYNK_VERSION="0.41.5"
 ARG BLYNK_URL="https://github.com/blynkkk/blynk-server/releases/download/v${BLYNK_VERSION}/server-${BLYNK_VERSION}.jar"
 ARG APP_DIR="/opt/blynk"
 

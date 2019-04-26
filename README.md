@@ -5,7 +5,7 @@ Docker and docker-compose are required to build and run these images...
 ## Content
 ### IoT
 In the `iot` directory:
- - Blynk server 0.41.4
+ - Blynk server 0.41.5
 
 ### P2P
 In the `p2p` directory:
@@ -19,9 +19,9 @@ It contains the containers:
  - Apache 2.4 with PHP 7.1
  - Apache 2.4 with PHP 7.2
  - MariaDB 10.3
- - Tengine 2.2.3 (OpenSSL 1.1.0j)
+ - Tengine 2.3.0 (OpenSSL 1.1.1b)
  - Fail2Ban 0.10.4
- - Consul 1.4.3
+ - Consul 1.4.4
  - vsftpd 3.0.2
 
 Tenginx uses as a frontend server: http://tengine.taobao.org  
