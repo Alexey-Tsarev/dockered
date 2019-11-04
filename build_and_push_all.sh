@@ -27,3 +27,5 @@ cd video_surveillance
 docker-compose build
 docker-compose push
 cd -
+
+docker system prune --force

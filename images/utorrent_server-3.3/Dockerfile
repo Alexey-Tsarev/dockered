@@ -10,10 +10,10 @@ ARG UTORRENT_WEBUI_URL="http://pr.apps.bittorrent.com/client-webui/3.5/utorrent-
 
 ARG APP_DIR="/opt/utorrent"
 
-WORKDIR "${APP_DIR}"
+COPY rootfs/ /
 
 RUN echo "=> Install packages" && \
-        apt-get update && \
+        apt-get -o Acquire::Check-Valid-Until=false update && \
         apt-get -y install \
             locales curl sudo procps net-tools less mc && \
     echo "=> Set locale" && \
@@ -33,11 +33,11 @@ RUN echo "=> Install packages" && \
         cd "${APP_DIR}" && \
         mkdir -p request data torrents/autoload torrents/store torrents/finished
 
-COPY workdir "${APP_DIR}"
-
 ENV LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en
 
+WORKDIR "${APP_DIR}"
+
 #ENTRYPOINT ["sleep", "inf"]
-ENTRYPOINT ["./docker-entrypoint.sh"]
+ENTRYPOINT ["/docker-entrypoint.sh"]

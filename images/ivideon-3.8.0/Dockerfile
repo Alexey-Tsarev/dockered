@@ -3,7 +3,7 @@ FROM debian:9
 LABEL maintainer="Alexey Tsarev <tsarev.alexey@gmail.com>"
 
 ARG DEBIAN_FRONTEND=noninteractive
-ARG IVIDEON_VERSION=3.7.2-*
+ARG IVIDEON_VERSION=3.8.0-*
 
 RUN echo "=> Install packages" && \
         apt-get update && \

@@ -2,7 +2,7 @@ FROM alexeysofree/centos7-base
 
 LABEL maintainer="Alexey Tsarev <tsarev.alexey@gmail.com>"
 
-ARG TENGINE_VERSION=2.3.0
+ARG TENGINE_VERSION=2.3.2
 
 # https://www.openssl.org/source/
 # The latest stable version is the 1.1.1 series.
@@ -12,7 +12,7 @@ ARG TENGINE_VERSION=2.3.0
 # The 1.1.0 series is currently only receiving security fixes and will go out of support on 11th September 2019.
 # All users of 1.0.2 and 1.1.0 are encouraged to upgrade to 1.1.1 as soon as possible.
 
-ARG OPENSSL_VERSION=1.1.1b
+ARG OPENSSL_VERSION=1.1.1d
 
 RUN echo "=> Install packages" && \
         yum -y install \

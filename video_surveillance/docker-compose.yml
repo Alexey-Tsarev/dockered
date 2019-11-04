@@ -3,12 +3,12 @@ version: '3.7'
 services:
   ivideon:
     build:
-      context: ../images/ivideon-3.7.2/
+      context: ../images/ivideon-3.8.0/
       args:
         - http_proxy
         - https_proxy
 
-    image:          alexeysofree/ivideon:3.7.2
+    image:          alexeysofree/ivideon:3.8.0
     container_name: ivideon
     network_mode:   host
     restart:        unless-stopped
