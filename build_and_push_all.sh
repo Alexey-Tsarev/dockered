@@ -28,4 +28,4 @@ docker-compose build
 docker-compose push
 cd -
 
-docker system prune --force
+docker system prune --all --force
