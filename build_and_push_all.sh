@@ -8,7 +8,7 @@ set -x
 docker system prune --all --force
 
 ./build_base_image.sh
-docker push alexeysofree/centos7-base:latest
+docker push alexeytsarev/centos7-base:latest
 
 cd lamp
 docker-compose build --no-cache

@@ -8,7 +8,7 @@ services:
         - http_proxy
         - https_proxy
 
-    image:          alexeysofree/utorrent_server:3.3
+    image:          alexeytsarev/utorrent_server:3.3
     container_name: utorrent
     network_mode:   host
     restart:        unless-stopped

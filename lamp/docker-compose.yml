@@ -9,7 +9,7 @@ services:
         - http_proxy
         - https_proxy
 
-    image:          alexeysofree/apache_php:2.4_5.6
+    image:          alexeytsarev/apache_php:2.4_5.6
     container_name: ap56
     network_mode:   host
     restart:        unless-stopped
@@ -46,7 +46,7 @@ services:
         - http_proxy
         - https_proxy
 
-    image:          alexeysofree/apache_php:2.4_7.0
+    image:          alexeytsarev/apache_php:2.4_7.0
     container_name: ap70
     network_mode:   host
     restart:        unless-stopped
@@ -83,7 +83,7 @@ services:
         - http_proxy
         - https_proxy
 
-    image:          alexeysofree/apache_php:2.4_7.1
+    image:          alexeytsarev/apache_php:2.4_7.1
     container_name: ap71
     network_mode:   host
     restart:        unless-stopped
@@ -120,7 +120,7 @@ services:
         - http_proxy
         - https_proxy
 
-    image:          alexeysofree/apache_php:2.4_7.2
+    image:          alexeytsarev/apache_php:2.4_7.2
     container_name: ap72
     network_mode:   host
     restart:        unless-stopped
@@ -157,7 +157,7 @@ services:
         - http_proxy
         - https_proxy
 
-    image:          alexeysofree/apache_php:2.4_7.3
+    image:          alexeytsarev/apache_php:2.4_7.3
     container_name: ap73
     network_mode:   host
     restart:        unless-stopped
@@ -194,7 +194,7 @@ services:
         - http_proxy
         - https_proxy
 
-    image:          alexeysofree/tengine:2.3.2
+    image:          alexeytsarev/tengine:2.3.2
     container_name: nginx
     network_mode:   host
     restart:        unless-stopped
@@ -233,7 +233,7 @@ services:
         - http_proxy
         - https_proxy
 
-    image:          alexeysofree/mariadb:10.4
+    image:          alexeytsarev/mariadb:10.4
     container_name: mysql
     network_mode:   host
     restart:        unless-stopped
@@ -274,7 +274,7 @@ services:
         - http_proxy
         - https_proxy
 
-    image:          alexeysofree/vsftpd:3.0.2
+    image:          alexeytsarev/vsftpd:3.0.2
     container_name: vsftpd
     network_mode:   host
     restart:        unless-stopped
@@ -312,7 +312,7 @@ services:
         - http_proxy
         - https_proxy
 
-    image:          alexeysofree/fail2ban:0.10.4
+    image:          alexeytsarev/fail2ban:0.10.4
     container_name: fail2ban
     network_mode:   host
     privileged:     true
@@ -358,7 +358,7 @@ services:
         - http_proxy
         - https_proxy
 
-    image:          alexeysofree/consul:1.6.1
+    image:          alexeytsarev/consul:1.6.1
     container_name: consul
     network_mode:   host
     restart:        unless-stopped

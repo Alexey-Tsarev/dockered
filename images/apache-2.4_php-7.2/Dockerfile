@@ -1,4 +1,4 @@
-FROM alexeysofree/centos7-base
+FROM alexeytsarev/centos7-base
 
 LABEL maintainer="Alexey Tsarev <tsarev.alexey@gmail.com>"
 
