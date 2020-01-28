@@ -10,22 +10,29 @@ docker system prune --all --force
 ./build_base_image.sh
 docker push alexeytsarev/centos7-base:latest
 
+cd compose
+
 cd lamp
 docker-compose build --no-cache
 docker-compose push
 cd -
 
-cd p2p
+cd utorrent_server
 docker-compose build --no-cache
 docker-compose push
 cd -
 
-cd iot
+cd blynk_server
 docker-compose build --no-cache
 docker-compose push
 cd -
 
-cd video_surveillance
+cd ivideon
+docker-compose build --no-cache
+docker-compose push
+cd -
+
+cd sslh
 docker-compose build --no-cache
 docker-compose push
 cd -

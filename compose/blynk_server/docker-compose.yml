@@ -3,7 +3,7 @@ version: '3.7'
 services:
   blynk:
     build:
-      context: ../images/blynk_server-0.41.11/
+      context: ../../images/blynk_server-0.41.11
       args:
         - http_proxy
         - https_proxy

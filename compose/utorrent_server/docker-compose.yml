@@ -3,7 +3,7 @@ version: '3.7'
 services:
   utorrent:
     build:
-      context: ../images/utorrent_server-3.3/
+      context: ../../images/utorrent_server-3.3
       args:
         - http_proxy
         - https_proxy
@@ -24,6 +24,7 @@ services:
     volumes:
       - /etc/passwd:/etc/passwd:ro
       - /etc/group:/etc/group:ro
+      - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
       - ${DOCKER_ROOT}/utorrent/log:/opt/utorrent/log
       - ${DOCKER_ROOT}/utorrent/data:/opt/utorrent/data

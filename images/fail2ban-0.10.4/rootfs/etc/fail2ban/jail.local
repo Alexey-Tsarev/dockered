@@ -6,7 +6,9 @@ bantime.increment = true
 bantime.rndtime = 10m
 
 [INCLUDES]
-before = paths-fedora.conf
+before = paths-common.conf
+#before = paths-fedora.conf
+#before = paths-debian.conf
 
 [sshd]
 enabled = true
