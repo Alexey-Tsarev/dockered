@@ -26,8 +26,10 @@ services:
       - /etc/group:/etc/group:ro
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-      - ${DOCKER_ROOT}/utorrent/log:/opt/utorrent/log
+      - ${DOCKER_ROOT}/log/utorrent:/opt/utorrent/log
       - ${DOCKER_ROOT}/utorrent/data:/opt/utorrent/data
+      - ${DOCKER_ROOT}/utorrent/data_in:/opt/utorrent/data_in
+      - ${DOCKER_ROOT}/utorrent/data_out:/opt/utorrent/data_out
       - ${DOCKER_ROOT}/utorrent/torrents:/opt/utorrent/torrents
       - ${DOCKER_ROOT}/utorrent/settings:/opt/utorrent/settings
 

@@ -44,7 +44,7 @@ RUN echo "=> Install packages" && \
         curl -o webui.zip "${UTORRENT_WEBUI_URL}" && \
     echo "=> Create directories" && \
         cd "${APP_DIR}" && \
-        mkdir -p request data torrents/autoload torrents/store torrents/finished && \
+        mkdir -m 777 -p request data data_in data_out torrents/autoload torrents/store torrents/finished && \
     echo "=> Clean" && \
         rm -rf "${TMP_DIR}" "${OPENSSL_LD_FILE}" && \
         apt -y remove build-essential wget && \
