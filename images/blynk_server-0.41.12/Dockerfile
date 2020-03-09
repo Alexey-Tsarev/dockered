@@ -2,14 +2,14 @@ FROM alexeytsarev/centos7-base
 
 LABEL maintainer="Alexey Tsarev <tsarev.alexey@gmail.com>"
 
-ARG BLYNK_VERSION="0.41.11"
+ARG BLYNK_VERSION="0.41.12"
 ARG BLYNK_URL="https://github.com/blynkkk/blynk-server/releases/download/v${BLYNK_VERSION}/server-${BLYNK_VERSION}.jar"
 ARG APP_DIR="/opt/blynk"
 
 WORKDIR "${APP_DIR}"
 
 RUN echo "=> Install packages" && \
-        yum -y install wget nc java-1.8.0-openjdk && \
+        yum -y install wget nc java-11-openjdk && \
     echo "=> Download blynk and make symlinks" && \
         wget "${BLYNK_URL}" && \
         ln -s *.jar blynk-server.jar && \
@@ -25,7 +25,7 @@ RUN echo "=> Install packages" && \
 
 COPY rootfs/ /
 
-EXPOSE 7443 8080 8441 8442 8443 9443
+EXPOSE 8080 9443 8440
 
 VOLUME /opt/blynk/data /opt/blynk/logs
 

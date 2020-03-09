@@ -32,7 +32,7 @@ RUN echo "=> Install packages" && \
         tar zxvf "openssl-${OPENSSL_VERSION}.tar.gz" && \
         cd "tengine-${TENGINE_VERSION}" && \
         ./configure --with-jemalloc --with-http_v2_module "--with-openssl=/root/temp/openssl-${OPENSSL_VERSION}" && \
-        make && \
+        make -j $(nproc) && \
         make install && \
         ln -s /usr/local/nginx/sbin/nginx /usr/sbin && \
         mv /usr/local/nginx/conf /usr/local/nginx/conf.src && \

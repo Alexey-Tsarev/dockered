@@ -1,0 +1,38 @@
+version: '3.7'
+
+services:
+  sshd:
+    build:
+      context: ../../images/sshd-7.9
+      args:
+        - http_proxy
+        - https_proxy
+
+    image:          alexeytsarev/sshd:7.9
+    container_name: sshd
+    network_mode:   host
+    restart:        unless-stopped
+
+    environment:
+      - TERM=xterm
+      - PRE_CMD=cd /bin && ln -s bash bash-2222
+      - SSHD_OPTS=-p 2222
+
+    labels:
+      - SERVICE_NAME=sshd
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/shadow:/etc/shadow:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/locale.gen:/etc/locale.gen:ro
+      - /home:/home:ro
+      - ${BACKUP_ROOT}/backup:/backup
+      - ${BACKUP_ROOT}/backup_storage:/backup_storage
+
+    logging:
+      driver: journald
+      options:
+        tag: sshd

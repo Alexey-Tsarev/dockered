@@ -3,18 +3,22 @@ version: '3.7'
 services:
   blynk:
     build:
-      context: ../../images/blynk_server-0.41.11
+      context: ../../images/blynk_server-0.41.12
       args:
         - http_proxy
         - https_proxy
 
-    image:          alexeytsarev/blynk_server:0.41.11
+    image:          alexeytsarev/blynk_server:0.41.12
     container_name: blynk
     network_mode:   host
     restart:        unless-stopped
 
     environment:
       - TERM=xterm
+      - BLYNK_CONFIG=config/server.properties
+      # - DEBUG=1
+      # - WAIT_FOR=127.0.0.1:5432 # Wait for Postgres
+      # - WAIT_FOR_TIMEOUT=60 # Wait for Postgres
 
     labels:
       - SERVICE_NAME=blynk
@@ -26,16 +30,14 @@ services:
 
     volumes:
       - ${DOCKER_ROOT}/blynk/data:/opt/blynk/data
-      - ${DOCKER_ROOT}/blynk/config:/opt/blynk/config
+      - ${DOCKER_ROOT}/blynk/config:/opt/blynk/config:ro
       - ${DOCKER_ROOT}/log/blynk:/opt/blynk/logs
+      - /etc/letsencrypt:/etc/letsencrypt:ro
 
     ports:
-    - 7443:7443
-    - 8080:8080
-    - 8441:8441
-    - 8442:8442
-    - 8443:8443
-    - 9443:9443
+      - 8080:8080 # HTTP API and WebSockets server
+      - 9443:9443 # HTTPS API, WebSockets and Admin page server
+      - 8440:8440 # Mqtt hardware server
 
-    # Custom Blynk config file
-    #command: -serverConfig config/server.properties
+    # Override Blynk command line parameters
+    #command: -serverConfig new_config/server.properties

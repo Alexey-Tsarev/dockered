@@ -19,7 +19,7 @@ RUN echo "=> Install packages" && \
         wget "https://github.com/yrutschle/sslh/archive/${SSLH_VERSION}.zip" && \
         unzip *.zip && \
         cd sslh-* && \
-        make USELIBCAP=1 && \
+        make -j $(nproc) USELIBCAP=1 && \
         cp sslh-fork sslh-select echosrv "${BIN_DIR}" && \
     echo "=> Setcap" && \
         cd "${BIN_DIR}" && \

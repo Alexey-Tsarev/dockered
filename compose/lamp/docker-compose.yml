@@ -27,7 +27,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /home:/home
       - /var/run/mysql:/var/lib/mysql
-      - ${DOCKER_ROOT}/apache/sites-enabled:/etc/httpd/sites-enabled
+      - ${DOCKER_ROOT}/apache/sites-enabled:/etc/httpd/sites-enabled:ro
       - ${DOCKER_ROOT}/log/ap56:/var/log/httpd
 
     logging:
@@ -65,7 +65,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /home:/home
       - /var/run/mysql:/var/lib/mysql
-      - ${DOCKER_ROOT}/apache/sites-enabled:/etc/httpd/sites-enabled
+      - ${DOCKER_ROOT}/apache/sites-enabled:/etc/httpd/sites-enabled:ro
       - ${DOCKER_ROOT}/log/ap70:/var/log/httpd
 
     logging:
@@ -103,7 +103,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /home:/home
       - /var/run/mysql:/var/lib/mysql
-      - ${DOCKER_ROOT}/apache/sites-enabled:/etc/httpd/sites-enabled
+      - ${DOCKER_ROOT}/apache/sites-enabled:/etc/httpd/sites-enabled:ro
       - ${DOCKER_ROOT}/log/ap71:/var/log/httpd
 
     logging:
@@ -141,7 +141,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /home:/home
       - /var/run/mysql:/var/lib/mysql
-      - ${DOCKER_ROOT}/apache/sites-enabled:/etc/httpd/sites-enabled
+      - ${DOCKER_ROOT}/apache/sites-enabled:/etc/httpd/sites-enabled:ro
       - ${DOCKER_ROOT}/log/ap72:/var/log/httpd
 
     logging:
@@ -179,7 +179,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /home:/home
       - /var/run/mysql:/var/lib/mysql
-      - ${DOCKER_ROOT}/apache/sites-enabled:/etc/httpd/sites-enabled
+      - ${DOCKER_ROOT}/apache/sites-enabled:/etc/httpd/sites-enabled:ro
       - ${DOCKER_ROOT}/log/ap73:/var/log/httpd
 
     logging:
@@ -190,6 +190,44 @@ services:
     ports:
       - 8073:8073
   # End Apache, php 7.3
+
+  # Apache, php 7.4
+  ap74:
+    build:
+      context: ../../images/apache-2.4_php-7.4
+      args:
+        - http_proxy
+        - https_proxy
+
+    image:          alexeytsarev/apache_php:2.4_7.4
+    container_name: ap74
+    network_mode:   host
+    restart:        unless-stopped
+
+    environment:
+      - TERM=xterm
+
+    labels:
+      - SERVICE_NAME=ap74
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /home:/home
+      - /var/run/mysql:/var/lib/mysql
+      - ${DOCKER_ROOT}/apache/sites-enabled:/etc/httpd/sites-enabled:ro
+      - ${DOCKER_ROOT}/log/ap74:/var/log/httpd
+
+    logging:
+      driver: journald
+      options:
+        tag: ap74
+
+    ports:
+      - 8074:8074
+  # End Apache, php 7.4
 
   # Tengine
   nginx:
@@ -349,6 +387,7 @@ services:
       - ${DOCKER_ROOT}/log/ap71:/var/log/httpd71:ro
       - ${DOCKER_ROOT}/log/ap72:/var/log/httpd72:ro
       - ${DOCKER_ROOT}/log/ap73:/var/log/httpd73:ro
+      - ${DOCKER_ROOT}/log/ap74:/var/log/httpd74:ro
 #      - ${DOCKER_ROOT}/fail2ban/jail.local:/etc/fail2ban/jail.local:ro # If you have a config
 
     depends_on:
@@ -358,6 +397,7 @@ services:
       # - ap71
       # - ap72
       # - ap73
+      # - ap74
   # End Fail2Ban
 
   # Consul

@@ -5,7 +5,7 @@ Docker and docker-compose are required to build and run these images...
 ## Content
 ### IoT
 In the `iot` directory:
- - Blynk server 0.41.11
+ - Blynk server 0.41.12
 
 ### P2P
 In the `p2p` directory:
@@ -19,6 +19,7 @@ It contains the containers:
  - Apache 2.4 with PHP 7.1
  - Apache 2.4 with PHP 7.2
  - Apache 2.4 with PHP 7.3
+ - Apache 2.4 with PHP 7.4
  - MariaDB 10.4
  - Tengine 2.3.2 (OpenSSL 1.1.1d)
  - Fail2Ban 0.10.4

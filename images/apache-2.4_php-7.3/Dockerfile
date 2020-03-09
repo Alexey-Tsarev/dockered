@@ -10,7 +10,7 @@ RUN yum -y install http://rpms.famillecollet.com/enterprise/remi-release-7.rpm &
         supervisor && \
     yum clean all
 
-EXPOSE 8072
+EXPOSE 8073
 
 VOLUME /var/log/httpd
 

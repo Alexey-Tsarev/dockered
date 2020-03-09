@@ -30,7 +30,7 @@ RUN echo "=> Install packages" && \
         tar zxvf "openssl-${OPENSSL_VERSION}.tar.gz" && \
         cd "openssl-${OPENSSL_VERSION}" && \
         ./config shared -Wl,--version-script=${OPENSSL_LD_FILE} && \
-        make && \
+        make -j $(nproc) && \
         make install && \
     echo "=> Install uTorrent" && \
         cd "${APP_DIR}" && \

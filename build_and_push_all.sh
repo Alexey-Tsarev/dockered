@@ -13,27 +13,27 @@ docker push alexeytsarev/centos7-base:latest
 cd compose
 
 cd lamp
-docker-compose build --no-cache
+docker-compose build --no-cache --parallel
 docker-compose push
 cd -
 
 cd utorrent_server
-docker-compose build --no-cache
+docker-compose build --no-cache --parallel
 docker-compose push
 cd -
 
 cd blynk_server
-docker-compose build --no-cache
+docker-compose build --no-cache --parallel
 docker-compose push
 cd -
 
 cd ivideon
-docker-compose build --no-cache
+docker-compose build --no-cache --parallel
 docker-compose push
 cd -
 
 cd sslh
-docker-compose build --no-cache
+docker-compose build --no-cache --parallel
 docker-compose push
 cd -
 
