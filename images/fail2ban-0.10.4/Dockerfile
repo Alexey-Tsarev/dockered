@@ -25,8 +25,6 @@ COPY rootfs/ /
 RUN chmod 755 /etc && \
     chmod 644 /etc/logrotate.d/fail2ban && \
     cd /etc/fail2ban/filter.d && \
-    cp sshd.conf sshd.conf.src && \
-    cat sshd.conf.src | grep -v '<F-NOFAIL>Received disconnect</F-NOFAIL>' > sshd.conf && \
     rm -rf /var/log
 
 VOLUME /var/log/fail2ban

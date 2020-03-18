@@ -366,6 +366,7 @@ services:
 
     environment:
       - TERM=xterm
+      - FAIL2BAN_PRE_EXEC
 
     labels:
       - SERVICE_NAME=fail2ban
