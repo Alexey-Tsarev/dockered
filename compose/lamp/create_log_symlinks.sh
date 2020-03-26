@@ -18,7 +18,7 @@ symlink_if_it_not_exists() {
 
 if [ -e "${ENV_FILE}" ]; then
     set -a
-    . "${ENV_FILE}"
+    . "${ENV_FILE}" > /dev/null 2>&1
     set +a
 
     if [ -n "${DOCKER_ROOT}" ] && [ "${DOCKER_ROOT}" != "/var" ]; then
@@ -27,5 +27,7 @@ if [ -e "${ENV_FILE}" ]; then
         symlink_if_it_not_exists "${DOCKER_ROOT}/log/ap70"  '/var/log/httpd70'
         symlink_if_it_not_exists "${DOCKER_ROOT}/log/ap71"  '/var/log/httpd71'
         symlink_if_it_not_exists "${DOCKER_ROOT}/log/ap72"  '/var/log/httpd72'
+        symlink_if_it_not_exists "${DOCKER_ROOT}/log/ap73"  '/var/log/httpd73'
+        symlink_if_it_not_exists "${DOCKER_ROOT}/log/ap74"  '/var/log/httpd74'
     fi
 fi

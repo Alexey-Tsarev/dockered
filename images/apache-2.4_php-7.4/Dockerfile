@@ -20,5 +20,5 @@ RUN chmod 755 /etc && \
     chmod 644 /etc/logrotate.d/httpd && \
     mv /etc/httpd/conf.d/userdir.conf /etc/httpd/conf.d/userdir.conf.bak
 
-ENTRYPOINT ["sleep", "inf"]
-#ENTRYPOINT ["supervisord", "-c", "/etc/supervisord.conf"]
+#ENTRYPOINT ["sleep", "inf"]
+ENTRYPOINT ["supervisord", "-c", "/etc/supervisord.conf"]
