@@ -15,6 +15,7 @@ MYSQL_PID_FILE="${MYSQL_RUN_DIR}/mysql.pid"
 MYSQL_SOCK_FILE="${MYSQL_RUN_DIR}/mysql.sock"
 MYSQL_USER="${MYSQL_USER:-mysql}"
 MYSQL_MAX_CONNECTIONS="${MYSQL_MAX_CONNECTIONS:-551}"
+MYSQL_BIND_ADDRESS="${MYSQL_BIND_ADDRESS:-127.0.0.1}"
 # End Cfg
 
 if [ -n "$1" ]; then
@@ -82,5 +83,5 @@ exec mariadbd --user="${MYSQL_USER}" \
               --datadir="${MYSQL_DB_DIR}" \
               --socket="${MYSQL_SOCK_FILE}" \
               --pid-file="${MYSQL_PID_FILE}" \
-              --bind-address=127.0.0.1 \
+              --bind-address="${MYSQL_BIND_ADDRESS}" \
               --max-connections="${MYSQL_MAX_CONNECTIONS}"
