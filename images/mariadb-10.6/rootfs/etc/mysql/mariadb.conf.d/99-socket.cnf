@@ -1,0 +1,3 @@
+[client-server]
+
+socket = /var/run/mysql/mysql.sock

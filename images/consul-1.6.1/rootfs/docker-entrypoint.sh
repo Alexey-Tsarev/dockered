@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 if [ -n "${DEBUG}" ]; then
     set -x
@@ -9,9 +9,9 @@ CONSUL_PID_DIR='/var/run'
 CONSUL_PID_FILE="${CONSUL_PID_DIR}/consul.pid"
 
 PUBLIC_IP_URLS=(
+https://checkip.amazonaws.com
 https://ident.me
 http://api.ipify.org
-http://ipv4bot.whatismyipaddress.com
 http://ip-api.com/line/?fields=query
 )
 

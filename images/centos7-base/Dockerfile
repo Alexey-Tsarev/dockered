@@ -1,3 +1,4 @@
+# Deprecated
 FROM centos:7
 
 LABEL maintainer="Alexey Tsarev <tsarev.alexey@gmail.com>"

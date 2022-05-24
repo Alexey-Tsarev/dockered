@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 set -e
 # set -x
@@ -34,14 +34,14 @@ create_user_if_it_not_exists() {
     if [ -n "$1" ]; then
         log "Checking the '$1' user... " 1 0
 
-        user_id="$(id -u $1 2> /dev/null ||:)"
+        user_id="$(id -u "$1" 2> /dev/null ||:)"
 
         if [ -n "${user_id}" ]; then
             log "exists" 0
         else
             log "doesn't exist" 0
 
-            user_group="$(getent group $1 2> /dev/null ||:)"
+            user_group="$(getent group "$1" 2> /dev/null ||:)"
 
             if [ -z "${user_group}" ]; then
                 user_group="--user-group"
@@ -68,7 +68,7 @@ create_system_user_if_it_not_exists "${MYSQL}"
 
 
 find "${HOME_ROOT_DIR}" -maxdepth 1 -mindepth 1 -type d -name "${HOME_MASK}" -printf "%f\n" | sort | \
-while read user; do
+while read -r user; do
     create_user_if_it_not_exists "${user}" "--shell /sbin/nologin "
 
     usermod -a -G "${user}"   "${APACHE}"

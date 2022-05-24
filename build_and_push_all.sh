@@ -1,40 +1,29 @@
-#!/usr/bin/env sh
+#!/bin/sh
 
 set -e
 set -x
 
+export DOCKER_BUILDKIT=1
+export COMPOSE_DOCKER_CLI_BUILD=1
+
 ./mark_sh_exec.sh
 
-docker system prune --all --force
+if [ -n "${CLEAN}" ]; then
+    docker system prune --all --force
+    docker builder prune --all --force
+fi
 
-./build_base_image.sh
-docker push alexeytsarev/centos7-base:latest
+./build_base_images.sh
+docker push alexeytsarev/debian:10-base
+docker push alexeytsarev/toolbox:latest
 
-cd compose
-
-cd lamp
-docker-compose build --no-cache --parallel
+cd images
+docker-compose build --progress=plain --parallel
 docker-compose push
-cd -
 
-cd utorrent_server
-docker-compose build --no-cache --parallel
-docker-compose push
-cd -
+if [ -n "${CLEAN}" ]; then
+    docker system prune --all --force
+    docker builder prune --all --force
+fi
 
-cd blynk_server
-docker-compose build --no-cache --parallel
-docker-compose push
-cd -
-
-cd ivideon
-docker-compose build --no-cache --parallel
-docker-compose push
-cd -
-
-cd sslh
-docker-compose build --no-cache --parallel
-docker-compose push
-cd -
-
-docker system prune --all --force
+echo "Done"

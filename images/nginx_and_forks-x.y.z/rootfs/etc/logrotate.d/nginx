@@ -1,0 +1,15 @@
+/opt/app/logs/*.log {
+    daily
+    missingok
+    rotate 365
+    compress
+    delaycompress
+    notifempty
+    create 640 nginx adm
+    sharedscripts
+    postrotate
+        if [ -f /run/app.pid ]; then
+            kill -USR1 "$(cat /run/app.pid)"
+        fi
+    endscript
+}

@@ -1,3 +1,4 @@
+# Deprecated
 FROM alexeytsarev/centos7-base:latest
 
 LABEL maintainer="Alexey Tsarev <tsarev.alexey@gmail.com>"

@@ -1,0 +1,13 @@
+{
+  "server": ["0.0.0.0"],
+  "server_port": "${SS_PORT}",
+  "password": "${SS_PASSWORD}",
+  "timeout": 86400,
+  "method": "${SS_METHOD}",
+  "mode": "tcp_only",
+  "fast_open": true,
+  "reuse_port": true,
+  "nameserver": "127.0.0.1",
+  "plugin": "ss-v2ray-plugin",
+  "plugin_opts": "server"
+}

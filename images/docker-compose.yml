@@ -1,0 +1,1193 @@
+version: '3.7'
+
+
+services:
+  # Blynk
+  blynk:
+    build:
+      context: blynk-server-0.41.17
+
+    image: alexeytsarev/blynk-server:0.41.17
+    container_name: blynk
+    network_mode: host
+    restart: unless-stopped
+
+    environment:
+      - TERM=xterm
+      - BLYNK_CONFIG=config/server.properties
+      #- DEBUG=1
+      #- WAIT_FOR=127.0.0.1:5432 # Wait for Postgres
+      #- WAIT_FOR_TIMEOUT=60 # Wait for Postgres
+
+    labels:
+      - SERVICE_NAME=blynk
+
+    logging:
+      driver: journald
+      options:
+        tag: blynk
+
+    volumes:
+      - ${DOCKER_ROOT}/blynk/config:/opt/blynk/config:ro
+      - ${DOCKER_ROOT}/blynk/data:/opt/blynk/data
+      - ${DOCKER_ROOT}/log/blynk:/opt/blynk/logs
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+
+    #ports:
+      #- "8080:8080" # HTTP API and WebSockets server
+      #- "9443:9443" # HTTPS API, WebSockets and Admin page server
+      #- "8440:8440" # Mqtt hardware server
+
+    # Override Blynk command line parameters
+    #command: /blynk.sh -serverConfig new_config/server.properties
+  # End Blynk
+
+
+  # GitLab
+  gitlab:
+    image: gitlab/gitlab-ee:latest
+    container_name: gitlab
+    restart: unless-stopped
+
+    labels:
+      - SERVICE_NAME=gitlab
+
+    logging:
+      driver: journald
+      options:
+        tag: gitlab
+
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url '${GITLAB_EXTERNAL_URL}'
+        gitlab_rails['gitlab_shell_ssh_port'] = 2223
+        registry_external_url 'https://upru.ga:5005'
+        registry_nginx['ssl_certificate'] = "/etc/letsencrypt/live/upru.ga/fullchain.pem"
+        registry_nginx['ssl_certificate_key'] = "/etc/letsencrypt/live/upru.ga/privkey.pem"
+
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - ${DOCKER_ROOT}/gitlab/config:/etc/gitlab
+      - ${DOCKER_ROOT}/gitlab/data:/var/opt/gitlab
+      - ${DOCKER_ROOT}/log/gitlab:/var/log/gitlab
+
+    ports:
+      - "2223:22"
+      - "8082:80"
+      - "7443:443"
+      - "5005:5005"
+  # End GitLab
+
+
+  # GitLab Runner
+  gitlab-runner:
+    image: gitlab/gitlab-runner:latest
+    container_name: gitlab-runner
+    network_mode: host
+    restart: unless-stopped
+
+    labels:
+      - SERVICE_NAME=gitlab-runner
+
+    logging:
+      driver: journald
+      options:
+        tag: gitlab-runner
+
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${DOCKER_ROOT}/gitlab-runner/config:/srv/gitlab-runner/config
+  # End GitLab Runner
+
+
+  # Trow
+  trow:
+    image: containersol/trow:2021-02-27-112-amd64
+    container_name: trow
+    network_mode: host
+    restart: unless-stopped
+    user: root
+
+    command: --proxy-docker-hub --no-tls --port 8083
+
+    labels:
+      - SERVICE_NAME=trow
+
+    logging:
+      driver: journald
+      options:
+        tag: trow
+
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ${DOCKER_ROOT}/trow:/data
+  # End Trow
+
+
+  # Ivideon
+  ivideon:
+    build:
+      context: ivideon-3.9.0
+
+    image: alexeytsarev/ivideon:3.9.0
+    container_name: ivideon
+    network_mode: host
+    restart: unless-stopped
+    init: true
+
+    # environment variables:
+    # gui=0 (or "gui" variable not provided) - Start Ivideon Server only. Run GUI manually: docker exec -ti ivideon /ivideon.sh gui
+    # gui=1                                  - Start Ivideon Server and GUI
+    environment:
+      - TERM=xterm
+      #- gui=1 # See comments above
+
+    labels:
+      - SERVICE_NAME=ivideon
+
+    logging:
+      driver: journald
+      options:
+        tag: ivideon
+
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ${DOCKER_ROOT}/ivideon_archive:/mnt/archive
+      - ${DOCKER_ROOT}/ivideon:/root/.IvideonServer # Comment this during initial startup. This keeps Ivideon settings. Uncomment after initial configuration and configs copy
+
+    #ports:
+      #- "8080:8080"
+      #- "3101:3101"
+      #- "443:443"
+      #- "80:80
+  # End Ivideon"
+
+
+  # Apache 2.4, php 5.6
+  ap56:
+    build:
+      context: apache-2.4_php-x.y
+      args:
+        - PHP_PACKAGES=php5.6 php5.6-common php5.6-cli php5.6-intl php5.6-mbstring php5.6-bcmath php5.6-gd php5.6-pgsql php5.6-mysql php5.6-json php5.6-zip php5.6-xml php5.6-opcache php5.6-xmlrpc php5.6-mcrypt
+        - SERVER_NAME=ap56
+        - HTTP_PORT=8056
+
+    image: alexeytsarev/apache_php:2.4_5.6
+    container_name: ap56
+    network_mode: host
+    restart: unless-stopped
+
+    environment:
+      - TERM=xterm
+
+    labels:
+      - SERVICE_NAME=ap56
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /home:/home
+      - /var/run/mysql:/var/lib/mysql
+      - ${DOCKER_ROOT}/apache/sites-enabled:/etc/apache2/sites-enabled:ro
+      - ${DOCKER_ROOT}/log/ap56:/var/log/apache2
+
+    logging:
+      driver: journald
+      options:
+        tag: ap56
+
+    #ports:
+      #- "8056:8056"
+  # End Apache 2.4, php 5.6
+
+
+  # Apache 2.4, php 7.0
+  ap70:
+    build:
+      context: apache-2.4_php-x.y
+      args:
+        - PHP_PACKAGES=php7.0 php7.0-common php7.0-cli php7.0-intl php7.0-mbstring php7.0-bcmath php7.0-gd php7.0-pgsql php7.0-mysql php7.0-json php7.0-zip php7.0-xml php7.0-opcache php7.0-xmlrpc php7.0-mcrypt
+        - SERVER_NAME=ap70
+        - HTTP_PORT=8070
+
+    image: alexeytsarev/apache_php:2.4_7.0
+    container_name: ap70
+    network_mode: host
+    restart: unless-stopped
+
+    environment:
+      - TERM=xterm
+
+    labels:
+      - SERVICE_NAME=ap70
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /home:/home
+      - /var/run/mysql:/var/lib/mysql
+      - ${DOCKER_ROOT}/apache/sites-enabled:/etc/apache2/sites-enabled:ro
+      - ${DOCKER_ROOT}/log/ap70:/var/log/apache2
+
+    logging:
+      driver: journald
+      options:
+        tag: ap70
+
+    #ports:
+      #- "8070:8070"
+  # End Apache 2.4, php 7.0
+
+
+  # Apache 2.4, php 7.1
+  ap71:
+    build:
+      context: apache-2.4_php-x.y
+      args:
+        - PHP_PACKAGES=php7.1 php7.1-common php7.1-cli php7.1-intl php7.1-mbstring php7.1-bcmath php7.1-gd php7.1-pgsql php7.1-mysql php7.1-json php7.1-zip php7.1-xml php7.1-opcache php7.1-xmlrpc php7.1-mcrypt
+        - SERVER_NAME=ap71
+        - HTTP_PORT=8071
+
+    image: alexeytsarev/apache_php:2.4_7.1
+    container_name: ap71
+    network_mode: host
+    restart: unless-stopped
+
+    environment:
+      - TERM=xterm
+
+    labels:
+      - SERVICE_NAME=ap71
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /home:/home
+      - /var/run/mysql:/var/lib/mysql
+      - ${DOCKER_ROOT}/apache/sites-enabled:/etc/apache2/sites-enabled:ro
+      - ${DOCKER_ROOT}/log/ap71:/var/log/apache2
+
+    logging:
+      driver: journald
+      options:
+        tag: ap71
+
+    #ports:
+      #- "8071:8071"
+  # End Apache 2.4, php 7.1
+
+
+  # Apache 2.4, php 7.2
+  ap72:
+    build:
+      context: apache-2.4_php-x.y
+      args:
+        - PHP_PACKAGES=php7.2 php7.2-common php7.2-cli php7.2-intl php7.2-mbstring php7.2-bcmath php7.2-gd php7.2-pgsql php7.2-mysql php7.2-json php7.2-zip php7.2-xml php7.2-opcache php7.2-xmlrpc
+        - SERVER_NAME=ap72
+        - HTTP_PORT=8072
+
+    image: alexeytsarev/apache_php:2.4_7.2
+    container_name: ap72
+    network_mode: host
+    restart: unless-stopped
+
+    environment:
+      - TERM=xterm
+
+    labels:
+      - SERVICE_NAME=ap72
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /home:/home
+      - /var/run/mysql:/var/lib/mysql
+      - ${DOCKER_ROOT}/apache/sites-enabled:/etc/apache2/sites-enabled:ro
+      - ${DOCKER_ROOT}/log/ap72:/var/log/apache2
+
+    logging:
+      driver: journald
+      options:
+        tag: ap72
+
+    #ports:
+      #- "8072:8072"
+  # End Apache 2.4, php 7.2
+
+
+  # Apache 2.4, php 7.3
+  ap73:
+    build:
+      context: apache-2.4_php-x.y
+      args:
+        - PHP_PACKAGES=php7.3 php7.3-common php7.3-cli php7.3-intl php7.3-mbstring php7.3-bcmath php7.3-gd php7.3-pgsql php7.3-mysql php7.3-json php7.3-zip php7.3-xml php7.3-opcache php7.3-xmlrpc
+        - SERVER_NAME=ap73
+        - HTTP_PORT=8073
+
+    image: alexeytsarev/apache_php:2.4_7.3
+    container_name: ap73
+    network_mode: host
+    restart: unless-stopped
+
+    environment:
+      - TERM=xterm
+
+    labels:
+      - SERVICE_NAME=ap73
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /home:/home
+      - /var/run/mysql:/var/lib/mysql
+      - ${DOCKER_ROOT}/apache/sites-enabled:/etc/apache2/sites-enabled:ro
+      - ${DOCKER_ROOT}/log/ap73:/var/log/apache2
+
+    logging:
+      driver: journald
+      options:
+        tag: ap73
+
+    #ports:
+      #- "8073:8073"
+  # End Apache 2.4, php 7.3
+
+
+  # Apache 2.4, php 7.4
+  ap74:
+    build:
+      context: apache-2.4_php-x.y
+      args:
+        - PHP_PACKAGES=php7.4 php7.4-common php7.4-cli php7.4-intl php7.4-mbstring php7.4-bcmath php7.4-gd php7.4-pgsql php7.4-mysql php7.4-json php7.4-zip php7.4-xml php7.4-opcache php7.4-xmlrpc
+        - SERVER_NAME=ap74
+        - HTTP_PORT=8074
+
+    image: alexeytsarev/apache_php:2.4_7.4
+    container_name: ap74
+    network_mode: host
+    restart: unless-stopped
+
+    environment:
+      - TERM=xterm
+
+    labels:
+      - SERVICE_NAME=ap74
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /home:/home
+      - /var/run/mysql:/var/lib/mysql
+      - ${DOCKER_ROOT}/apache/sites-enabled:/etc/apache2/sites-enabled:ro
+      - ${DOCKER_ROOT}/log/ap74:/var/log/apache2
+
+    logging:
+      driver: journald
+      options:
+        tag: ap74
+
+    #ports:
+      #- "8074:8074"
+  # End Apache 2.4, php 7.4
+
+
+  # Apache 2.4, php 8.0
+  ap80:
+    build:
+      context: apache-2.4_php-x.y
+      args:
+        - PHP_PACKAGES=php8.0 php8.0-common php8.0-cli php8.0-intl php8.0-mbstring php8.0-bcmath php8.0-gd php8.0-pgsql php8.0-mysql php8.0-zip php8.0-xml php8.0-opcache
+        - SERVER_NAME=ap80
+        - HTTP_PORT=8080
+
+    image: alexeytsarev/apache_php:2.4_8.0
+    container_name: ap80
+    network_mode: host
+    restart: unless-stopped
+
+    environment:
+      - TERM=xterm
+
+    labels:
+      - SERVICE_NAME=ap80
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /home:/home
+      - /var/run/mysql:/var/lib/mysql
+      - ${DOCKER_ROOT}/apache/sites-enabled:/etc/apache2/sites-enabled:ro
+      - ${DOCKER_ROOT}/log/ap80:/var/log/apache2
+
+    logging:
+      driver: journald
+      options:
+        tag: ap80
+
+    #ports:
+      #- "8080:8080"
+  # End Apache 2.4, php 8.0
+
+
+  # Apache 2.4, php 8.1
+  ap81:
+    build:
+      context: apache-2.4_php-x.y
+      args:
+        - PHP_PACKAGES=php8.1 php8.1-common php8.1-cli php8.1-intl php8.1-mbstring php8.1-bcmath php8.1-gd php8.1-pgsql php8.1-mysql php8.1-zip php8.1-xml php8.1-opcache
+        - SERVER_NAME=ap81
+        - HTTP_PORT=8081
+
+    image: alexeytsarev/apache_php:2.4_8.1
+    container_name: ap81
+    network_mode: host
+    restart: unless-stopped
+
+    environment:
+      - TERM=xterm
+
+    labels:
+      - SERVICE_NAME=ap81
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /home:/home
+      - /var/run/mysql:/var/lib/mysql
+      - ${DOCKER_ROOT}/apache/sites-enabled:/etc/apache2/sites-enabled:ro
+      - ${DOCKER_ROOT}/log/ap81:/var/log/apache2
+
+    logging:
+      driver: journald
+      options:
+        tag: ap81
+
+      #ports:
+      #- "8081:8081"
+  # End Apache 2.4, php 8.1
+
+
+  # Nginx stable
+  nginx-stable:
+    build:
+      context: nginx_and_forks-x.y.z
+      args:
+        - APP_NAME=nginx-stable
+        - APP_SHORT=nginx
+        - APP_VERSION=1.20.2
+        - APP_SRC_URL=https://nginx.org/download/nginx-1.20.2.tar.gz
+
+    image: alexeytsarev/nginx:1.20.2
+    container_name: nginx-stable
+    network_mode: host
+    restart: unless-stopped
+
+    environment:
+      - TERM=xterm
+
+    labels:
+      - SERVICE_NAME=nginx-stable
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /home:/home
+      #- ${DOCKER_ROOT}/nginx-stable/sites-enabled:/opt/nginx/conf/sites-enabled
+      #- ${DOCKER_ROOT}/nginx-stable/letsencrypt:/etc/letsencrypt
+      #- ${DOCKER_ROOT}/log/nginx-stable:/opt/nginx/logs
+      #- ${DOCKER_ROOT}/log/nginx-stable/letsencrypt:/var/log/letsencrypt
+
+    logging:
+      driver: journald
+      options:
+        tag: nginx-stable
+
+      #ports:
+      #- "80:80"
+      #- "443:443"
+  # End Nginx stable
+
+
+  # Nginx mainline
+  nginx-mainline:
+    build:
+      context: nginx_and_forks-x.y.z
+      args:
+        - APP_NAME=nginx-mainline
+        - APP_SHORT=nginx
+        - APP_VERSION=1.21.6
+        - APP_SRC_URL=https://nginx.org/download/nginx-1.21.6.tar.gz
+
+    image: alexeytsarev/nginx:1.21.6
+    container_name: nginx-mainline
+    network_mode: host
+    restart: unless-stopped
+
+    environment:
+      - TERM=xterm
+
+    labels:
+      - SERVICE_NAME=nginx-mainline
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /home:/home
+      #- ${DOCKER_ROOT}/nginx-mainline/sites-enabled:/opt/nginx/conf/sites-enabled
+      #- ${DOCKER_ROOT}/nginx-mainline/letsencrypt:/etc/letsencrypt
+      #- ${DOCKER_ROOT}/log/nginx-mainline:/opt/nginx/logs
+      #- ${DOCKER_ROOT}/log/nginx-mainline/letsencrypt:/var/log/letsencrypt
+
+    logging:
+      driver: journald
+      options:
+        tag: nginx-mainline
+
+    #ports:
+      #- "80:80"
+      #- "443:443"
+  # End Nginx mainline
+
+
+  # Nginx legacy
+  nginx-legacy:
+    build:
+      context: nginx_and_forks-x.y.z
+      args:
+        - APP_NAME=nginx-legacy
+        - APP_SHORT=nginx
+        - APP_VERSION=1.18.0
+        - APP_SRC_URL=https://nginx.org/download/nginx-1.18.0.tar.gz
+
+    image: alexeytsarev/nginx:1.18.0
+    container_name: nginx-legacy
+    network_mode: host
+    restart: unless-stopped
+
+    environment:
+      - TERM=xterm
+
+    labels:
+      - SERVICE_NAME=nginx-legacy
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /home:/home
+      #- ${DOCKER_ROOT}/nginx-legacy/sites-enabled:/opt/nginx/conf/sites-enabled
+      #- ${DOCKER_ROOT}/nginx-legacy/letsencrypt:/etc/letsencrypt
+      #- ${DOCKER_ROOT}/log/nginx-legacy:/opt/nginx/logs
+      #- ${DOCKER_ROOT}/log/nginx-legacy/letsencrypt:/var/log/letsencrypt
+
+    logging:
+      driver: journald
+      options:
+        tag: nginx-legacy
+
+    #ports:
+      #- "80:80"
+      #- "443:443"
+  # End Nginx legacy
+
+
+  # Tengine
+  tengine:
+    build:
+      context: nginx_and_forks-x.y.z
+      args:
+        - APP_NAME=tengine
+        - APP_SHORT=tengine
+        - APP_VERSION=2.3.3
+        - APP_SRC_URL=https://tengine.taobao.org/download/tengine-2.3.3.tar.gz
+        - CONFIGURE_OPTS=--with-jemalloc
+        - PKGS=libjemalloc2
+
+    image: alexeytsarev/tengine:2.3.3
+    container_name: tengine
+    network_mode: host
+    restart: unless-stopped
+
+    environment:
+      - TERM=xterm
+
+    labels:
+      - SERVICE_NAME=tengine
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /home:/home
+      - ${DOCKER_ROOT}/nginx/sites-enabled:/opt/tengine/conf/sites-enabled
+      - ${DOCKER_ROOT}/letsencrypt:/etc/letsencrypt
+      - ${DOCKER_ROOT}/log/nginx:/opt/tengine/logs
+      - ${DOCKER_ROOT}/log/letsencrypt:/var/log/letsencrypt
+
+    logging:
+      driver: journald
+      options:
+        tag: tengine
+
+    #ports:
+      #- "80:80"
+      #- "443:443"
+  # End Tengine
+
+
+#  # OpenResty # TODO
+#  openresty:
+#    build:
+#      context: nginx_and_forks-x.y.z
+#      args:
+#        - APP_NAME=openresty
+#        - APP_SHORT=openresty
+#        - APP_SRC_URL=https://openresty.org/download/openresty-1.19.3.1.tar.gz
+#
+#    image: alexeytsarev/openresty:1.19.3.1
+#    container_name: openresty
+#    network_mode: host
+#    restart: unless-stopped
+#
+#    environment:
+#      - TERM=xterm
+#
+#    labels:
+#      - SERVICE_NAME=openresty
+#
+#    volumes:
+#      - /etc/passwd:/etc/passwd:ro
+#      - /etc/group:/etc/group:ro
+#      - /etc/timezone:/etc/timezone:ro
+#      - /etc/localtime:/etc/localtime:ro
+#      - /home:/home
+#      #- ${DOCKER_ROOT}/openresty/sites-enabled:/opt/openresty/conf/sites-enabled
+#      #- ${DOCKER_ROOT}/letsencrypt:/etc/letsencrypt
+#      #- ${DOCKER_ROOT}/log/openresty:/opt/openresty/logs
+#      #- ${DOCKER_ROOT}/log/letsencrypt:/var/log/letsencrypt
+#
+#    logging:
+#      driver: journald
+#      options:
+#        tag: nginx
+#
+#    #ports:
+#      #- "80:80"
+#      #- "443:443"
+#  # End OpenResty
+
+
+  # MariaDB
+  mariadb:
+    build:
+      context: mariadb-10.6
+
+    image: alexeytsarev/mariadb:10.6
+    container_name: mysql
+    network_mode: host
+    restart: unless-stopped
+
+    environment:
+      - TERM=xterm
+      - MYSQL_USER
+      - MYSQL_MAX_CONNECTIONS
+      - MYSQL_RUN_BEFORE
+      - MYSQL_LISTEN_PORT=3306
+
+    labels:
+      - SERVICE_NAME=mysql
+
+    logging:
+      driver: journald
+      options:
+        tag: mysql
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/mysql:/var/run/mysql
+      - /tmp:/tmp
+      - ${DOCKER_ROOT}/mysql:/etc/mysql
+      - ${DOCKER_ROOT}/mysql_db:/var/lib/mysql
+      - ${DOCKER_ROOT}/log/mysql:/var/log/mysql
+
+    #ports:
+      #- "3306:3306"
+  # End MariaDB
+
+
+  # vsftpd
+  vsftpd:
+    build:
+      context: vsftpd-3.0.3
+
+    image: alexeytsarev/vsftpd:3.0.3
+    container_name: vsftpd
+    network_mode: host
+    restart: unless-stopped
+    init: true
+
+    environment:
+      - TERM=xterm
+
+    labels:
+      - SERVICE_NAME=vsftpd
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/shadow:/etc/shadow:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /home:/home
+      - ${DOCKER_ROOT}/vsftpd:/etc/vsftpd
+      - ${DOCKER_ROOT}/log/vsftpd:/var/log/vsftpd
+
+    logging:
+      driver: journald
+      options:
+        tag: vsftpd
+
+    #ports:
+      #- "21:21"
+  # End vsftpd
+
+
+  # Fail2Ban
+  fail2ban:
+    build:
+      context: fail2ban-0.11.2
+
+    image: alexeytsarev/fail2ban:0.11.2
+    container_name: fail2ban
+    network_mode: host
+    privileged: true
+    restart: unless-stopped
+
+    environment:
+      - TERM=xterm
+      - FAIL2BAN_PRE_EXEC
+
+    labels:
+      - SERVICE_NAME=fail2ban
+
+    logging:
+      driver: journald
+      options:
+        tag: fail2ban
+
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /lib/modules:/lib/modules
+      - /var/log:/var/log
+      - ${DOCKER_ROOT}/log/fail2ban:/var/log/fail2ban
+      - ${DOCKER_ROOT}/log/nginx:/var/log/nginx:ro
+      - ${DOCKER_ROOT}/log/ap56:/var/log/httpd56:ro
+      - ${DOCKER_ROOT}/log/ap70:/var/log/httpd70:ro
+      - ${DOCKER_ROOT}/log/ap71:/var/log/httpd71:ro
+      - ${DOCKER_ROOT}/log/ap72:/var/log/httpd72:ro
+      - ${DOCKER_ROOT}/log/ap73:/var/log/httpd73:ro
+      - ${DOCKER_ROOT}/log/ap74:/var/log/httpd74:ro
+      - ${DOCKER_ROOT}/log/ap80:/var/log/httpd80:ro
+      - ${DOCKER_ROOT}/log/ap81:/var/log/httpd81:ro
+      #- ${DOCKER_ROOT}/fail2ban/jail.local:/etc/fail2ban/jail.local:ro # If you have a config
+
+      #depends_on:
+      #- nginx
+      #- ap56
+      #- ap70
+      #- ap71
+      #- ap72
+      #- ap73
+      #- ap74
+      #- ap80
+      #- ap81
+  # End Fail2Ban
+
+
+#  # Consul
+#  consul:
+#    build:
+#      context: consul-1.6.1
+#
+#    image: alexeytsarev/consul:1.6.1
+#    container_name: consul
+#    network_mode: host
+#    restart: unless-stopped
+#    init: true
+#
+#    environment:
+#      - TERM=xterm
+#      #- CONSUL_ADVERTISE_PUBLIC_IP=10
+#      - CONSUL_ADVERTISE_FIRST_IP
+#      #- DEBUG=1
+#
+#    command: -server -ui
+#    #command: -server -ui -bootstrap
+#    #command: -server -ui -advertise=\'{{ GetInterfaceIP \"eth0\" }}\'
+#    #command: -server -ui -bootstrap -advertise=\'{{ GetInterfaceIP \"eth0\" }}\'
+#
+#    labels:
+#      - SERVICE_NAME=consul
+#
+#    logging:
+#      driver: journald
+#      options:
+#        tag: consul
+#
+#    volumes:
+#      - /etc/timezone:/etc/timezone:ro
+#      - /etc/localtime:/etc/localtime:ro
+#      - ${DOCKER_ROOT}/consul/data:/etc/consul/data
+#      - ${DOCKER_ROOT}/consul/config:/etc/consul/config
+#
+#    ports:
+#      - "8300:8300"               # Server RPC    (Default 8300). This is used by servers to handle incoming requests from other agents. TCP only.
+#      - "8301:8301"               # Serf LAN      (Default 8301). This is used to handle gossip in the LAN. Required by all agents. TCP and UDP.
+#      - "8301:8301/udp"
+#      - "8302:8302"               # Serf WAN      (Default 8302). This is used by servers to gossip over the WAN to other servers. TCP and UDP.
+#      - "8302:8302/udp"
+#      - "127.0.0.1:8500:8500"     # HTTP API      (Default 8500). This is used by clients to talk to the HTTP API. TCP only.
+#      - "127.0.0.1:8600:8600"     # DNS Interface (Default 8600). Used to resolve DNS queries. TCP and UDP.
+#      - "127.0.0.1:8600:8600/udp"
+#  # End Consul
+
+
+#  # Registrator
+#  registrator:
+#    image: gliderlabs/registrator:latest
+#    container_name: registrator
+#    network_mode: host
+#    restart: unless-stopped
+#
+#    environment:
+#      - TERM=xterm
+#
+#    command: consul://127.0.0.1:8500
+#
+#    labels:
+#      - SERVICE_NAME=registrator
+#
+#    logging:
+#      driver: journald
+#      options:
+#        tag: registrator
+#
+#    volumes:
+#      - /etc/timezone:/etc/timezone:ro
+#      - /etc/localtime:/etc/localtime:ro
+#      - /var/run/docker.sock:/tmp/docker.sock
+#
+#    depends_on:
+#      - consul
+#  # End Registrator
+
+
+  # sshd
+  sshd:
+    build:
+      context: sshd-8.4
+      args:
+        - PACKAGES=msmtp curl wget
+
+    image: alexeytsarev/sshd:8.4
+    container_name: sshd
+    network_mode: host
+    restart: unless-stopped
+    init: true
+
+    environment:
+      - TERM=xterm
+      - SSHD_OPTS=-e -p 2222
+      - PRE_CMD=[ ! -f /bin/bash-2222 ] && set -x && cd /bin && ln -s bash bash-2222 && { set +x; } 2>/dev/null
+
+    labels:
+      - SERVICE_NAME=sshd
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/shadow:/etc/shadow:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/locale.gen:/etc/locale.gen:ro
+      - /home:/home:ro
+      - ${BACKUP_ROOT}/backup:/backup
+      - ${BACKUP_ROOT}/backup_storage:/backup_storage
+
+    logging:
+      driver: journald
+      options:
+        tag: sshd
+
+    #ports:
+      #- "2222:2222"
+  # End sshd
+
+
+  # sslh
+  sslh:
+    build:
+      context: sslh-1.22c
+
+    image: alexeytsarev/sslh:1.22c
+    container_name: sslh
+    privileged: true
+    network_mode: host
+    restart: unless-stopped
+
+    environment:
+      - TERM=xterm
+      - SSLH=sslh-select
+      - SSLH_OPTS=-p 0.0.0.0:443 --http 127.0.0.1:8443 --ssh 127.0.0.1:22 --openvpn 127.0.0.1:1194
+
+    labels:
+      - SERVICE_NAME=sslh
+
+    logging:
+      driver: journald
+      options:
+        tag: sslh
+
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+  # End sslh
+
+
+  # traccar
+  traccar:
+    image: traccar/traccar:debian
+    container_name: traccar
+    network_mode: host
+    restart: unless-stopped
+
+    environment:
+      - TERM=xterm
+
+    labels:
+      - SERVICE_NAME=traccar
+
+    logging:
+      driver: journald
+      options:
+        tag: traccar
+
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ${DOCKER_ROOT}/traccar:/opt/traccar/conf
+      - ${DOCKER_ROOT}/log/traccar:/opt/traccar/logs:rw
+
+    #ports:
+      #- "5000-5150:5000-5150"
+      #- "5000-5150:5000-5150/udp"
+      #- "8082:8082"
+  # End traccar
+
+
+  # utorrent
+  utorrent:
+    build:
+      context: utorrent-server-3.3
+
+    image: alexeytsarev/utorrent-server:3.3
+    container_name: utorrent
+    network_mode: host
+    restart: unless-stopped
+
+    environment:
+      - TERM=xterm
+      - UTORRENT_USER
+      - UTORRENT_GROUP
+
+    labels:
+      - SERVICE_NAME=utorrent
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ${DOCKER_ROOT}/log/utorrent:/opt/utorrent/log
+      - ${DOCKER_ROOT}/utorrent/data:/opt/utorrent/data
+      - ${DOCKER_ROOT}/utorrent/data_in:/opt/utorrent/data_in
+      - ${DOCKER_ROOT}/utorrent/data_out:/opt/utorrent/data_out
+      - ${DOCKER_ROOT}/utorrent/torrents:/opt/utorrent/torrents
+      - ${DOCKER_ROOT}/utorrent/settings:/opt/utorrent/settings
+
+    logging:
+      driver: journald
+      options:
+        tag: utorrent
+  # End utorrent
+
+
+  # gerbera
+  gerbera:
+    image: gerbera/gerbera:1.9.2
+    container_name: gerbera
+    network_mode: host
+    restart: unless-stopped
+    command: ["gerbera", "--interface", "br-vlan300", "--port", "49494", "--config", "/var/run/gerbera/config.xml"]
+
+    environment:
+      - TERM=xterm
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ${DOCKER_ROOT}/gerbera:/var/run/gerbera
+      - /mnt/hdd/p2p/data:/content:ro
+
+    logging:
+      driver: journald
+      options:
+        tag: gerbera
+
+    #ports:
+      #- "49494:49494"
+      #- "1900:1900/udp"
+  # End gerbera
+
+
+  # wg-easy
+  wg-easy:
+    build:
+      context: wg-easy-5
+
+    image: alexeytsarev/wg-easy:5
+    container_name: wg-easy
+    network_mode: host
+    restart: unless-stopped
+
+    environment:
+      - TERM=xterm
+      - WG_HOST
+      - WG_HOST_ALIASES
+      - WG_PORT=${WG_PORT:-51820}
+      - PORT=${WG_UI_PORT:-51821}
+      - WG_UI_PREFIX=${WG_UI_PREFIX:-/WG/}
+      - PASSWORD=${WG_PASSWORD}
+      - WG_POST_UP=sleep 0
+      - WG_POST_DOWN=sleep 0
+      - WG_DEFAULT_ADDRESS
+      - WG_DEFAULT_DNS
+      - SS_PREFIX
+      - SS_PORT=${SS_PORT:-9999}
+
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ${DOCKER_ROOT}/wg-easy:/etc/wireguard
+      - ${DOCKER_ROOT}/nginx/sites-enabled:/opt/nginx/conf/sites-enabled
+
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+
+    #sysctls:
+      #- net.ipv4.conf.all.src_valid_mark=1
+      #- net.ipv4.ip_forward=1
+
+    logging:
+      driver: journald
+      options:
+        tag: wg-easy
+
+    #ports:
+      #- "51820:51820/udp"
+      #- "51821:51821"
+
+    command: /bin/sh -c "template_envsubst.sh /opt/nginx/conf/sites-enabled/template /opt/nginx/conf/sites-enabled ; dumb-init node server.js"
+  # End wg-easy
+
+
+  # shadowsocks
+  shadowsocks:
+    build:
+      context: shadowsocks-libev-3.3.5_v2ray-plugin-1.3.1
+
+    image: alexeytsarev/shadowsocks-libev_v2ray-plugin:3.3.5_1.3.1
+    container_name: shadowsocks
+    network_mode: host
+    restart: unless-stopped
+
+    environment:
+      - TERM=xterm
+      - SS_PORT=${SS_PORT:-9999}
+      - SS_PASSWORD
+      - SS_METHOD
+
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      #- ${DOCKER_ROOT}/shadowsocks-libev:/etc/shadowsocks-libev
+
+    logging:
+      driver: journald
+      options:
+        tag: shadowsocks
+
+    #ports:
+      #- "9999:9999"
+  # End shadowsocks
+
+
+  # dnscrypt-proxy
+  dnscrypt-proxy:
+    build:
+      context: dnscrypt-proxy-2.1.1
+
+    image: alexeytsarev/dnscrypt-proxy:2.1.1
+    container_name: dnscrypt-proxy
+    network_mode: host
+    restart: unless-stopped
+
+    environment:
+      - TERM=xterm
+
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+
+    logging:
+      driver: journald
+      options:
+        tag: dnscrypt-proxy
+  # End dnscrypt-proxy
