@@ -4,5 +4,5 @@ To run:
 ```
 cd ../../images
 ./env.sh
-docker-compose up gitlab gitlab-runner trow
+docker compose up gitlab gitlab-runner
 ```

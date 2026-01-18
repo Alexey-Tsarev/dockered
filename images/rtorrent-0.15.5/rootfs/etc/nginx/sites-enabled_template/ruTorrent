@@ -1,0 +1,25 @@
+server {
+    listen ${RTORRENT_HTTP_LISTEN_PORT:-80} default_server;
+    listen [::]:${RTORRENT_HTTP_LISTEN_PORT:-80} default_server;
+    server_name _;
+
+    root /var/www/html;
+    index index.php index.html index.htm index.nginx-debian.html;
+
+    #location / {
+    #    try_files $uri $uri/ =404;
+    #}
+
+    location /${RTORRENT_HTTP_ALIAS} {
+        alias /var/www/html/ruTorrent/;
+    }
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php8.2-fpm.sock;
+    }
+
+    location ~ /\.ht {
+        deny all;
+    }
+}

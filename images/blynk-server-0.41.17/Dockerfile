@@ -1,9 +1,7 @@
-# syntax=docker.io/docker/dockerfile:1.4
+# syntax=docker.io/docker/dockerfile:1
 
-FROM alexeytsarev/toolbox:latest as toolbox
-FROM maven:3-openjdk-11 as builder
-
-LABEL maintainer="Alexey Tsarev <tsarev.alexey@gmail.com>"
+FROM alexeytsarev/toolbox:latest AS toolbox
+FROM maven:3-openjdk-11 AS builder
 
 ARG DEBIAN_FRONTEND="noninteractive"
 ARG BLYNK_VERSION="0.41.17"
@@ -12,26 +10,31 @@ COPY --from=toolbox \
     /usr/local/bin/wget.sh \
     /usr/local/bin/
 
+#RUN --mount=type=cache,id=blynk_server_maven_cache,target=/root/.m2,sharing=private \
+#    --mount=type=cache,id=blynk_server_root,target=/root \
+#    echo "=> Download sources" && \
+#        cd /root && \
+#        wget.sh "https://github.com/blynkkk/blynk-server/archive/refs/tags/v${BLYNK_VERSION}.zip" && \
+#        cp -a "v${BLYNK_VERSION}.zip" /var/tmp && \
+#    echo "=> Extract sources" && \
+#        cd /var/tmp && \
+#        ls -l && \
+#        unzip "v${BLYNK_VERSION}.zip" && \
+#    echo "=> Build" && \
+#        cd "/var/tmp/blynk-server-${BLYNK_VERSION}" && \
+#        mvn clean install -DskipTests=true && \
+#        cd server/launcher/target && \
+#        pwd && \
+#        ls -l
+
 RUN --mount=type=cache,id=blynk_server_maven_cache,target=/root/.m2,sharing=private \
     --mount=type=cache,id=blynk_server_root,target=/root \
-    echo "=> Download sources" && \
-        cd /root && \
-        wget.sh "https://github.com/blynkkk/blynk-server/archive/refs/tags/v${BLYNK_VERSION}.zip" && \
-        cp -a "v${BLYNK_VERSION}.zip" /var/tmp && \
-    echo "=> Extract sources" && \
-        cd /var/tmp && \
-        ls -l && \
-        unzip "v${BLYNK_VERSION}.zip" && \
-    echo "=> Build" && \
-        cd "/var/tmp/blynk-server-${BLYNK_VERSION}" && \
-        mvn clean install -DskipTests=true && \
-        cd server/launcher/target && \
-        pwd && \
-        ls -l
+    echo "=> Download jar" && \
+        mkdir -p /var/tmp/blynk-server-${BLYNK_VERSION}/server/launcher/target && \
+        cd /var/tmp/blynk-server-${BLYNK_VERSION}/server/launcher/target && \
+        wget.sh "https://github.com/Peterkn2001/blynk-server/releases/download/v${BLYNK_VERSION}/server-${BLYNK_VERSION}.jar"
 
-FROM alexeytsarev/debian:10-base
-
-LABEL maintainer="Alexey Tsarev <tsarev.alexey@gmail.com>"
+FROM alexeytsarev/debian:11-base
 
 ARG DEBIAN_FRONTEND="noninteractive"
 ARG APP_DIR="/opt/blynk"

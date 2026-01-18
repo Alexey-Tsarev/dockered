@@ -1,13 +1,11 @@
-# syntax=docker.io/docker/dockerfile:1.4
+# syntax=docker.io/docker/dockerfile:1
 
-FROM alexeytsarev/debian:10-base
-
-LABEL maintainer="Alexey Tsarev <tsarev.alexey@gmail.com>"
+FROM alexeytsarev/debian:13
 
 ARG DEBIAN_FRONTEND="noninteractive"
-ARG WAIT_FOR_VERSION="2.2.3"
+ARG WAIT_FOR_VERSION="2.2.4"
 ARG SUPERVISORD_VERSION="0.7.3"
-ARG ENVSUBST_VERSION="1.2.0"
+ARG ENVSUBST_VERSION="1.4.3"
 
 COPY usr_local_bin/ /usr/local/bin/
 
@@ -17,7 +15,7 @@ RUN --mount=type=cache,id=toolbox_var_cache_apt,target=/var/cache/apt,sharing=pr
     echo "=> Set execution bit" && \
         chmod 755 /usr/local/bin/* && \
     echo "=> Install packages" && \
-        apt_install.sh mc netcat wget curl && \
+        apt_install.sh mc netcat-traditional wget curl && \
     echo "=> Install wait-for" && \
         cd /root && \
         mkdir -p "wait-for_v${WAIT_FOR_VERSION}" && \

@@ -10,4 +10,4 @@ PATH=/sbin:/bin:/usr/sbin:/usr/bin
 # |  |  |  |  |
 # *  *  *  *  *     command to be executed
 
-  0  8  *  *  *     /certbot.sh >> /var/log/letsencrypt/certbot.log 2>&1
+  0  8  *  *  *     eval acme.sh ${ACME_OPTS} --cron >> /opt/app/log/acme_cron.log

@@ -1,7 +1,7 @@
-# syntax=docker.io/docker/dockerfile:1.4
+# syntax=docker.io/docker/dockerfile:1
 
-FROM alexeytsarev/toolbox:latest as toolbox
-FROM alexeytsarev/debian:10-base as builder
+FROM alexeytsarev/toolbox:latest AS toolbox
+FROM alexeytsarev/debian:11-base AS builder
 
 ARG DEBIAN_FRONTEND="noninteractive"
 ARG DNSCRYPT_PXORY_VERSION="2.1.1"
@@ -24,9 +24,7 @@ RUN --mount=type=cache,id=dnscrypt_proxy_var_cache_apt,target=/var/cache/apt,sha
         tar -xf "${DNSCRYPT_PROXY_FILE_NAME}" -C /root/temp
 
 
-FROM alexeytsarev/debian:10-base
-
-LABEL maintainer="Alexey Tsarev <tsarev.alexey@gmail.com>"
+FROM alexeytsarev/debian:11-base
 
 ARG DEBIAN_FRONTEND="noninteractive"
 ARG APP_DIR="/opt/dnscrypt_proxy"

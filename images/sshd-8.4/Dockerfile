@@ -1,9 +1,7 @@
-# syntax=docker.io/docker/dockerfile:1.4
+# syntax=docker.io/docker/dockerfile:1
 
-FROM alexeytsarev/toolbox:latest as toolbox
+FROM alexeytsarev/toolbox:latest AS toolbox
 FROM debian:bullseye
-
-LABEL maintainer="Alexey Tsarev <tsarev.alexey@gmail.com>"
 
 ARG DEBIAN_FRONTEND="noninteractive"
 ARG PACKAGES

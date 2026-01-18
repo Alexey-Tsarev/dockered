@@ -1,7 +1,7 @@
-# syntax=docker.io/docker/dockerfile:1.4
+# syntax=docker.io/docker/dockerfile:1
 
-FROM alexeytsarev/toolbox:latest as toolbox
-FROM alexeytsarev/debian:10-base as builder
+FROM alexeytsarev/toolbox:latest AS toolbox
+FROM alexeytsarev/debian:12 AS builder
 
 # Product Version 3.3. Source Revision 30470. Build Date 2014-01-14 09:10:15 -0800
 ARG UTORRENT_URL="http://download-hr.utorrent.com/track/beta/endpoint/utserver/os/linux-x64-debian-7-0"
@@ -22,7 +22,7 @@ RUN --mount=type=cache,id=utorrent_var_cache_apt,target=/var/cache/apt,sharing=p
     --mount=type=cache,id=utorrent_var_lib_apt,target=/var/lib/apt,sharing=private \
     --mount=type=cache,id=utorrent_root,target=/root \
     echo "=> Install packages" && \
-        apt_install.sh build-essential wget && \
+        apt_install.sh build-essential wget net-tools && \
     echo "=> Build and install OpenSSL ${OPENSSL_VERSION} from sources" && \
         cd /root && \
         wget.sh "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz" && \
@@ -50,9 +50,7 @@ RUN --mount=type=cache,id=utorrent_var_cache_apt,target=/var/cache/apt,sharing=p
         cd "${APP_DIR}" && \
         mkdir -m 777 -p request data data_in data_out torrents/autoload torrents/store torrents/finished
 
-FROM alexeytsarev/debian:10-base
-
-LABEL maintainer="Alexey Tsarev <tsarev.alexey@gmail.com>"
+FROM alexeytsarev/debian:12
 
 ARG DEBIAN_FRONTEND="noninteractive"
 ARG APP_DIR="/opt/utorrent"

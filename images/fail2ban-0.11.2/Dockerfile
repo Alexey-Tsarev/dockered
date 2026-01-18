@@ -1,7 +1,7 @@
-# syntax=docker.io/docker/dockerfile:1.4
+# syntax=docker.io/docker/dockerfile:1
 
-FROM alexeytsarev/toolbox:latest as toolbox
-FROM alexeytsarev/debian:10-base as builder
+FROM alexeytsarev/toolbox:latest AS toolbox
+FROM alexeytsarev/debian:11-base AS builder
 
 ARG DEBIAN_FRONTEND="noninteractive"
 ARG FAIL2BAN_VERSION="0.11.2"
@@ -26,15 +26,13 @@ RUN --mount=type=cache,id=fail2ban_var_cache_apt,target=/var/cache/apt,sharing=p
         cd .. && \
         rm -rf fail2ban-*
 
-FROM alexeytsarev/debian:10-base
-
-LABEL maintainer="Alexey Tsarev <tsarev.alexey@gmail.com>"
+FROM alexeytsarev/debian:11-base
 
 ARG DEBIAN_FRONTEND="noninteractive"
 
 COPY --from=toolbox /usr/local/bin/supervisord /usr/local/bin
 COPY --from=builder /usr/local/bin/fail2ban-* /usr/local/bin
-COPY --from=builder /usr/local/lib/python3.7/dist-packages/fail2ban /usr/local/lib/python3.7/dist-packages/fail2ban
+COPY --from=builder /usr/local/lib/python3.9/dist-packages/fail2ban /usr/local/lib/python3.7/dist-packages/fail2ban
 COPY --from=builder /etc/fail2ban /etc/fail2ban
 COPY --from=builder /usr/share/doc/fail2ban /usr/share/doc/fail2ban
 COPY rootfs/ /

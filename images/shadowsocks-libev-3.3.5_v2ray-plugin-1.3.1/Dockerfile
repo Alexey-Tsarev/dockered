@@ -1,9 +1,7 @@
-# syntax=docker.io/docker/dockerfile:1.4
+# syntax=docker.io/docker/dockerfile:1
 
-FROM alexeytsarev/toolbox:latest as toolbox
+FROM alexeytsarev/toolbox:latest AS toolbox
 FROM debian:11
-
-LABEL maintainer="Alexey Tsarev <tsarev.alexey@gmail.com>"
 
 COPY --from=toolbox \
     /usr/local/bin/apt_install.sh \

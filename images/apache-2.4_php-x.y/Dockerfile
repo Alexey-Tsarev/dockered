@@ -1,15 +1,13 @@
-# syntax=docker.io/docker/dockerfile:1.4
+# syntax=docker.io/docker/dockerfile:1
 
-FROM alexeytsarev/toolbox:latest as toolbox
-FROM alexeytsarev/debian:10-base
-
-LABEL maintainer="Alexey Tsarev <tsarev.alexey@gmail.com>"
+FROM alexeytsarev/toolbox:latest AS toolbox
+FROM alexeytsarev/debian:11-base
 
 ARG DEBIAN_FRONTEND="noninteractive"
 ARG PHP_PACKAGES
 ARG SERVER_NAME
 ARG HTTP_PORT
-ARG TMP_PACKAGES="gettext-base wget"
+ARG TMP_PACKAGES="gettext-base wget lsb-release"
 
 COPY rootfs/ /
 
@@ -39,9 +37,11 @@ RUN --mount=type=cache,id=${SERVER_NAME}_var_cache_apt,target=/var/cache/apt,sha
         cd /root && \
         wget.sh https://packages.sury.org/php/apt.gpg && \
         cp -a apt.gpg /etc/apt/trusted.gpg.d/packages.sury.org_php.gpg && \
-        echo "deb https://packages.sury.org/php/ buster main" > /etc/apt/sources.list.d/packages.sury.org_php.list && \
+        echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/packages.sury.org_php.list && \
     echo "=> Install PHP" && \
         apt_install.sh ${PHP_PACKAGES} && \
+    echo "=> Upgrade packages" && \
+        apt -y upgrade && \
     echo "=> Truncate ports.conf" && \
         echo "# Listen settings are in /etc/apache2/conf-enabled/99-my.conf" > /etc/apache2/ports.conf && \
     echo "=> Remove symlinks in conf-enabled" && \

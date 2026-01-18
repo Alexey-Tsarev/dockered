@@ -1,12 +1,10 @@
-# syntax=docker.io/docker/dockerfile:1.4
+# syntax=docker.io/docker/dockerfile:1
 
-FROM alexeytsarev/toolbox:latest as toolbox
-FROM alexeytsarev/debian:10-base
+FROM alexeytsarev/toolbox:latest AS toolbox
+FROM alexeytsarev/debian:11-base
 
 # BuildKit/apt caches do not work properly in the below case:
 #FROM debian:9
-
-LABEL maintainer="Alexey Tsarev <tsarev.alexey@gmail.com>"
 
 ARG DEBIAN_FRONTEND="noninteractive"
 ARG REPO_URL="https://gitlab.com/Alexey-Tsarev/fat/-/raw/main/packages/packages.ivideon.com/ubuntu"

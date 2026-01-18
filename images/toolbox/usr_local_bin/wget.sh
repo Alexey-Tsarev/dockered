@@ -5,7 +5,7 @@ if [ "$#" -lt 1 ]; then
     exit 1
 fi
 
-fname="$(basename "$1")"
+file_name="$(basename "$1")"
 ec=$?
 
 if [ "${ec}" -ne 0 ]; then
@@ -13,14 +13,17 @@ if [ "${ec}" -ne 0 ]; then
     exit "${ec}"
 fi
 
-if [ -f "${fname}" ]; then
-    echo "Skip download, file exists: $(pwd)/${fname}"
-    ls -l "${fname}"
+if [ -f "${file_name}" ]; then
+    echo "Skip download, file exists: $(pwd)/${file_name}"
+    ls -l "${file_name}"
 else
-    mkdir -p temp
-    cd temp || exit $?
+    TMP_DIR_NAME="$(date "+%s.%N")"
+    mkdir "${TMP_DIR_NAME}"
+    trap 'rm -rf "${TMP_DIR_NAME}"' EXIT
 
-    wget "$1"
+    cd "${TMP_DIR_NAME}" || exit $?
+
+    wget "$@"
     ec=$?
 
     if [ "${ec}" -ne 0 ]; then
@@ -28,6 +31,6 @@ else
         exit "${ec}"
     fi
 
-    mv "${fname}" ../
+    mv ./* ../
     cd ../
 fi

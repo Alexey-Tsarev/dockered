@@ -1,4 +1,10 @@
 .DS_Store
 .idea/
 images/.env
+images/.env.98-*
 images/.env.99-*
+
+.env
+docker-compose.yml
+
+*untrack*/

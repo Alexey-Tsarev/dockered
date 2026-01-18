@@ -7,5 +7,5 @@ To run:
 ```
 cd ../../images
 ./env.sh
-docker-compose up blynk
+docker compose up blynk
 ```

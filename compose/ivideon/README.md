@@ -6,5 +6,5 @@ Run:
 ```
 cd ../../images
 ./env.sh
-docker-compose up ivideon
+docker compose up ivideon
 ```

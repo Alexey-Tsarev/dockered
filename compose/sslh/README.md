@@ -4,5 +4,5 @@ To run:
 ```
 cd ../../images
 ./env.sh
-docker-compose up sslh
+docker compose up sslh
 ```

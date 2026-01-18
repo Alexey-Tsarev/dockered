@@ -9,5 +9,5 @@ To run:
 ```
 cd ../../images
 ./env.sh
-docker-compose up traccar
+docker compose up traccar
 ```

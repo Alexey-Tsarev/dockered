@@ -3,8 +3,7 @@
 set -e
 set -x
 
-export DOCKER_BUILDKIT=1
-export COMPOSE_DOCKER_CLI_BUILD=1
+export DOCKER_DEFAULT_PLATFORM=linux/amd64
 
 ./mark_sh_exec.sh
 
@@ -14,12 +13,12 @@ if [ -n "${CLEAN}" ]; then
 fi
 
 ./build_base_images.sh
-docker push alexeytsarev/debian:10-base
+docker push alexeytsarev/debian:13
 docker push alexeytsarev/toolbox:latest
 
 cd images
-docker-compose build --progress=plain --parallel
-docker-compose push
+docker compose --progress=plain build --parallel
+docker compose push
 
 if [ -n "${CLEAN}" ]; then
     docker system prune --all --force

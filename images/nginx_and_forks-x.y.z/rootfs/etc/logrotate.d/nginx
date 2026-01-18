@@ -1,4 +1,4 @@
-/opt/app/logs/*.log {
+/opt/app/log/*.log {
     daily
     missingok
     rotate 365

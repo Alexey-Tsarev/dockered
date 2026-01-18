@@ -1,8 +1,6 @@
 # Deprecated
 FROM alexeytsarev/centos7-base:latest
 
-LABEL maintainer="Alexey Tsarev <tsarev.alexey@gmail.com>"
-
 ARG CONSUL_VERSION=1.6.1
 ARG BIN_DIR_IN_PATH=/usr/local/bin
 
