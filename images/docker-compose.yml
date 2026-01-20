@@ -1661,14 +1661,16 @@ services:
     container_name: cam_streamer
     network_mode: host
     restart: unless-stopped
-    #privileged: true
+    privileged: true
     security_opt:
       - apparmor=unconfined
 
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-      - ${DOCKER_ROOT}/cam_streamer/:/opt/cam_streamer/cfg/ # first start: comment this line, - configs are needed
+      - /dev/snd/:/dev/snd/
+      - /dev/v4l/:/dev/v4l/
+      # - ${DOCKER_ROOT}/cam_streamer/:/opt/cam_streamer/cfg/ # first start: configs are needed
       - ${DOCKER_ROOT}/log/cam_streamer:/opt/cam_streamer/log/
       - /mnt/hdd/cam/:/opt/cam_streamer/store/
       # - ~/dev/cam_streamer/cam_streamer.py:/opt/cam_streamer/cam_streamer.py # debug only!

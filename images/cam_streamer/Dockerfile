@@ -18,10 +18,10 @@ RUN --mount=type=cache,id=cam_streamer_var_cache_apt,target=/var/cache/apt,shari
     --mount=type=cache,id=cam_streamer_root,target=/root \
     echo "=> Install packages  " && \
         apt_install.sh \
-            wget unzip \
-            python-is-python3 python3-pip python3-venv \
             ffmpeg \
-            gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav && \
+            gstreamer1.0-alsa gstreamer1.0-libav gstreamer1.0-plugins-bad gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-ugly gstreamer1.0-tools \
+            python-is-python3 python3-pip python3-venv \
+            wget unzip && \
     echo "=> Download cam_streamer" && \
         cd /root && \
         # rm -f *.zip && \
