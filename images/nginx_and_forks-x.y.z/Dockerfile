@@ -141,6 +141,7 @@ RUN --mount=type=cache,id=${APP_NAME}_var_cache_apt,target=/var/cache/apt,sharin
         ln -s "${APP_SHORT}" "${APP_SHORT}-${APP_VERSION}" && \
         cd /run && \
         ln -s app.pid "${APP_SHORT}.pid" && \
+        ln -s "/opt/${APP_SHORT}/sbin/${APP_SHORT}" /usr/local/sbin/ && \
     echo "=> Symlink: acme" && \
         ln -s /opt/acme/acme.sh /usr/local/bin && \
     echo "=> Keep original config" && \
@@ -156,6 +157,8 @@ RUN --mount=type=cache,id=${APP_NAME}_var_cache_apt,target=/var/cache/apt,sharin
         clean_and_keep.sh
 
 ENV ACME_OPTS="${ACME_OPTS}"
+
+WORKDIR /opt/app
 
 EXPOSE 80 443
 
