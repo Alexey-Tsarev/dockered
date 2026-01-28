@@ -1176,13 +1176,13 @@ services:
   # transmission
   transmission:
     build:
-      context: transmission-4.1.0-beta.4
+      context: transmission-4.1.0
       network: host
       args:
          - CLEAN=0
         # - CLEAN=1
 
-    image: alexeytsarev/transmission:4.1.0-beta.4
+    image: alexeytsarev/transmission:4.1.0
     container_name: transmission
     network_mode: host
     #privileged: true
