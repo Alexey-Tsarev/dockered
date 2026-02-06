@@ -7,7 +7,7 @@ FROM alexeytsarev/toolbox:latest AS toolbox
 FROM alexeytsarev/debian:13 AS builder
 
 ARG DEBIAN_FRONTEND="noninteractive"
-ARG OPENSSL_VERSION="3.6.0"
+ARG OPENSSL_VERSION="3.6.1"
 ARG ACME_COMMIT="f39d066ced0271d87790dc426556c1e02a88c91b"
 ARG ACME_OPTS
 ARG APP_NAME
@@ -98,7 +98,9 @@ ARG PKGS_RUNTIME
 COPY --from=toolbox \
     /usr/local/bin/apt_install.sh \
     /usr/local/bin/clean_and_keep.sh \
+    /usr/local/bin/envsubst \
     /usr/local/bin/supervisord \
+    /usr/local/bin/template_envsubst.sh \
     /usr/local/bin/
 
 COPY --from=builder /opt /opt/
@@ -111,10 +113,11 @@ RUN --mount=type=cache,id=${APP_NAME}_var_cache_apt,target=/var/cache/apt,sharin
         chmod 0755 /acme_bot.sh \
                    /etc \
                    /etc/logrotate.d \
+                   /nginx.sh \
                    /opt \
-                   /opt/conf/*/sites-enabled \
-                   /opt/conf/*/common \
                    /opt/cert \
+                   /opt/conf/*/common \
+                   /opt/conf/*/sites-enabled \
                    /var \
                    /var/spool \
                    /var/spool/cron && \
@@ -122,8 +125,8 @@ RUN --mount=type=cache,id=${APP_NAME}_var_cache_apt,target=/var/cache/apt,sharin
         chmod 0644 /etc/supervisord.conf \
                    /etc/logrotate.d/nginx \
                    /opt/conf/*/*.conf \
-                   /opt/conf/*/sites-enabled/* \
-                   /opt/conf/*/common/* && \
+                   /opt/conf/*/common/* \
+                   /opt/conf/*/sites-enabled/* && \
         chmod 0600 /opt/cert/default/* \
                    /opt/cert/example.com/* \
                    /var/spool/cron/crontabs/root && \
@@ -152,14 +155,18 @@ RUN --mount=type=cache,id=${APP_NAME}_var_cache_apt,target=/var/cache/apt,sharin
         rm -rf /opt/conf && \
     echo "=> Cron" && \
         crontab /var/spool/cron/crontabs/root && \
+    echo "=> Remove .gitkeep" && \
+        rm -f /opt/app/conf/template/.gitkeep && \
+        rm -f /opt/app/conf/common/template/.gitkeep && \
     echo "=> Clean" && \
         apt -y autoremove && \
-        clean_and_keep.sh
+        clean_and_keep.sh /usr/local/bin/envsubst /usr/local/bin/template_envsubst.sh
 
 ENV ACME_OPTS="${ACME_OPTS}"
 
 WORKDIR /opt/app
 
+# ${HTTP_PORT:-80}, ${HTTPS_PORT:-443}
 EXPOSE 80 443
 
 VOLUME /opt/cert /opt/${APP_SHORT}/log

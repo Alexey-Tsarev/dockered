@@ -5,7 +5,7 @@
     compress
     delaycompress
     notifempty
-    create 640 nginx adm
+    create 640 root root
     sharedscripts
     postrotate
         if [ -f /run/app.pid ]; then

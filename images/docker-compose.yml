@@ -151,14 +151,16 @@ services:
       context: apache-2.4_php-x.y
       network: host
       args:
-        - PHP_PACKAGES=php5.6 php5.6-common php5.6-cli php5.6-intl php5.6-mbstring php5.6-bcmath php5.6-gd php5.6-pgsql php5.6-mysql php5.6-json php5.6-zip php5.6-xml php5.6-opcache php5.6-xmlrpc php5.6-mcrypt
-        - SERVER_NAME=ap56
-        - HTTP_PORT=8056
+        - PHP_PACKAGES=php5.6 php5.6-common php5.6-cli php5.6-curl php5.6-intl php5.6-mbstring php5.6-bcmath php5.6-gd php5.6-pgsql php5.6-mysql php5.6-json php5.6-zip php5.6-xml php5.6-opcache php5.6-xmlrpc php5.6-mcrypt
 
     image: alexeytsarev/apache_php:2.4_5.6
     container_name: ap56
-    network_mode: host
     restart: unless-stopped
+
+    #network_mode: host
+    network_mode: bridge
+    #ports:
+      #- "80:80"
 
     environment:
       - TERM=xterm
@@ -171,18 +173,14 @@ services:
       - /etc/group:/etc/group:ro
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-      - /home:/home
-      - /var/run/mysql:/var/lib/mysql
-      - ${DOCKER_ROOT}/apache/sites-enabled:/etc/apache2/sites-enabled:ro
-      - ${DOCKER_ROOT}/log/ap56:/var/log/apache2
+      - /run/mysqld/:/run/mysqld/
+      - ${DOCKER_ROOT}/apache/sites-enabled/:/etc/apache2/sites-enabled/:ro
+      - ${DOCKER_ROOT}/log/ap56/:/var/log/apache2/
 
     logging:
       driver: journald
       options:
         tag: ap56
-
-    #ports:
-      #- "8056:8056"
   # End Apache 2.4, php 5.6
 
 
@@ -192,14 +190,16 @@ services:
       context: apache-2.4_php-x.y
       network: host
       args:
-        - PHP_PACKAGES=php7.0 php7.0-common php7.0-cli php7.0-intl php7.0-mbstring php7.0-bcmath php7.0-gd php7.0-pgsql php7.0-mysql php7.0-json php7.0-zip php7.0-xml php7.0-opcache php7.0-xmlrpc php7.0-mcrypt
-        - SERVER_NAME=ap70
-        - HTTP_PORT=8070
+        - PHP_PACKAGES=php7.0 php7.0-common php7.0-cli php7.0-curl php7.0-intl php7.0-mbstring php7.0-bcmath php7.0-gd php7.0-pgsql php7.0-mysql php7.0-json php7.0-zip php7.0-xml php7.0-opcache php7.0-xmlrpc php7.0-mcrypt
 
     image: alexeytsarev/apache_php:2.4_7.0
     container_name: ap70
-    network_mode: host
     restart: unless-stopped
+
+    #network_mode: host
+    network_mode: bridge
+    #ports:
+      #- "80:80"
 
     environment:
       - TERM=xterm
@@ -212,18 +212,14 @@ services:
       - /etc/group:/etc/group:ro
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-      - /home:/home
-      - /var/run/mysql:/var/lib/mysql
-      - ${DOCKER_ROOT}/apache/sites-enabled:/etc/apache2/sites-enabled:ro
-      - ${DOCKER_ROOT}/log/ap70:/var/log/apache2
+      - /run/mysqld/:/run/mysqld/
+      - ${DOCKER_ROOT}/apache/sites-enabled/:/etc/apache2/sites-enabled/:ro
+      - ${DOCKER_ROOT}/log/ap70/:/var/log/apache2/
 
     logging:
       driver: journald
       options:
         tag: ap70
-
-    #ports:
-      #- "8070:8070"
   # End Apache 2.4, php 7.0
 
 
@@ -233,14 +229,16 @@ services:
       context: apache-2.4_php-x.y
       network: host
       args:
-        - PHP_PACKAGES=php7.1 php7.1-common php7.1-cli php7.1-intl php7.1-mbstring php7.1-bcmath php7.1-gd php7.1-pgsql php7.1-mysql php7.1-json php7.1-zip php7.1-xml php7.1-opcache php7.1-xmlrpc php7.1-mcrypt
-        - SERVER_NAME=ap71
-        - HTTP_PORT=8071
+        - PHP_PACKAGES=php7.1 php7.1-common php7.1-cli php7.1-curl php7.1-intl php7.1-mbstring php7.1-bcmath php7.1-gd php7.1-pgsql php7.1-mysql php7.1-json php7.1-zip php7.1-xml php7.1-opcache php7.1-xmlrpc php7.1-mcrypt
 
     image: alexeytsarev/apache_php:2.4_7.1
     container_name: ap71
-    network_mode: host
     restart: unless-stopped
+
+    #network_mode: host
+    network_mode: bridge
+    #ports:
+      #- "80:80"
 
     environment:
       - TERM=xterm
@@ -253,18 +251,14 @@ services:
       - /etc/group:/etc/group:ro
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-      - /home:/home
-      - /var/run/mysql:/var/lib/mysql
-      - ${DOCKER_ROOT}/apache/sites-enabled:/etc/apache2/sites-enabled:ro
-      - ${DOCKER_ROOT}/log/ap71:/var/log/apache2
+      - /run/mysqld/:/run/mysqld/
+      - ${DOCKER_ROOT}/apache/sites-enabled/:/etc/apache2/sites-enabled/:ro
+      - ${DOCKER_ROOT}/log/ap71/:/var/log/apache2/
 
     logging:
       driver: journald
       options:
         tag: ap71
-
-    #ports:
-      #- "8071:8071"
   # End Apache 2.4, php 7.1
 
 
@@ -274,14 +268,16 @@ services:
       context: apache-2.4_php-x.y
       network: host
       args:
-        - PHP_PACKAGES=php7.2 php7.2-common php7.2-cli php7.2-intl php7.2-mbstring php7.2-bcmath php7.2-gd php7.2-pgsql php7.2-mysql php7.2-json php7.2-zip php7.2-xml php7.2-opcache php7.2-xmlrpc
-        - SERVER_NAME=ap72
-        - HTTP_PORT=8072
+        - PHP_PACKAGES=php7.2 php7.2-common php7.2-cli php7.2-curl php7.2-intl php7.2-mbstring php7.2-bcmath php7.2-gd php7.2-pgsql php7.2-mysql php7.2-json php7.2-zip php7.2-xml php7.2-opcache php7.2-xmlrpc
 
     image: alexeytsarev/apache_php:2.4_7.2
     container_name: ap72
-    network_mode: host
     restart: unless-stopped
+
+    #network_mode: host
+    network_mode: bridge
+    #ports:
+      #- "80:80"
 
     environment:
       - TERM=xterm
@@ -294,18 +290,14 @@ services:
       - /etc/group:/etc/group:ro
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-      - /home:/home
-      - /var/run/mysql:/var/lib/mysql
-      - ${DOCKER_ROOT}/apache/sites-enabled:/etc/apache2/sites-enabled:ro
-      - ${DOCKER_ROOT}/log/ap72:/var/log/apache2
+      - /run/mysqld/:/run/mysqld/
+      - ${DOCKER_ROOT}/apache/sites-enabled/:/etc/apache2/sites-enabled/:ro
+      - ${DOCKER_ROOT}/log/ap72/:/var/log/apache2/
 
     logging:
       driver: journald
       options:
         tag: ap72
-
-    #ports:
-      #- "8072:8072"
   # End Apache 2.4, php 7.2
 
 
@@ -315,14 +307,16 @@ services:
       context: apache-2.4_php-x.y
       network: host
       args:
-        - PHP_PACKAGES=php7.3 php7.3-common php7.3-cli php7.3-intl php7.3-mbstring php7.3-bcmath php7.3-gd php7.3-pgsql php7.3-mysql php7.3-json php7.3-zip php7.3-xml php7.3-opcache php7.3-xmlrpc
-        - SERVER_NAME=ap73
-        - HTTP_PORT=8073
+        - PHP_PACKAGES=php7.3 php7.3-common php7.3-cli php7.3-curl php7.3-intl php7.3-mbstring php7.3-bcmath php7.3-gd php7.3-pgsql php7.3-mysql php7.3-json php7.3-zip php7.3-xml php7.3-opcache php7.3-xmlrpc
 
     image: alexeytsarev/apache_php:2.4_7.3
     container_name: ap73
-    network_mode: host
     restart: unless-stopped
+
+    #network_mode: host
+    network_mode: bridge
+    #ports:
+      #- "80:80"
 
     environment:
       - TERM=xterm
@@ -335,18 +329,14 @@ services:
       - /etc/group:/etc/group:ro
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-      - /home:/home
-      - /var/run/mysql:/var/lib/mysql
-      - ${DOCKER_ROOT}/apache/sites-enabled:/etc/apache2/sites-enabled:ro
-      - ${DOCKER_ROOT}/log/ap73:/var/log/apache2
+      - /run/mysqld/:/run/mysqld/
+      - ${DOCKER_ROOT}/apache/sites-enabled/:/etc/apache2/sites-enabled/:ro
+      - ${DOCKER_ROOT}/log/ap73/:/var/log/apache2/
 
     logging:
       driver: journald
       options:
         tag: ap73
-
-    #ports:
-      #- "8073:8073"
   # End Apache 2.4, php 7.3
 
 
@@ -356,14 +346,16 @@ services:
       context: apache-2.4_php-x.y
       network: host
       args:
-        - PHP_PACKAGES=php7.4 php7.4-common php7.4-cli php7.4-intl php7.4-mbstring php7.4-bcmath php7.4-gd php7.4-pgsql php7.4-mysql php7.4-json php7.4-zip php7.4-xml php7.4-opcache php7.4-xmlrpc
-        - SERVER_NAME=ap74
-        - HTTP_PORT=8074
+        - PHP_PACKAGES=php7.4 php7.4-common php7.4-cli php7.4-curl php7.4-intl php7.4-mbstring php7.4-bcmath php7.4-gd php7.4-pgsql php7.4-mysql php7.4-json php7.4-zip php7.4-xml php7.4-opcache php7.4-xmlrpc
 
     image: alexeytsarev/apache_php:2.4_7.4
     container_name: ap74
-    network_mode: host
     restart: unless-stopped
+
+    #network_mode: host
+    network_mode: bridge
+    #ports:
+      #- "80:80"
 
     environment:
       - TERM=xterm
@@ -376,18 +368,14 @@ services:
       - /etc/group:/etc/group:ro
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-      - /home:/home
-      - /var/run/mysql:/var/lib/mysql
-      - ${DOCKER_ROOT}/apache/sites-enabled:/etc/apache2/sites-enabled:ro
-      - ${DOCKER_ROOT}/log/ap74:/var/log/apache2
+      - /run/mysqld/:/run/mysqld/
+      - ${DOCKER_ROOT}/apache/sites-enabled/:/etc/apache2/sites-enabled/:ro
+      - ${DOCKER_ROOT}/log/ap74/:/var/log/apache2/
 
     logging:
       driver: journald
       options:
         tag: ap74
-
-    #ports:
-      #- "8074:8074"
   # End Apache 2.4, php 7.4
 
 
@@ -397,14 +385,16 @@ services:
       context: apache-2.4_php-x.y
       network: host
       args:
-        - PHP_PACKAGES=php8.0 php8.0-common php8.0-cli php8.0-intl php8.0-mbstring php8.0-bcmath php8.0-gd php8.0-pgsql php8.0-mysql php8.0-zip php8.0-xml php8.0-opcache
-        - SERVER_NAME=ap80
-        - HTTP_PORT=8080
+        - PHP_PACKAGES=php8.0 php8.0-common php8.0-cli php8.0-curl php8.0-intl php8.0-mbstring php8.0-bcmath php8.0-gd php8.0-pgsql php8.0-mysql php8.0-zip php8.0-xml php8.0-opcache
 
     image: alexeytsarev/apache_php:2.4_8.0
     container_name: ap80
-    network_mode: host
     restart: unless-stopped
+
+    #network_mode: host
+    network_mode: bridge
+    #ports:
+      #- "80:80"
 
     environment:
       - TERM=xterm
@@ -417,18 +407,14 @@ services:
       - /etc/group:/etc/group:ro
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-      - /home:/home
-      - /var/run/mysql:/var/lib/mysql
-      - ${DOCKER_ROOT}/apache/sites-enabled:/etc/apache2/sites-enabled:ro
-      - ${DOCKER_ROOT}/log/ap80:/var/log/apache2
+      - /run/mysqld/:/run/mysqld/
+      - ${DOCKER_ROOT}/apache/sites-enabled/:/etc/apache2/sites-enabled/:ro
+      - ${DOCKER_ROOT}/log/ap80/:/var/log/apache2/
 
     logging:
       driver: journald
       options:
         tag: ap80
-
-    #ports:
-      #- "8080:8080"
   # End Apache 2.4, php 8.0
 
 
@@ -438,14 +424,16 @@ services:
       context: apache-2.4_php-x.y
       network: host
       args:
-        - PHP_PACKAGES=php8.1 php8.1-common php8.1-cli php8.1-intl php8.1-mbstring php8.1-bcmath php8.1-gd php8.1-pgsql php8.1-mysql php8.1-zip php8.1-xml php8.1-opcache
-        - SERVER_NAME=ap81
-        - HTTP_PORT=8081
+        - PHP_PACKAGES=php8.1 php8.1-common php8.1-cli php8.1-curl php8.1-intl php8.1-mbstring php8.1-bcmath php8.1-gd php8.1-pgsql php8.1-mysql php8.1-zip php8.1-xml php8.1-opcache
 
     image: alexeytsarev/apache_php:2.4_8.1
     container_name: ap81
-    network_mode: host
     restart: unless-stopped
+
+    #network_mode: host
+    network_mode: bridge
+    #ports:
+      #- "80:80"
 
     environment:
       - TERM=xterm
@@ -458,18 +446,14 @@ services:
       - /etc/group:/etc/group:ro
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-      - /home:/home
-      - /var/run/mysql:/var/lib/mysql
-      - ${DOCKER_ROOT}/apache/sites-enabled:/etc/apache2/sites-enabled:ro
-      - ${DOCKER_ROOT}/log/ap81:/var/log/apache2
+      - /run/mysqld/:/run/mysqld/
+      - ${DOCKER_ROOT}/apache/sites-enabled/:/etc/apache2/sites-enabled/:ro
+      - ${DOCKER_ROOT}/log/ap81/:/var/log/apache2/
 
     logging:
       driver: journald
       options:
         tag: ap81
-
-    #ports:
-    #- "8081:8081"
   # End Apache 2.4, php 8.1
 
 
@@ -479,14 +463,16 @@ services:
       context: apache-2.4_php-x.y
       network: host
       args:
-        - PHP_PACKAGES=php8.2 php8.2-common php8.2-cli php8.2-intl php8.2-mbstring php8.2-bcmath php8.2-gd php8.2-pgsql php8.2-mysql php8.2-zip php8.2-xml php8.2-opcache
-        - SERVER_NAME=ap82
-        - HTTP_PORT=8082
+        - PHP_PACKAGES=php8.2 php8.2-common php8.2-cli php8.2-curl php8.2-intl php8.2-mbstring php8.2-bcmath php8.2-gd php8.2-pgsql php8.2-mysql php8.2-zip php8.2-xml php8.2-opcache
 
     image: alexeytsarev/apache_php:2.4_8.2
     container_name: ap82
-    network_mode: host
     restart: unless-stopped
+
+    #network_mode: host
+    network_mode: bridge
+    #ports:
+      #- "80:80"
 
     environment:
       - TERM=xterm
@@ -499,19 +485,132 @@ services:
       - /etc/group:/etc/group:ro
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-      - /home:/home
-      - /var/run/mysql:/var/lib/mysql
-      - ${DOCKER_ROOT}/apache/sites-enabled:/etc/apache2/sites-enabled:ro
-      - ${DOCKER_ROOT}/log/ap82:/var/log/apache2
+      - /run/mysqld/:/run/mysqld/
+      - ${DOCKER_ROOT}/apache/sites-enabled/:/etc/apache2/sites-enabled/:ro
+      - ${DOCKER_ROOT}/log/ap82/:/var/log/apache2/
 
     logging:
       driver: journald
       options:
         tag: ap82
-
-    #ports:
-    #- "8082:8082"
   # End Apache 2.4, php 8.2
+
+
+  # Apache 2.4, php 8.3
+  ap83:
+    build:
+      context: apache-2.4_php-x.y
+      network: host
+      args:
+        - PHP_PACKAGES=php8.3 php8.3-common php8.3-cli php8.3-curl php8.3-intl php8.3-mbstring php8.3-bcmath php8.3-gd php8.3-pgsql php8.3-mysql php8.3-zip php8.3-xml php8.3-opcache
+
+    image: alexeytsarev/apache_php:2.4_8.3
+    container_name: ap83
+    restart: unless-stopped
+
+    #network_mode: host
+    network_mode: bridge
+    #ports:
+      #- "80:80"
+
+    environment:
+      - TERM=xterm
+
+    labels:
+      - SERVICE_NAME=ap83
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /run/mysqld/:/run/mysqld/
+      - ${DOCKER_ROOT}/apache/sites-enabled/:/etc/apache2/sites-enabled/:ro
+      - ${DOCKER_ROOT}/log/ap83/:/var/log/apache2/
+
+    logging:
+      driver: journald
+      options:
+        tag: ap83
+  # End Apache 2.4, php 8.3
+
+
+  # Apache 2.4, php 8.4
+  ap84:
+    build:
+      context: apache-2.4_php-x.y
+      network: host
+      args:
+        - PHP_PACKAGES=php8.4 php8.4-common php8.4-cli php8.4-curl php8.4-intl php8.4-mbstring php8.4-bcmath php8.4-gd php8.4-pgsql php8.4-mysql php8.4-zip php8.4-xml php8.4-opcache
+
+    image: alexeytsarev/apache_php:2.4_8.4
+    container_name: ap84
+    restart: unless-stopped
+
+    #network_mode: host
+    network_mode: bridge
+    #ports:
+      #- "80:80"
+
+    environment:
+      - TERM=xterm
+
+    labels:
+      - SERVICE_NAME=ap84
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /run/mysqld/:/run/mysqld/
+      - ${DOCKER_ROOT}/apache/sites-enabled/:/etc/apache2/sites-enabled/:ro
+      - ${DOCKER_ROOT}/log/ap84/:/var/log/apache2/
+
+    logging:
+      driver: journald
+      options:
+        tag: ap84
+  # End Apache 2.4, php 8.4
+
+
+  # Apache 2.4, php 8.5
+  ap85:
+    build:
+      context: apache-2.4_php-x.y
+      network: host
+      args:
+        - PHP_PACKAGES=php8.5 php8.5-common php8.5-cli php8.5-curl php8.5-intl php8.5-mbstring php8.5-bcmath php8.5-gd php8.5-pgsql php8.5-mysql php8.5-zip php8.5-xml
+
+    image: alexeytsarev/apache_php:2.4_8.5
+    container_name: ap85
+    restart: unless-stopped
+
+    #network_mode: host
+    network_mode: bridge
+    #ports:
+      #- "80:80"
+
+    environment:
+      - TERM=xterm
+
+    labels:
+      - SERVICE_NAME=ap85
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /run/mysqld/:/run/mysqld/
+      - ${DOCKER_ROOT}/apache/sites-enabled/:/etc/apache2/sites-enabled/:ro
+      - ${DOCKER_ROOT}/log/ap85/:/var/log/apache2/
+
+    logging:
+      driver: journald
+      options:
+        tag: ap85
+  # End Apache 2.4, php 8.5
 
 
   # Nginx stable
@@ -740,11 +839,11 @@ services:
       - /etc/group:/etc/group:ro
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-      - /var/run/mysql:/var/run/mysql
-      - /tmp:/tmp
-      - ${DOCKER_ROOT}/mysql:/etc/mysql
-      - ${DOCKER_ROOT}/mysql_db:/var/lib/mysql
-      - ${DOCKER_ROOT}/log/mysql:/var/log/mysql
+      - /run/mysqld/:/run/mysqld/
+      - /tmp/:/tmp/
+      - ${DOCKER_ROOT}/mysql/:/etc/mysql/
+      - ${DOCKER_ROOT}/mysql_db/:/var/lib/mysql/
+      - ${DOCKER_ROOT}/log/mysql/:/var/log/mysql/
 
     #ports:
       #- "3306:3306"
@@ -829,6 +928,9 @@ services:
       - ${DOCKER_ROOT}/log/ap80:/var/log/httpd80:ro
       - ${DOCKER_ROOT}/log/ap81:/var/log/httpd81:ro
       - ${DOCKER_ROOT}/log/ap82:/var/log/httpd82:ro
+      - ${DOCKER_ROOT}/log/ap83:/var/log/httpd83:ro
+      - ${DOCKER_ROOT}/log/ap84:/var/log/httpd84:ro
+      - ${DOCKER_ROOT}/log/ap85:/var/log/httpd85:ro
       #- ${DOCKER_ROOT}/fail2ban/jail.local:/etc/fail2ban/jail.local:ro # If you have a config
 
       #depends_on:
@@ -842,6 +944,9 @@ services:
       #- ap80
       #- ap81
       #- ap82
+      #- ap83
+      #- ap84
+      #- ap85
   # End Fail2Ban
 
 
@@ -968,16 +1073,32 @@ services:
 
 
   # sslh
+  # https://github.com/yrutschle/sslh?tab=readme-ov-file#docker-image
   sslh:
+    # https://github.com/yrutschle/sslh/pkgs/container/sslh
     image: ghcr.io/yrutschle/sslh:latest
     container_name: sslh
-    privileged: true
-    network_mode: host
+    # privileged: true
     restart: unless-stopped
+    security_opt:
+      - apparmor=unconfined
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+      - NET_BIND_SERVICE
+
+    network_mode: host
+    #network_mode: bridge
+    #ports:
+    #- "443:443"
+
+    # must be set manually
+    # sysctls:
+    #  - net.ipv4.conf.default.route_localnet=1
+    #  - net.ipv4.conf.all.route_localnet=1
 
     environment:
       - TERM=xterm
-      - SSLH_OPTS=-p 0.0.0.0:443 --http 127.0.0.1:8443 --ssh 127.0.0.1:22 --openvpn 127.0.0.1:1194
 
     labels:
       - SERVICE_NAME=sslh
@@ -990,8 +1111,11 @@ services:
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-      - /etc/passwd:/etc/passwd:ro
-      - /etc/group:/etc/group:ro
+
+    #entrypoint: ""
+    #command: sleep inf
+
+    command: --foreground --transparent --numeric --listen=0.0.0.0:443 --ssh 127.0.0.1:22 --tls=127.0.0.1:8443 --openvpn=127.0.0.1:1194
   # End sslh
 
 
@@ -1683,3 +1807,61 @@ services:
     # command: sleep inf
     # command: cam_streamer.sh -log_level DEBUG
   # End cam_streamer
+
+
+  # zabbix_server
+  zabbix_server:
+    image: zabbix/zabbix-server-mysql:ubuntu-7.0-latest
+    container_name: zabbix_server
+    network_mode: host
+    restart: unless-stopped
+    privileged: true
+    #security_opt:
+      #- apparmor=unconfined
+
+    environment:
+      DB_SERVER_HOST: ${ZABBIX_DB_SERVER_HOST}
+      MYSQL_USER: ${ZABBIX_MYSQL_USER}
+      MYSQL_PASSWORD: ${ZABBIX_MYSQL_PASSWORD}
+
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+
+    logging:
+      driver: journald
+      options:
+        tag: zabbix_server
+  # End zabbix_server
+
+
+  # zabbix_web
+  zabbix_web:
+    image: zabbix/zabbix-web-nginx-mysql:ubuntu-7.0-latest
+    container_name: zabbix_web
+    network_mode: host
+    restart: unless-stopped
+    privileged: true
+    #security_opt:
+      #- apparmor=unconfined
+
+    healthcheck:
+      test: []
+      disable: true
+
+    environment:
+      DB_SERVER_HOST: ${ZABBIX_DB_SERVER_HOST}
+      MYSQL_USER: ${ZABBIX_MYSQL_USER}
+      MYSQL_PASSWORD: ${ZABBIX_MYSQL_PASSWORD}
+
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ${DOCKER_ROOT}/zabbix/web/nginx.conf:/etc/zabbix/nginx.conf
+      - ${DOCKER_ROOT}/zabbix/web/nginx_ssl.conf:/etc/zabbix/nginx_ssl.conf
+
+    logging:
+      driver: journald
+      options:
+        tag: zabbix_web
+  # End zabbix_web
