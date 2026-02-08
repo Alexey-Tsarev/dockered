@@ -3,7 +3,6 @@
 FROM alexeytsarev/toolbox:latest AS toolbox
 FROM alexeytsarev/debian:11-base AS builder
 
-ARG DEBIAN_FRONTEND="noninteractive"
 ARG DNSCRYPT_PXORY_VERSION="2.1.1"
 ARG DNSCRYPT_PROXY_FILE_NAME="dnscrypt-proxy-linux_x86_64-${DNSCRYPT_PXORY_VERSION}.tar.gz"
 
@@ -26,7 +25,6 @@ RUN --mount=type=cache,id=dnscrypt_proxy_var_cache_apt,target=/var/cache/apt,sha
 
 FROM alexeytsarev/debian:11-base
 
-ARG DEBIAN_FRONTEND="noninteractive"
 ARG APP_DIR="/opt/dnscrypt_proxy"
 
 WORKDIR "${APP_DIR}"

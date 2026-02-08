@@ -19,8 +19,6 @@ ARG TMP_PACKAGES="git cmake build-essential libcurl4-openssl-dev libssl-dev pyth
 
 ARG CLEAN
 
-ARG DEBIAN_FRONTEND="noninteractive"
-
 COPY --from=toolbox \
     /usr/local/bin/apt_install.sh \
     /usr/local/bin/clean_and_keep.sh \

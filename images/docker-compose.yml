@@ -1794,7 +1794,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /dev/snd/:/dev/snd/
       - /dev/v4l/:/dev/v4l/
-      # - ${DOCKER_ROOT}/cam_streamer/:/opt/cam_streamer/cfg/ # first start: configs are needed
+      - ${DOCKER_ROOT}/cam_streamer/:/opt/cam_streamer/cfg/ # first start: comment this line: configs are needed
       - ${DOCKER_ROOT}/log/cam_streamer:/opt/cam_streamer/log/
       - /mnt/hdd/cam/:/opt/cam_streamer/store/
       # - ~/dev/cam_streamer/cam_streamer.py:/opt/cam_streamer/cam_streamer.py # debug only!

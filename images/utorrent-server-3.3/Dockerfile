@@ -9,7 +9,6 @@ ARG UTORRENT_URL="http://download-hr.utorrent.com/track/beta/endpoint/utserver/o
 # Version 0.388
 ARG UTORRENT_WEBUI_URL="http://pr.apps.bittorrent.com/client-webui/3.5/utorrent-webui-20130528.zip"
 
-ARG DEBIAN_FRONTEND="noninteractive"
 ARG APP_DIR="/opt/utorrent"
 ARG OPENSSL_VERSION="1.0.2u"
 
@@ -52,7 +51,6 @@ RUN --mount=type=cache,id=utorrent_var_cache_apt,target=/var/cache/apt,sharing=p
 
 FROM alexeytsarev/debian:12
 
-ARG DEBIAN_FRONTEND="noninteractive"
 ARG APP_DIR="/opt/utorrent"
 
 COPY --from=builder "${APP_DIR}" "${APP_DIR}/"

@@ -1,21 +1,22 @@
 # syntax=docker.io/docker/dockerfile:1
 
 # Global scope
+ARG ACME_COMMIT="f39d066ced0271d87790dc426556c1e02a88c91b"
 ARG ACME_OPTS="--home /opt/acme --cert-home /opt/acme_cert --config-home /opt/acme_conf"
+ARG OPENSSL_VERSION="3.6.1"
 
 FROM alexeytsarev/toolbox:latest AS toolbox
 FROM alexeytsarev/debian:13 AS builder
 
-ARG DEBIAN_FRONTEND="noninteractive"
-ARG OPENSSL_VERSION="3.6.1"
-ARG ACME_COMMIT="f39d066ced0271d87790dc426556c1e02a88c91b"
+ARG ACME_COMMIT
 ARG ACME_OPTS
 ARG APP_NAME
 ARG APP_SHORT
-ARG APP_VERSION
 ARG APP_SRC_URL
-ARG PKGS_BUILDTIME
+ARG APP_VERSION
 ARG CONFIGURE_OPTS
+ARG OPENSSL_VERSION
+ARG PKGS_BUILDTIME
 
 COPY --from=toolbox \
     /usr/local/bin/apt_install.sh \
@@ -65,7 +66,7 @@ RUN --mount=type=cache,id=${APP_NAME}_var_cache_apt,target=/var/cache/apt,sharin
             --prefix=/opt/${APP_SHORT} \
             --error-log-path=/opt/${APP_SHORT}/log/error.log \
             --pid-path=/run/${APP_SHORT}.pid \
-            --with-openssl=../openssl-${OPENSSL_VERSION}/ \
+            --with-openssl=../openssl-${OPENSSL_VERSION} \
             --with-threads \
             --with-pcre \
             --with-compat \
@@ -88,7 +89,6 @@ RUN --mount=type=cache,id=${APP_NAME}_var_cache_apt,target=/var/cache/apt,sharin
 
 FROM alexeytsarev/debian:13
 
-ARG DEBIAN_FRONTEND="noninteractive"
 ARG ACME_OPTS
 ARG APP_NAME
 ARG APP_SHORT

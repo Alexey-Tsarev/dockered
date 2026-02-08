@@ -1,13 +1,20 @@
 # syntax=docker.io/docker/dockerfile:1
 
+# Global scope
+ARG ENVSUBST_VERSION="1.4.3"
+ARG SUPERVISORD_VERSION="0.7.3"
+ARG UV_VERSION="0.10.0"
+ARG WAIT_FOR_VERSION="2.2.4"
+
+FROM ghcr.io/astral-sh/uv:${UV_VERSION} AS uv
 FROM alexeytsarev/debian:13
 
-ARG DEBIAN_FRONTEND="noninteractive"
-ARG WAIT_FOR_VERSION="2.2.4"
-ARG SUPERVISORD_VERSION="0.7.3"
-ARG ENVSUBST_VERSION="1.4.3"
+ARG ENVSUBST_VERSION
+ARG SUPERVISORD_VERSION
+ARG WAIT_FOR_VERSION
 
-COPY usr_local_bin/ /usr/local/bin/
+COPY rootfs/ /
+COPY --from=uv /uv /usr/local/bin
 
 RUN --mount=type=cache,id=toolbox_var_cache_apt,target=/var/cache/apt,sharing=private \
     --mount=type=cache,id=toolbox_var_lib_apt,target=/var/lib/apt,sharing=private \

@@ -6,7 +6,6 @@ FROM alexeytsarev/debian:11-base
 # BuildKit/apt caches do not work properly in the below case:
 #FROM debian:9
 
-ARG DEBIAN_FRONTEND="noninteractive"
 ARG REPO_URL="https://gitlab.com/Alexey-Tsarev/fat/-/raw/main/packages/packages.ivideon.com/ubuntu"
 ARG TMP_PACKAGES="wget gnupg gcc make lsb-release"
 

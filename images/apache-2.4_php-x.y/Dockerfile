@@ -3,7 +3,6 @@
 FROM alexeytsarev/toolbox:latest AS toolbox
 FROM alexeytsarev/debian:13
 
-ARG DEBIAN_FRONTEND="noninteractive"
 ARG PHP_PACKAGES
 ARG SERVER_NAME
 ARG LOG_ROTATE=365

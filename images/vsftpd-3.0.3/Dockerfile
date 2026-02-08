@@ -3,8 +3,6 @@
 FROM alexeytsarev/toolbox:latest AS toolbox
 FROM alexeytsarev/debian:11-base
 
-ARG DEBIAN_FRONTEND="noninteractive"
-
 COPY --from=toolbox \
     /usr/local/bin/apt_install.sh \
     /usr/local/bin/clean_and_keep.sh \

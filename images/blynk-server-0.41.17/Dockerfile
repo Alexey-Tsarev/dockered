@@ -3,7 +3,6 @@
 FROM alexeytsarev/toolbox:latest AS toolbox
 FROM maven:3-openjdk-11 AS builder
 
-ARG DEBIAN_FRONTEND="noninteractive"
 ARG BLYNK_VERSION="0.41.17"
 
 COPY --from=toolbox \
@@ -36,7 +35,6 @@ RUN --mount=type=cache,id=blynk_server_maven_cache,target=/root/.m2,sharing=priv
 
 FROM alexeytsarev/debian:11-base
 
-ARG DEBIAN_FRONTEND="noninteractive"
 ARG APP_DIR="/opt/blynk"
 
 COPY --from=toolbox \

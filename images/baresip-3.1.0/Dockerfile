@@ -6,7 +6,6 @@ FROM alexeytsarev/debian:11-base AS builder
 ARG APP_VERSION="3.1.0"
 ARG RE_SRC_URL="https://github.com/baresip/re/archive/refs/tags/v${APP_VERSION}.zip"
 ARG BARESIP_SRC_URL="https://github.com/baresip/baresip/archive/refs/tags/v${APP_VERSION}.zip"
-ARG DEBIAN_FRONTEND="noninteractive"
 
 COPY --from=toolbox \
     /usr/local/bin/apt_install.sh \
@@ -48,7 +47,6 @@ RUN --mount=type=cache,id=baresip_var_cache_apt,target=/var/cache/apt,sharing=pr
 
 #FROM alexeytsarev/debian:11-base
 #
-#ARG DEBIAN_FRONTEND="noninteractive"
 #ARG APP_NAME
 #ARG APP_SHORT
 #ARG PKGS

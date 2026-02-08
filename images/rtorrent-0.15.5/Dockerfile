@@ -59,7 +59,6 @@ RUN --mount=type=cache,id=rtorrent_var_cache_apt,target=/var/cache/apt,sharing=p
 
 FROM alexeytsarev/debian:12
 
-ARG DEBIAN_FRONTEND="noninteractive"
 ARG APP_DIR="/opt/rtorrent"
 
 COPY --from=toolbox \

@@ -3,7 +3,6 @@
 FROM alexeytsarev/toolbox:latest AS toolbox
 FROM alexeytsarev/debian:11-base
 
-ARG DEBIAN_FRONTEND="noninteractive"
 ARG TMP_PACKAGES="software-properties-common dirmngr apt-transport-https"
 
 COPY --from=toolbox \

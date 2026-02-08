@@ -3,7 +3,6 @@
 FROM alexeytsarev/toolbox:latest AS toolbox
 FROM alexeytsarev/debian:11-base AS builder
 
-ARG DEBIAN_FRONTEND="noninteractive"
 ARG FAIL2BAN_VERSION="0.11.2"
 
 COPY --from=toolbox \
@@ -27,8 +26,6 @@ RUN --mount=type=cache,id=fail2ban_var_cache_apt,target=/var/cache/apt,sharing=p
         rm -rf fail2ban-*
 
 FROM alexeytsarev/debian:11-base
-
-ARG DEBIAN_FRONTEND="noninteractive"
 
 COPY --from=toolbox /usr/local/bin/supervisord /usr/local/bin
 COPY --from=builder /usr/local/bin/fail2ban-* /usr/local/bin

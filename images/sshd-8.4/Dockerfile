@@ -3,7 +3,6 @@
 FROM alexeytsarev/toolbox:latest AS toolbox
 FROM debian:bullseye
 
-ARG DEBIAN_FRONTEND="noninteractive"
 ARG PACKAGES
 
 COPY --from=toolbox \

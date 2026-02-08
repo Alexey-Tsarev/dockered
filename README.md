@@ -3,13 +3,10 @@ This repository contains applications which were `Docker`'ed by me.
 `Docker` and `docker compose` are required to build and run these images...
 
 ## Content
-### IoT
- - Blynk server 0.41.17
-
 ### P2P
+- Transmission
  - uTorrent server
  - rTorrent
- - Transmission
 
 ### LAMP
  - Apache with PHP
@@ -18,7 +15,10 @@ This repository contains applications which were `Docker`'ed by me.
  - Tengine
  - Fail2Ban
  - vsftpd
- 
+
+### IoT
+- Blynk server 0.41.17
+
 ### Video Surveillance
 In the `ivideon` directory there is an Ivideon Server for Linux.  
 You don't need any `X.org` server. This image uses `Xvfb` (`X` virtual framebuffer).
@@ -30,7 +30,6 @@ See `compose/ivideon/README.md`
 - DNSCrypt-proxy
 - Tengine
 See `compose/proxy/README.md`
-
 
 To build all:
 ```
