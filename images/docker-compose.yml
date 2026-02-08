@@ -1462,10 +1462,10 @@ services:
   # dnscrypt-proxy
   dnscrypt-proxy:
     build:
-      context: dnscrypt-proxy-2.1.1
+      context: dnscrypt-proxy-2.1.15
       network: host
 
-    image: alexeytsarev/dnscrypt-proxy:2.1.1
+    image: alexeytsarev/dnscrypt-proxy:2.1.15
     container_name: dnscrypt-proxy
     network_mode: host
     restart: unless-stopped
