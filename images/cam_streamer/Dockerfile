@@ -33,7 +33,7 @@ RUN --mount=type=cache,id=cam_streamer_var_cache_apt,target=/var/cache/apt,shari
         cp -av cam_streamer* "${APP_DIR}" && \
     echo "=> Sync a Python project into a new environment" && \
         cd "${APP_DIR}" && \
-        uv sync --locked --no-dev --link-mode  copy --compile-bytecode && \
+        uv sync --locked --no-dev --link-mode copy --compile-bytecode && \
     echo "=> Clean" && \
         apt -y purge ${TMP_PACKAGES} && \
         apt -y autoremove && \

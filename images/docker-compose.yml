@@ -1032,16 +1032,15 @@ services:
   # sshd
   sshd:
     build:
-      context: sshd-8.4
+      context: sshd-10.0
       network: host
       args:
         - PACKAGES=msmtp curl wget
 
-    image: alexeytsarev/sshd:8.4
+    image: alexeytsarev/sshd:10.0
     container_name: sshd
     network_mode: host
     restart: unless-stopped
-    init: true
 
     environment:
       - TERM=xterm

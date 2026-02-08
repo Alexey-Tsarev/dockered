@@ -1,7 +1,7 @@
 # syntax=docker.io/docker/dockerfile:1
 
 FROM alexeytsarev/toolbox:latest AS toolbox
-FROM debian:bullseye
+FROM alexeytsarev/debian:13
 
 ARG PACKAGES
 
