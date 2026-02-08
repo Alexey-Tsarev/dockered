@@ -853,14 +853,18 @@ services:
   # vsftpd
   vsftpd:
     build:
-      context: vsftpd-3.0.3
+      context: vsftpd-3.0.5
       network: host
 
-    image: alexeytsarev/vsftpd:3.0.3
+    image: alexeytsarev/vsftpd:3.0.5
     container_name: vsftpd
-    network_mode: host
     restart: unless-stopped
     init: true
+
+    network_mode: host
+    #network_mode: bridge
+    #ports:
+    #- "21:21"
 
     environment:
       - TERM=xterm
@@ -882,9 +886,6 @@ services:
       driver: journald
       options:
         tag: vsftpd
-
-    #ports:
-      #- "21:21"
   # End vsftpd
 
 
