@@ -1,7 +1,7 @@
 # syntax=docker.io/docker/dockerfile:1
 
 FROM alexeytsarev/toolbox:latest AS toolbox
-FROM debian:11
+FROM debian:12
 
 COPY --from=toolbox \
     /usr/local/bin/apt_install.sh \

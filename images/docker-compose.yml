@@ -106,9 +106,9 @@ services:
 
   # Ivideon
   ivideon:
-    build:
-      context: ivideon-3.9.0
-      network: host
+    #build:
+    #  context: ivideon-3.9.0
+    #  network: host
 
     image: alexeytsarev/ivideon:3.9.0
     container_name: ivideon
@@ -811,10 +811,10 @@ services:
   # MariaDB
   mariadb:
     build:
-      context: mariadb-10.11
+      context: mariadb-11.8
       network: host
 
-    image: alexeytsarev/mariadb:10.11
+    image: alexeytsarev/mariadb:11.8
     container_name: mysql
     network_mode: host
     restart: unless-stopped
@@ -892,10 +892,10 @@ services:
   # Fail2Ban
   fail2ban:
     build:
-      context: fail2ban-0.11.2
+      context: fail2ban-1.1.0
       network: host
 
-    image: alexeytsarev/fail2ban:0.11.2
+    image: alexeytsarev/fail2ban:1.1.0
     container_name: fail2ban
     privileged: true
     network_mode: host
@@ -1865,3 +1865,7 @@ services:
       options:
         tag: zabbix_web
   # End zabbix_web
+
+
+# my:
+# docker compose up cam_streamer jellyfin ome sshd sslh traccar transmission zabbix_server zabbix_web

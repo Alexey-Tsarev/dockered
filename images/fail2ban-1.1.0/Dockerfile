@@ -1,9 +1,9 @@
 # syntax=docker.io/docker/dockerfile:1
 
 FROM alexeytsarev/toolbox:latest AS toolbox
-FROM alexeytsarev/debian:11-base AS builder
+FROM alexeytsarev/debian:13 AS builder
 
-ARG FAIL2BAN_VERSION="0.11.2"
+ARG FAIL2BAN_VERSION="1.1.0"
 
 COPY --from=toolbox \
     /usr/local/bin/apt_install.sh \
@@ -23,13 +23,15 @@ RUN --mount=type=cache,id=fail2ban_var_cache_apt,target=/var/cache/apt,sharing=p
         cd fail2ban-* && \
         python3 setup.py install && \
         cd .. && \
-        rm -rf fail2ban-*
+        rm -rf fail2ban-* && \
+    echo "=> List /usr/local/lib" && \
+        find /usr/local/lib
 
-FROM alexeytsarev/debian:11-base
+FROM alexeytsarev/debian:13
 
 COPY --from=toolbox /usr/local/bin/supervisord /usr/local/bin
 COPY --from=builder /usr/local/bin/fail2ban-* /usr/local/bin
-COPY --from=builder /usr/local/lib/python3.9/dist-packages/fail2ban /usr/local/lib/python3.7/dist-packages/fail2ban
+COPY --from=builder /usr/local/lib/python3.13/dist-packages/fail2ban /usr/local/lib/python3.13/dist-packages/fail2ban
 COPY --from=builder /etc/fail2ban /etc/fail2ban
 COPY --from=builder /usr/share/doc/fail2ban /usr/share/doc/fail2ban
 COPY rootfs/ /
@@ -41,7 +43,7 @@ RUN --mount=type=cache,id=fail2ban_var_cache_apt,target=/var/cache/apt,sharing=p
         chmod 644 /etc/logrotate.d/fail2ban && \
         chmod 755 /fail2ban.sh && \
     echo "=> Install packages" && \
-        apt -y install python3 python3-systemd python3-pyinotify python3-dnspython gamin iptables ipset kmod cron logrotate && \
+        apt -y install python3 python3-systemd python3-pyinotify python3-dnspython iptables ipset kmod cron logrotate && \
     echo "=> Enable dateext" && \
         sed -i 's/#dateext/dateext/' /etc/logrotate.conf && \
     echo "=> Enable compress" && \

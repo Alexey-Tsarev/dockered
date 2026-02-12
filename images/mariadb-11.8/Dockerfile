@@ -1,9 +1,9 @@
 # syntax=docker.io/docker/dockerfile:1
 
 FROM alexeytsarev/toolbox:latest AS toolbox
-FROM alexeytsarev/debian:11-base
+FROM alexeytsarev/debian:13
 
-ARG TMP_PACKAGES="software-properties-common dirmngr apt-transport-https"
+ARG TMP_PACKAGES="apt-transport-https"
 
 COPY --from=toolbox \
     /usr/local/bin/apt_install.sh \
@@ -19,15 +19,15 @@ RUN --mount=type=cache,id=mariadb_var_cache_apt,target=/var/cache/apt,sharing=pr
     --mount=type=cache,id=mariadb_var_lib_apt,target=/var/lib/apt,sharing=private \
     --mount=type=cache,id=mariadb_root,target=/root \
     echo "=> Set permissions" && \
-        chmod 755 /etc /etc/mysql /etc/mysql/mariadb.conf.d && \
-        chmod 644 /etc/mysql/mariadb.conf.d/99-*.cnf && \
-        chmod 755 /mariadb.sh /mysql_upgrade.sh && \
+        chmod 755 /etc /etc/apt /etc/apt/sources.list.d /mariadb.sh /mysql-upgrade.sh && \
+        chmod 644 /etc/apt/sources.list.d/mariadb.sources && \
     echo "=> Install packages" && \
-        apt_install.sh ${TMP_PACKAGES} cron logrotate pigz wget netcat && \
+        apt_install.sh ${TMP_PACKAGES} cron logrotate pigz wget netcat-traditional && \
         cd /root && \
-        wget.sh https://mariadb.org/mariadb_release_signing_key.asc && \
-        apt-key add mariadb_release_signing_key.asc && \
-        add-apt-repository 'deb [arch=amd64,arm64,ppc64el] http://sgp1.mirrors.digitalocean.com/mariadb/repo/10.11/debian bullseye main' && \
+        wget.sh https://mariadb.org/mariadb_release_signing_key.pgp && \
+        mkdir -p /etc/apt/keyrings && \
+        cp -av mariadb_release_signing_key.pgp /etc/apt/keyrings/mariadb-keyring.pgp && \
+        apt update && \
         apt_install.sh mariadb-server && \
     echo "=> Move DB and cfg" && \
         /mariadb.sh build && \
@@ -42,7 +42,7 @@ RUN --mount=type=cache,id=mariadb_var_cache_apt,target=/var/cache/apt,sharing=pr
 
 EXPOSE 3306
 
-VOLUME /etc/mysql /var/lib/mysql /var/run/mysql /var/log/mysql
+VOLUME /etc/mysql /var/lib/mysql /run/mysqld /var/log/mysql
 
 #CMD ["sleep", "inf"]
 #CMD ["/mariadb.sh"]

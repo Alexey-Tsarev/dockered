@@ -3,9 +3,10 @@
 # Global scope
 ARG ENVSUBST_VERSION="1.4.3"
 ARG SUPERVISORD_VERSION="0.7.3"
-ARG UV_VERSION="0.10.0"
+ARG UV_VERSION="0.10.2"
 ARG WAIT_FOR_VERSION="2.2.4"
 
+# https://github.com/astral-sh/uv/releases
 FROM ghcr.io/astral-sh/uv:${UV_VERSION} AS uv
 FROM alexeytsarev/debian:13
 

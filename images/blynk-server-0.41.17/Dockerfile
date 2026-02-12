@@ -33,7 +33,7 @@ RUN --mount=type=cache,id=blynk_server_maven_cache,target=/root/.m2,sharing=priv
         cd /var/tmp/blynk-server-${BLYNK_VERSION}/server/launcher/target && \
         wget.sh "https://github.com/Peterkn2001/blynk-server/releases/download/v${BLYNK_VERSION}/server-${BLYNK_VERSION}.jar"
 
-FROM alexeytsarev/debian:11-base
+FROM alexeytsarev/debian:13
 
 ARG APP_DIR="/opt/blynk"
 
@@ -56,7 +56,7 @@ RUN --mount=type=cache,id=blynk_server_var_cache_apt,target=/var/cache/apt,shari
     echo "=> Set permissions" && \
         chmod 755 /blynk.sh && \
     echo "=> Install packages" && \
-        apt_install.sh netcat openjdk-11-jdk && \
+        apt_install.sh netcat-traditional default-jdk && \
     echo "=> Install blynk" && \
         mv /var/tmp/server-*.jar "${APP_DIR}" && \
     echo "=> Create directories and links" && \
