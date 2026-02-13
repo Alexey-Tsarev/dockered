@@ -622,10 +622,10 @@ services:
       args:
         - APP_NAME=nginx-stable
         - APP_SHORT=nginx
-        - APP_VERSION=1.28.1
-        - APP_SRC_URL=https://nginx.org/download/nginx-1.28.1.tar.gz
+        - APP_VERSION=1.28.2
+        - APP_SRC_URL=https://nginx.org/download/nginx-1.28.2.tar.gz
 
-    image: alexeytsarev/nginx:1.28.1
+    image: alexeytsarev/nginx:1.28.2
     container_name: nginx-stable
     restart: unless-stopped
     security_opt:
@@ -670,10 +670,10 @@ services:
       args:
         - APP_NAME=nginx-mainline
         - APP_SHORT=nginx
-        - APP_VERSION=1.29.4
-        - APP_SRC_URL=https://nginx.org/download/nginx-1.29.4.tar.gz
+        - APP_VERSION=1.29.5
+        - APP_SRC_URL=https://nginx.org/download/nginx-1.29.5.tar.gz
 
-    image: alexeytsarev/nginx:1.29.4
+    image: alexeytsarev/nginx:1.29.5
     container_name: nginx-mainline
     restart: unless-stopped
     security_opt:
@@ -1154,9 +1154,9 @@ services:
 
   # utorrent
   utorrent:
-    build:
-      context: utorrent-server-3.3
-      network: host
+    #build:
+    #  context: utorrent-server-3.3
+    #  network: host
 
     image: alexeytsarev/utorrent-server:3.3
     container_name: utorrent
@@ -1865,7 +1865,3 @@ services:
       options:
         tag: zabbix_web
   # End zabbix_web
-
-
-# my:
-# docker compose up cam_streamer jellyfin ome sshd sslh traccar transmission zabbix_server zabbix_web

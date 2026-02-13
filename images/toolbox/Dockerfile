@@ -15,7 +15,11 @@ ARG SUPERVISORD_VERSION
 ARG WAIT_FOR_VERSION
 
 COPY rootfs/ /
-COPY --from=uv /uv /usr/local/bin
+
+COPY --from=uv \
+    /uv \
+    /uvx \
+    /usr/local/bin/
 
 RUN --mount=type=cache,id=toolbox_var_cache_apt,target=/var/cache/apt,sharing=private \
     --mount=type=cache,id=toolbox_var_lib_apt,target=/var/lib/apt,sharing=private \
