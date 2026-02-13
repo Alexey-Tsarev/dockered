@@ -1472,6 +1472,10 @@ services:
 
     environment:
       - TERM=xterm
+      - DNSCRYPT_PROXY_LISTEN_ADDRESS_REG=^listen_addresses = .*$
+      - DNSCRYPT_PROXY_LISTEN_ADDRESS_VAL=listen_addresses = ['127.0.0.1:53053']
+      - DNSCRYPT_PROXY_MAX_CLIENTS_REG=^max_clients = .*$
+      - DNSCRYPT_PROXY_MAX_CLIENTS_VAL=max_clients = 999
 
     volumes:
       - /etc/timezone:/etc/timezone:ro

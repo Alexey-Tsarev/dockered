@@ -26,7 +26,6 @@ RUN --mount=type=cache,id=dnscrypt_proxy_var_cache_apt,target=/var/cache/apt,sha
         mkdir -p /root/temp && \
         tar -xf "${DNSCRYPT_PROXY_FILE_NAME}" -C /root/temp
 
-
 FROM alexeytsarev/debian:13
 
 ARG APP_DIR
@@ -35,9 +34,10 @@ WORKDIR "${APP_DIR}"
 
 COPY --from=builder /root/temp/*/ ./
 
-RUN echo "=> Make config from example" && \
-        cp -av example-dnscrypt-proxy.toml dnscrypt-proxy.toml && \
-        sed -i "s/listen_addresses = \['127.0.0.1:53'\]/listen_addresses = ['0.0.0.0:53']/g" dnscrypt-proxy.toml
+COPY rootfs/ /
+
+RUN echo "=> Set permissions" && \
+        chmod 755 /dnscrypt-proxy.sh
 
 #CMD ["sleep", "inf"]
-CMD ["./dnscrypt-proxy"]
+CMD ["/dnscrypt-proxy.sh"]
