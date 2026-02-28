@@ -1300,13 +1300,13 @@ services:
   # transmission
   transmission:
     build:
-      context: transmission-4.1.0
+      context: transmission-4.1.1
       network: host
       args:
          - CLEAN=0
         # - CLEAN=1
 
-    image: alexeytsarev/transmission:4.1.0
+    image: alexeytsarev/transmission:4.1.1
     container_name: transmission
     network_mode: host
     #privileged: true
@@ -1320,7 +1320,7 @@ services:
       - FLOOD_BASE_URI=/flood
       - TRANSMISSION_USER
       - TRANSMISSION_GROUP
-      - TRANSMISSION_OPTIONS=--foreground --sequential-download
+      - TRANSMISSION_OPTIONS=--foreground --sequential-download --lpd
       #- TRANSMISSION_OPTIONS=--foreground
 
     labels:
