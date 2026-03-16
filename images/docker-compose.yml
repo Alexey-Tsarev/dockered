@@ -1489,26 +1489,103 @@ services:
 
 
   # 3proxy
+  # https://github.com/tarampampam/3proxy-docker
   3proxy:
-    image: tarampampam/3proxy:latest
+    # https://hub.docker.com/r/tarampampam/3proxy/
+    image: tarampampam/3proxy:1.12.1
     container_name: 3proxy
     network_mode: host
     restart: unless-stopped
 
     environment:
-      - TERM=xterm
-      - PROXY_LOGIN=proxy
-      - PROXY_PASSWORD=proxyz3
+      TERM: xterm
+      EXTRA_CONFIG: internal 127.0.0.1
 
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
+      - ${DOCKER_ROOT}/3proxy/3proxy.cfg.mustach:/etc/3proxy/3proxy.cfg.mustach # If first start: comment this
 
     logging:
       driver: journald
       options:
         tag: 3proxy
   # End 3proxy
+
+
+  # dante-server
+  dante-server:
+    build:
+      context: dante-server-1.4.4
+      network: host
+
+    image: alexeytsarev/dante-server:1.4.4
+    container_name: dante-server
+    network_mode: host
+#    privileged: true
+    restart: unless-stopped
+    security_opt:
+      - apparmor=unconfined
+
+    environment:
+      TERM: xterm
+
+    labels:
+      - SERVICE_NAME=dante-server
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ${DOCKER_ROOT}/dante-server:/opt/dante-server/
+      - ${DOCKER_ROOT}/log/dante-server:/opt/dante-server/log/
+
+    logging:
+      driver: journald
+      options:
+        tag: dante-server
+  # End dante-server
+
+
+  # slipstream-rust
+  slipstream-rust:
+    build:
+      context: slipstream-rust-0.1.0
+      network: host
+      args:
+        - CLEAN=0
+        # - CLEAN=1
+
+    image: alexeytsarev/slipstream-rust:0.1.0
+    container_name: slipstream-rust
+    network_mode: host
+    #privileged: true
+    restart: unless-stopped
+    security_opt:
+      - apparmor=unconfined
+
+    environment:
+      TERM: xterm
+      DNS_LISTEN_PORT: 53
+      TARGET_ADDRESS: 127.0.0.1:1080
+      DOMAIN: "${SLIPSTREAM_DOMAIN}"
+
+    labels:
+      - SERVICE_NAME=slipstream-rust
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ${DOCKER_ROOT}/slipstream-rust:/opt/slipstream-rust/conf
+
+    logging:
+      driver: journald
+      options:
+        tag: slipstream-rust
+  # End slipstream-rust
 
 
   # baresip-0

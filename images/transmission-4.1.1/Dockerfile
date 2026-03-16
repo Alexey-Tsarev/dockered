@@ -1,7 +1,7 @@
 # syntax=docker.io/docker/dockerfile:1
 
 FROM alexeytsarev/toolbox:latest AS toolbox
-FROM alexeytsarev/debian:13 AS builder
+FROM alexeytsarev/debian:13
 
 # https://github.com/transmission/transmission/releases
 ARG TRANSMISSION_VERSION="4.1.1"

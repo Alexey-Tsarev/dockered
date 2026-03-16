@@ -1,7 +1,7 @@
 # syntax=docker.io/docker/dockerfile:1
 
 FROM alexeytsarev/toolbox:latest AS toolbox
-FROM alexeytsarev/debian:13 AS builder
+FROM alexeytsarev/debian:13
 
 ARG APP_DIR="/opt/cam_streamer"
 ARG CAM_STREAMER_URL="https://github.com/Alexey-Tsarev/cam_streamer/archive/refs/heads/OvenMediaEngine.zip"
