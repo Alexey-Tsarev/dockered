@@ -59,8 +59,20 @@ COPY --from=builder /var/tmp "${APP_DIR}"
 
 COPY rootfs/slipstream-server.sh /
 
-RUN echo "=> Set execution bit" && \
-        chmod 755 /*.sh
+COPY --from=toolbox \
+    /usr/local/bin/apt_install.sh \
+    /usr/local/bin/clean_and_keep.sh \
+    /usr/local/bin/
+
+RUN --mount=type=cache,id=slipstream_var_cache_apt,target=/var/cache/apt,sharing=private \
+    --mount=type=cache,id=slipstream_var_lib_apt,target=/var/lib/apt,sharing=private \
+    echo "=> Install packages" && \
+        apt_install.sh iproute2 jq && \
+    echo "=> Set execution bit" && \
+        chmod 755 /*.sh && \
+    echo "=> Clean" && \
+        apt -y autoremove && \
+        clean_and_keep.sh
 
 #CMD ["sleep", "inf"]
 CMD ["/slipstream-server.sh"]

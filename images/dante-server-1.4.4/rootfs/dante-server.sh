@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 set -a
 EXTERNAL="$(ip route show default | awk '{print $5}')"
 set +a

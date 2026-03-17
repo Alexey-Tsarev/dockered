@@ -1567,8 +1567,7 @@ services:
 
     environment:
       TERM: xterm
-      DNS_LISTEN_PORT: 53
-      TARGET_ADDRESS: 127.0.0.1:1080
+      #DNS_LISTEN_HOST: 0.0.0.0
       DOMAIN: "${SLIPSTREAM_DOMAIN}"
 
     labels:
