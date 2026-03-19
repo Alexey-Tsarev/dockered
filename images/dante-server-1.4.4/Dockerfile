@@ -2,7 +2,8 @@
 
 # Global scope
 ARG DANTE_VERSION="1.4.4"
-ARG DANTE_URL="https://www.inet.no/dante/files/dante-${DANTE_VERSION}.tar.gz"
+#ARG DANTE_URL="https://www.inet.no/dante/files/dante-${DANTE_VERSION}.tar.gz"
+ARG DANTE_URL="https://mse.uk.distfiles.macports.org/dante/dante-${DANTE_VERSION}.tar.gz"
 ARG APP_DIR="/opt/dante"
 
 FROM alexeytsarev/toolbox:latest AS toolbox
