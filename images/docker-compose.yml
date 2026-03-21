@@ -670,10 +670,10 @@ services:
       args:
         - APP_NAME=nginx-mainline
         - APP_SHORT=nginx
-        - APP_VERSION=1.29.5
-        - APP_SRC_URL=https://nginx.org/download/nginx-1.29.5.tar.gz
+        - APP_VERSION=1.29.6
+        - APP_SRC_URL=https://nginx.org/download/nginx-1.29.6.tar.gz
 
-    image: alexeytsarev/nginx:1.29.5
+    image: alexeytsarev/nginx:1.29.6
     container_name: nginx-mainline
     restart: unless-stopped
     security_opt:
