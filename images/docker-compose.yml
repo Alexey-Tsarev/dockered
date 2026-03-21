@@ -1774,6 +1774,7 @@ services:
 
   # Jellyfin
   # https://jellyfin.org/docs/general/installation/container/
+  # https://github.com/jellyfin/jellyfin/releases
   jellyfin:
     # https://hub.docker.com/r/jellyfin/jellyfin/tags
     image: jellyfin/jellyfin:10.11
@@ -1787,25 +1788,19 @@ services:
       #- "8096:8096/tcp"
       #- "7359:7359/udp"
 
-    environment:
-      - JELLYFIN_PublishedServerUrl=${JELLYFIN_URL} # Optional - alternative address used for autodiscovery
-
     volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+
       - ${DOCKER_ROOT}/jellyfin/config:/config
       - ${DOCKER_ROOT}/jellyfin/cache:/cache
-      - type: bind
-        source: /usr/share/fonts
-        target: /usr/local/share/fonts/custom
-        read_only: false
-      # Media bindings
-      - type: bind
-        source: ${JELLYFIN_MEDIA1_SOURCE}
-        target: ${JELLYFIN_MEDIA1_TARGET}
-        read_only: true
-      - type: bind
-        source: ${JELLYFIN_MEDIA2_SOURCE}
-        target: ${JELLYFIN_MEDIA2_TARGET}
-        read_only: false
+
+      - /usr/share/fonts:/usr/local/share/fonts/custom:ro
+
+      - ${MEDIA1_SOURCE}:${MEDIA1_TARGET}
+      - ${MEDIA2_SOURCE}:${MEDIA2_TARGET}
 
     # Optional - may be necessary for docker health check to pass if running in host network mode
     # extra_hosts:
@@ -1816,6 +1811,36 @@ services:
       options:
         tag: jellyfin
   # End Jellyfin
+
+
+  # Emby
+  # https://hub.docker.com/r/emby/embyserver#installation
+  emby:
+    image: emby/embyserver
+    container_name: emby
+    restart: unless-stopped
+
+    network_mode: host
+    #network_mode: bridge
+    #ports:
+      #- "8096:8096" # HTTP port
+      #- "8920:8920" # HTTPS port
+
+    environment:
+      - UID=1002 # The UID to run emby as (default: 2)
+      - GID=1002 # The GID to run emby as (default 2)
+      - GIDLIST=100 # A comma-separated list of additional GIDs to run emby as (default: 2)
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+
+      - ${DOCKER_ROOT}/emby/config:/config
+
+      - ${MEDIA1_SOURCE}:${MEDIA1_TARGET}
+      - ${MEDIA2_SOURCE}:${MEDIA2_TARGET}
+  # End Emby
 
 
   # OvenMediaEngine

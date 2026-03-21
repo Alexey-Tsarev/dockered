@@ -26,7 +26,7 @@ echo >> .env
 
 # shellcheck disable=SC2086
 # shellcheck disable=SC2046
-eval env -i $(grep -h -v '^#' ${ENVS}) | sed 's/=\(.*\)/=\1/' >> .env
+eval env -i $(grep -h -v '^#' ${ENVS}) | sort| sed 's/=\(.*\)/=\1/' >> .env
 
 if [ "${v}" = 1 ]; then
     echo "Done. Print the following '.env' file:"
