@@ -649,7 +649,6 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
       #- ${DOCKER_ROOT}/nginx-stable/sites-enabled/:/opt/nginx/conf/sites-enabled/
-      #- ${DOCKER_ROOT}/nginx-stable/acme.cfg:/acme.cfg
       #- ${DOCKER_ROOT}/cert/:/opt/cert/
       #- ${DOCKER_ROOT}/log/nginx-stable/:/opt/nginx/log/
       #- /home:/home
@@ -697,7 +696,6 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
       #- ${DOCKER_ROOT}/nginx-mainline/sites-enabled/:/opt/nginx/conf/sites-enabled/
-      #- ${DOCKER_ROOT}/nginx-mainline/acme.cfg:/acme.cfg
       #- ${DOCKER_ROOT}/cert/:/opt/cert/
       #- ${DOCKER_ROOT}/log/nginx-mainline/:/opt/nginx/log/
       #- /home:/home
@@ -745,7 +743,6 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
       #- ${DOCKER_ROOT}/nginx-legacy/sites-enabled/:/opt/nginx/conf/sites-enabled/
-      #- ${DOCKER_ROOT}/nginx-legacy/acme.cfg:/acme.cfg
       #- ${DOCKER_ROOT}/cert/:/opt/cert/
       #- ${DOCKER_ROOT}/log/nginx-legacy/:/opt/nginx/log/
       #- /home:/home
@@ -796,7 +793,6 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
       #- ${DOCKER_ROOT}/tengine/sites-enabled/:/opt/tengine/conf/sites-enabled/
-      #- ${DOCKER_ROOT}/tengine/acme.cfg:/acme.cfg
       #- ${DOCKER_ROOT}/cert/:/opt/cert/
       #- ${DOCKER_ROOT}/log/tengine/:/opt/nginx/log/
       #- /home:/home
@@ -806,6 +802,44 @@ services:
       options:
         tag: tengine
   # End Tengine
+
+
+  # acme
+  # https://github.com/acmesh-official/acme.sh/releases
+  acme:
+    build:
+      context: acme-3.1.2
+      network: host
+
+    image: alexeytsarev/acme:3.1.2
+    container_name: acme
+    restart: unless-stopped
+    #security_opt:
+      #- apparmor=unconfined
+
+    #network_mode: host
+    network_mode: bridge
+
+    environment:
+      - TERM=xterm
+
+    labels:
+      - SERVICE_NAME=acme
+
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      #- ${DOCKER_ROOT}/acme/acme.cfg:/acme.cfg
+      #- ${DOCKER_ROOT}/acme/cert_internal/:/opt/cert_internal/
+      #- ${DOCKER_ROOT}/log/acme/:/opt/log/
+      #- ${DOCKER_ROOT}/nginx/sites-enabled/:/opt/sites/nginx/
+      #- ${DOCKER_ROOT}/cert/:/opt/cert/
+
+    logging:
+      driver: journald
+      options:
+        tag: acme
+  # End acme
 
 
   # MariaDB

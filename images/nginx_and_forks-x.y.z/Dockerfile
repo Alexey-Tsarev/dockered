@@ -1,21 +1,14 @@
 # syntax=docker.io/docker/dockerfile:1
 
-# Global scope
-ARG ACME_COMMIT="f39d066ced0271d87790dc426556c1e02a88c91b"
-ARG ACME_OPTS="--home /opt/acme --cert-home /opt/acme_cert --config-home /opt/acme_conf"
-ARG OPENSSL_VERSION="3.6.1"
-
 FROM alexeytsarev/toolbox:latest AS toolbox
 FROM alexeytsarev/debian:13 AS builder
 
-ARG ACME_COMMIT
-ARG ACME_OPTS
 ARG APP_NAME
 ARG APP_SHORT
 ARG APP_SRC_URL
 ARG APP_VERSION
 ARG CONFIGURE_OPTS
-ARG OPENSSL_VERSION
+ARG OPENSSL_VERSION="3.6.1"
 ARG PKGS_BUILDTIME
 
 COPY --from=toolbox \
@@ -34,22 +27,6 @@ RUN --mount=type=cache,id=${APP_NAME}_var_cache_apt,target=/var/cache/apt,sharin
         fi && \
     echo "=> Install packages" && \
         apt_install.sh wget unzip tree build-essential libpcre2-dev zlib1g-dev ${PKGS_BUILDTIME} && \
-    echo "=> Download: acme" && \
-        cd /root && \
-        wget.sh "https://github.com/acmesh-official/acme.sh/archive/${ACME_COMMIT}.zip" && \
-    echo "=> Extract sources: acme" && \
-        cd /root && \
-        rm -rf acme.sh* && \
-        unzip *.zip && \
-    echo "=> Install: acme" && \
-        cd /root && \
-        cd acme.sh* && \
-        set -x && \
-        mkdir -p \
-            /opt/acme \
-            /opt/acme_cert \
-            /opt/acme_conf && \
-        eval ./acme.sh --install --nocron ${ACME_OPTS} && \
     echo "=> Download sources: ${APP_NAME}" && \
         cd /root && \
         wget.sh "${APP_SRC_URL}" && \
@@ -89,7 +66,6 @@ RUN --mount=type=cache,id=${APP_NAME}_var_cache_apt,target=/var/cache/apt,sharin
 
 FROM alexeytsarev/debian:13
 
-ARG ACME_OPTS
 ARG APP_NAME
 ARG APP_SHORT
 ARG APP_VERSION
@@ -110,28 +86,22 @@ COPY rootfs/ /
 RUN --mount=type=cache,id=${APP_NAME}_var_cache_apt,target=/var/cache/apt,sharing=private \
     --mount=type=cache,id=${APP_NAME}_var_lib_apt,target=/var/lib/apt,sharing=private \
     echo "=> Set permissions" && \
-        chmod 0755 /acme_bot.sh \
-                   /etc \
+        chmod 0755 /etc \
                    /etc/logrotate.d \
                    /nginx.sh \
                    /opt \
                    /opt/cert \
                    /opt/conf/*/common \
-                   /opt/conf/*/sites-enabled \
-                   /var \
-                   /var/spool \
-                   /var/spool/cron && \
-        chmod 1730 /var/spool/cron/crontabs && \
+                   /opt/conf/*/sites-enabled && \
         chmod 0644 /etc/supervisord.conf \
                    /etc/logrotate.d/nginx \
                    /opt/conf/*/*.conf \
                    /opt/conf/*/common/* \
                    /opt/conf/*/sites-enabled/* && \
         chmod 0600 /opt/cert/default/* \
-                   /opt/cert/example.com/* \
-                   /var/spool/cron/crontabs/root && \
+                   /opt/cert/example.com/* && \
     echo "=> Install packages" && \
-        apt_install.sh cron logrotate curl wget net-tools netcat-traditional ${PKGS_RUNTIME} && \
+        apt_install.sh cron logrotate curl net-tools netcat-traditional ${PKGS_RUNTIME} && \
     echo "=> Enable dateext" && \
         sed -i 's/#dateext/dateext/' /etc/logrotate.conf && \
     echo "=> Enable compress" && \
@@ -145,16 +115,12 @@ RUN --mount=type=cache,id=${APP_NAME}_var_cache_apt,target=/var/cache/apt,sharin
         cd /run && \
         ln -s app.pid "${APP_SHORT}.pid" && \
         ln -s "/opt/${APP_SHORT}/sbin/${APP_SHORT}" /usr/local/sbin/ && \
-    echo "=> Symlink: acme" && \
-        ln -s /opt/acme/acme.sh /usr/local/bin && \
     echo "=> Keep original config" && \
         cd "/opt/${APP_SHORT}/conf" && \
         cp -av nginx.conf nginx.conf.orig && \
     echo "=> Copy config" && \
-        cp -av -r -L /opt/conf/${APP_NAME}/* "/opt/${APP_SHORT}/conf" && \
-        rm -rf /opt/conf && \
-    echo "=> Cron" && \
-        crontab /var/spool/cron/crontabs/root && \
+        cp -a -v -r -L /opt/conf/${APP_NAME}/* "/opt/${APP_SHORT}/conf" && \
+        rm -r -f /opt/conf && \
     echo "=> Remove .gitkeep" && \
         rm -f /opt/app/conf/template/.gitkeep && \
         rm -f /opt/app/conf/common/template/.gitkeep && \
@@ -162,14 +128,12 @@ RUN --mount=type=cache,id=${APP_NAME}_var_cache_apt,target=/var/cache/apt,sharin
         apt -y autoremove && \
         clean_and_keep.sh /usr/local/bin/envsubst /usr/local/bin/template_envsubst.sh
 
-ENV ACME_OPTS="${ACME_OPTS}"
-
 WORKDIR /opt/app
 
 # ${HTTP_PORT:-80}, ${HTTPS_PORT:-443}
 EXPOSE 80 443
 
-VOLUME /opt/cert /opt/${APP_SHORT}/log
+VOLUME /opt/${APP_SHORT}/conf/sites-enabled /opt/${APP_SHORT}/log /opt/cert
 
 #CMD ["sleep", "inf"]
 CMD ["supervisord"]
