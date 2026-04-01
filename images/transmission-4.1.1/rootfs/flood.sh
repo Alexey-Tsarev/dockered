@@ -10,6 +10,8 @@ if [ -n "${FLOOD_BASE_URI}" ]; then
 fi
 
 if [ -n "${TRANSMISSION_USER}" ] && [ -n "${TRANSMISSION_GROUP}" ]; then
+    chown -R "${TRANSMISSION_USER}:${TRANSMISSION_GROUP}" /opt/flood
+
     CMD="sudo \
             -u ${TRANSMISSION_USER} \
             -g ${TRANSMISSION_GROUP} \

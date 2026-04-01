@@ -11,6 +11,8 @@ if [ -n "${TRANSMISSION_OPTIONS}" ]; then
 fi
 
 if [ -n "${TRANSMISSION_USER}" ] && [ -n "${TRANSMISSION_GROUP}" ]; then
+    rm -f .config/transmission-daemon/*.tmp.*
+
     chown "${TRANSMISSION_USER}:${TRANSMISSION_GROUP}" \
         "$(pwd)" \
         .config

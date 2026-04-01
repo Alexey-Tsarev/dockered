@@ -1110,7 +1110,7 @@ services:
   # https://github.com/yrutschle/sslh?tab=readme-ov-file#docker-image
   sslh:
     # https://github.com/yrutschle/sslh/pkgs/container/sslh
-    image: ghcr.io/yrutschle/sslh:latest
+    image: ghcr.io/yrutschle/sslh:2.3.1
     container_name: sslh
     # privileged: true
     restart: unless-stopped
