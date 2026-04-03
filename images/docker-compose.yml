@@ -2004,3 +2004,42 @@ services:
       options:
         tag: zabbix_web
   # End zabbix_web
+
+
+  # Jackett
+  # https://github.com/Jackett/Jackett
+  jackett:
+    # https://hub.docker.com/r/linuxserver/jackett/tags
+    image: lscr.io/linuxserver/jackett:0.24.1528
+    container_name: jackett
+    restart: unless-stopped
+    security_opt:
+      - apparmor=unconfined
+
+    network_mode: host
+    #network_mode: bridge
+    #ports:
+      #- "9117:9117"
+
+    environment:
+      - PUID=65534
+      - PGID=65534
+      #- AUTO_UPDATE=true #optional
+      #- RUN_OPTS= #optional
+
+    labels:
+      - SERVICE_NAME=jackett
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ${DOCKER_ROOT}/jackett:/config/
+      - ${DOCKER_ROOT}/jackett/downloads/:/downloads/
+
+    logging:
+      driver: journald
+      options:
+        tag: jackett
+# End Jackett
