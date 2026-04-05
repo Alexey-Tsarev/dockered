@@ -1850,7 +1850,8 @@ services:
   # Emby
   # https://hub.docker.com/r/emby/embyserver#installation
   emby:
-    image: emby/embyserver
+    # https://hub.docker.com/r/emby/embyserver
+    image: emby/embyserver:4.10.0.8
     container_name: emby
     restart: unless-stopped
 
@@ -2041,3 +2042,48 @@ services:
       options:
         tag: jackett
 # End Jackett
+
+
+  # Jacred
+  # https://github.com/jacred-fdb/jacred
+  jacred:
+    # https://github.com/jacred-fdb/jacred/pkgs/container/jacred
+    image: ghcr.io/jacred-fdb/jacred:latest
+    restart: unless-stopped
+    security_opt:
+      - apparmor=unconfined
+
+    network_mode: host
+    #network_mode: bridge
+    #ports:
+      #- "9117:9117"
+
+    labels:
+      - SERVICE_NAME=jacred
+
+    volumes:
+      - ${DOCKER_ROOT}/jacred/config/:/app/config/
+      - ${DOCKER_ROOT}/jacred/data/:/app/Data/
+
+    environment:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - UMASK=0027
+
+    logging:
+      driver: journald
+      options:
+        tag: jacred
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "-s", "-m", "10", "http://127.0.0.1:9117/health"]
+      interval: 30s
+      timeout: 15s
+      retries: 3
+      start_period: 45s
+
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
+# End Jacred
