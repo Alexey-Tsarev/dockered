@@ -1887,6 +1887,7 @@ services:
 
     environment:
       OME_HOST_IP: ${HOST_IP}
+      OME_WEBRTC_TCP_RELAY_PORT: 34780
 
     network_mode: host
     #network_mode: bridge
@@ -2049,6 +2050,7 @@ services:
   jacred:
     # https://github.com/jacred-fdb/jacred/pkgs/container/jacred
     image: ghcr.io/jacred-fdb/jacred:latest
+    container_name: jacred
     restart: unless-stopped
     security_opt:
       - apparmor=unconfined
@@ -2062,6 +2064,8 @@ services:
       - SERVICE_NAME=jacred
 
     volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
       - ${DOCKER_ROOT}/jacred/config/:/app/config/
       - ${DOCKER_ROOT}/jacred/data/:/app/Data/
 
@@ -2087,3 +2091,48 @@ services:
         limits:
           memory: 2048M
 # End Jacred
+
+
+# Snikket
+  # https://snikket.org/service/quickstart/
+  snikket_proxy:
+    container_name: snikket-proxy
+    image: snikket/snikket-web-proxy:stable
+    env_file: ${DOCKER_ROOT}/snikket/snikket.conf
+    network_mode: host
+    security_opt:
+      - apparmor=unconfined
+    volumes:
+      - ${DOCKER_ROOT}/snikket/data/:/snikket
+      - ${DOCKER_ROOT}/snikket/acme/:/var/www/html/.well-known/acme-challenge
+    restart: "unless-stopped"
+  snikket_certs:
+    container_name: snikket-certs
+    image: snikket/snikket-cert-manager:stable
+    network_mode: host
+    env_file: ${DOCKER_ROOT}/snikket/snikket.conf
+    security_opt:
+      - apparmor=unconfined
+    volumes:
+      - ${DOCKER_ROOT}/snikket/data/:/snikket
+      - ${DOCKER_ROOT}/snikket/acme/:/var/www/.well-known/acme-challenge
+    restart: "unless-stopped"
+  snikket_portal:
+    container_name: snikket-portal
+    image: snikket/snikket-web-portal:stable
+    network_mode: host
+    env_file: ${DOCKER_ROOT}/snikket/snikket.conf
+    security_opt:
+      - apparmor=unconfined
+    restart: "unless-stopped"
+  snikket_server:
+    container_name: snikket
+    image: snikket/snikket-server:stable
+    network_mode: host
+    volumes:
+      - ${DOCKER_ROOT}/snikket/data/:/snikket
+    env_file: ${DOCKER_ROOT}/snikket/snikket.conf
+    security_opt:
+      - apparmor=unconfined
+    restart: "unless-stopped"
+# End Snikket

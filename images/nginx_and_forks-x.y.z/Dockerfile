@@ -40,21 +40,23 @@ RUN --mount=type=cache,id=${APP_NAME}_var_cache_apt,target=/var/cache/apt,sharin
         cd /var/tmp/${APP_SHORT}-* && \
         mkdir /opt/temp && \
         ./configure \
-            --prefix=/opt/${APP_SHORT} \
             --error-log-path=/opt/${APP_SHORT}/log/error.log \
-            --pid-path=/run/${APP_SHORT}.pid \
-            --with-openssl=../openssl-${OPENSSL_VERSION} \
-            --with-threads \
-            --with-pcre \
-            --with-compat \
-            --with-http_ssl_module \
-            --with-http_v2_module \
-            --with-http_realip_module \
             --http-client-body-temp-path=/opt/temp/client_body \
-            --http-proxy-temp-path=/opt/temp/proxy \
             --http-fastcgi-temp-path=/opt/temp/fastcgi \
-            --http-uwsgi-temp-path=/opt/temp/uwsgi \
+            --http-proxy-temp-path=/opt/temp/proxy \
             --http-scgi-temp-path=/opt/temp/scgi \
+            --http-uwsgi-temp-path=/opt/temp/uwsgi \
+            --pid-path=/run/${APP_SHORT}.pid \
+            --prefix=/opt/${APP_SHORT} \
+            --with-compat \
+            --with-http_gunzip_module \
+            --with-http_realip_module \
+            --with-http_ssl_module \
+            --with-http_sub_module \
+            --with-http_v2_module \
+            --with-openssl=../openssl-${OPENSSL_VERSION} \
+            --with-pcre \
+            --with-threads \
             ${CONFIGURE_OPTS} && \
         make -j $(nproc) && \
     echo "=> Install: ${APP_NAME}" && \
