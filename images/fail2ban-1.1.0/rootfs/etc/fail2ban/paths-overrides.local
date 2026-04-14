@@ -1,3 +1,2 @@
-#[DEFAULT]
-#nginx_access_log = /var/log/nginx/access.log
-#nginx_error_log = /var/log/nginx/error.log
+[DEFAULT]
+syslog_daemon = /var/log/syslog

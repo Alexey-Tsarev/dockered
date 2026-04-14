@@ -15,25 +15,33 @@ RUN --mount=type=cache,id=fail2ban_var_cache_apt,target=/var/cache/apt,sharing=p
     --mount=type=cache,id=fail2ban_root,target=/root \
     echo "=> Install packages" && \
         apt_install.sh wget unzip python3 python3-setuptools && \
-    echo "=> Install fail2ban" && \
+    echo "=> Download fail2ban" && \
         cd /root && \
         wget.sh "https://github.com/fail2ban/fail2ban/archive/${FAIL2BAN_VERSION}.zip" && \
         rm -rf fail2ban-* && \
         unzip "${FAIL2BAN_VERSION}.zip" && \
         cd fail2ban-* && \
+    echo "=> Install fail2ban" && \
+        python3 --version && \
         python3 setup.py install && \
         cd .. && \
         rm -rf fail2ban-* && \
+    echo "=> List /etc/fail2ban" && \
+        find /etc/fail2ban && \
+    echo "=> List /usr/local/bin" && \
+        find /usr/local/bin && \
     echo "=> List /usr/local/lib" && \
-        find /usr/local/lib
+        find /usr/local/lib && \
+    echo "=> List /usr/share/doc" && \
+        find /usr/share/doc
 
 FROM alexeytsarev/debian:13
 
-COPY --from=toolbox /usr/local/bin/supervisord /usr/local/bin
+COPY --from=builder /etc/fail2ban /etc/fail2ban
 COPY --from=builder /usr/local/bin/fail2ban-* /usr/local/bin
 COPY --from=builder /usr/local/lib/python3.13/dist-packages/fail2ban /usr/local/lib/python3.13/dist-packages/fail2ban
-COPY --from=builder /etc/fail2ban /etc/fail2ban
 COPY --from=builder /usr/share/doc/fail2ban /usr/share/doc/fail2ban
+COPY --from=toolbox /usr/local/bin/supervisord /usr/local/bin
 COPY rootfs/ /
 
 RUN --mount=type=cache,id=fail2ban_var_cache_apt,target=/var/cache/apt,sharing=private \

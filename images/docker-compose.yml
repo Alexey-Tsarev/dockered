@@ -950,38 +950,11 @@ services:
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-      - /lib/modules:/lib/modules
       - /var/log:/var/log
       - ${DOCKER_ROOT}/log/fail2ban:/var/log/fail2ban
       - ${DOCKER_ROOT}/log/nginx:/var/log/nginx:ro
-      - ${DOCKER_ROOT}/log/ap56:/var/log/httpd56:ro
-      - ${DOCKER_ROOT}/log/ap70:/var/log/httpd70:ro
-      - ${DOCKER_ROOT}/log/ap71:/var/log/httpd71:ro
-      - ${DOCKER_ROOT}/log/ap72:/var/log/httpd72:ro
-      - ${DOCKER_ROOT}/log/ap73:/var/log/httpd73:ro
-      - ${DOCKER_ROOT}/log/ap74:/var/log/httpd74:ro
-      - ${DOCKER_ROOT}/log/ap80:/var/log/httpd80:ro
-      - ${DOCKER_ROOT}/log/ap81:/var/log/httpd81:ro
-      - ${DOCKER_ROOT}/log/ap82:/var/log/httpd82:ro
-      - ${DOCKER_ROOT}/log/ap83:/var/log/httpd83:ro
-      - ${DOCKER_ROOT}/log/ap84:/var/log/httpd84:ro
-      - ${DOCKER_ROOT}/log/ap85:/var/log/httpd85:ro
-      #- ${DOCKER_ROOT}/fail2ban/jail.local:/etc/fail2ban/jail.local:ro # If you have a config
-
-      #depends_on:
-      #- nginx
-      #- ap56
-      #- ap70
-      #- ap71
-      #- ap72
-      #- ap73
-      #- ap74
-      #- ap80
-      #- ap81
-      #- ap82
-      #- ap83
-      #- ap84
-      #- ap85
+      - ${DOCKER_ROOT}/log/apache:/var/log/apache2:ro
+      #- ${DOCKER_ROOT}/fail2ban/jail.local:/etc/fail2ban/jail.local:ro
   # End Fail2Ban
 
 
