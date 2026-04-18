@@ -1,15 +1,20 @@
 [DEFAULT]
+bantime = 1h
+
 bantime.increment = true
 bantime.rndtime   = 10m
 
 banaction          = nftables-multiport
 banaction_allports = nftables-allports
 
+[pam-generic]
+enabled = true
+
 [xrdp-authfail]
-enabled  = true
+enabled = true
 
 [xrdp-connection-accepted]
-enabled  = true
+enabled = true
 
 [xrdp-libxrdp_process_incoming-failed]
-enabled  = true
+enabled = true
