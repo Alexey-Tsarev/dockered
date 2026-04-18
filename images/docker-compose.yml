@@ -622,10 +622,10 @@ services:
       args:
         - APP_NAME=nginx-stable
         - APP_SHORT=nginx
-        - APP_VERSION=1.28.2
-        - APP_SRC_URL=https://nginx.org/download/nginx-1.28.2.tar.gz
+        - APP_SRC_URL=https://nginx.org/download/nginx-1.30.0.tar.gz
+        - APP_VERSION=1.30.0
 
-    image: alexeytsarev/nginx:1.28.2
+    image: alexeytsarev/nginx:1.30.0
     container_name: nginx-stable
     restart: unless-stopped
     security_opt:
@@ -669,10 +669,10 @@ services:
       args:
         - APP_NAME=nginx-mainline
         - APP_SHORT=nginx
-        - APP_VERSION=1.29.6
-        - APP_SRC_URL=https://nginx.org/download/nginx-1.29.6.tar.gz
+        - APP_SRC_URL=https://nginx.org/download/nginx-1.29.8.tar.gz
+        - APP_VERSION=1.29.8
 
-    image: alexeytsarev/nginx:1.29.6
+    image: alexeytsarev/nginx:1.29.8
     container_name: nginx-mainline
     restart: unless-stopped
     security_opt:
@@ -716,10 +716,11 @@ services:
       args:
         - APP_NAME=nginx-legacy
         - APP_SHORT=nginx
-        - APP_VERSION=1.26.3
-        - APP_SRC_URL=https://nginx.org/download/nginx-1.26.3.tar.gz
+        - APP_SRC_URL=https://nginx.org/download/nginx-1.28.3.tar.gz
+        - APP_VERSION=1.28.3
+        - OPENSSL_VERSION=3.6.2
 
-    image: alexeytsarev/nginx:1.26.3
+    image: alexeytsarev/nginx:1.28.3
     container_name: nginx-legacy
     restart: unless-stopped
     security_opt:
@@ -763,9 +764,10 @@ services:
       args:
         - APP_NAME=tengine
         - APP_SHORT=tengine
-        - APP_VERSION=3.1.0
         - APP_SRC_URL=https://github.com/alibaba/tengine/archive/refs/tags/3.1.0.tar.gz
+        - APP_VERSION=3.1.0
         - CONFIGURE_OPTS=--with-jemalloc
+        - OPENSSL_VERSION=3.6.2
         - PKGS_BUILDTIME=libjemalloc2 libjemalloc-dev
         - PKGS_RUNTIME=libjemalloc2
 

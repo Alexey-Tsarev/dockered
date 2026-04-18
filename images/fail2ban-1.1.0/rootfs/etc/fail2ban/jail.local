@@ -5,6 +5,11 @@ bantime.rndtime   = 10m
 banaction          = nftables-multiport
 banaction_allports = nftables-allports
 
+[xrdp-authfail]
+enabled  = true
 
-[xrdp]
-enabled = true
+[xrdp-connection-accepted]
+enabled  = true
+
+[xrdp-libxrdp_process_incoming-failed]
+enabled  = true
