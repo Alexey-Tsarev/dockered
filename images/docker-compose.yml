@@ -1936,9 +1936,9 @@ services:
       #- apparmor=unconfined
 
     environment:
-      DB_SERVER_HOST: ${ZABBIX_DB_SERVER_HOST}
-      MYSQL_USER: ${ZABBIX_MYSQL_USER}
-      MYSQL_PASSWORD: ${ZABBIX_MYSQL_PASSWORD}
+      DB_SERVER_HOST: ${ZABBIX_DB_SERVER_HOST:-127.0.0.1}
+      MYSQL_USER: ${ZABBIX_MYSQL_USER:-zabbix}
+      MYSQL_PASSWORD: ${ZABBIX_MYSQL_PASSWORD:-zabbix}
 
     volumes:
       - /etc/timezone:/etc/timezone:ro
@@ -1966,9 +1966,10 @@ services:
       disable: true
 
     environment:
-      DB_SERVER_HOST: ${ZABBIX_DB_SERVER_HOST}
-      MYSQL_USER: ${ZABBIX_MYSQL_USER}
-      MYSQL_PASSWORD: ${ZABBIX_MYSQL_PASSWORD}
+      DB_SERVER_HOST: ${ZABBIX_DB_SERVER_HOST:-127.0.0.1}
+      MYSQL_USER: ${ZABBIX_MYSQL_USER:-zabbix}
+      MYSQL_PASSWORD: ${ZABBIX_MYSQL_PASSWORD:-zabbix}
+      ZBX_SERVER_HOST: ${ZABBIX_SERVER_HOST:-127.0.0.1}
 
     volumes:
       - /etc/timezone:/etc/timezone:ro
