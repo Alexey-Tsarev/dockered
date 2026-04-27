@@ -3,7 +3,7 @@
 # Global scope
 ARG ENVSUBST_VERSION="1.4.3"
 ARG SUPERVISORD_VERSION="0.7.3"
-ARG UV_VERSION="0.10.2"
+ARG UV_VERSION="0.11.8"
 ARG WAIT_FOR_VERSION="2.2.4"
 
 # https://github.com/astral-sh/uv/releases
