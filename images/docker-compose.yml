@@ -624,6 +624,8 @@ services:
         - APP_SHORT=nginx
         - APP_SRC_URL=https://nginx.org/download/nginx-1.30.0.tar.gz
         - APP_VERSION=1.30.0
+      tags:
+        - alexeytsarev/nginx:stable
 
     image: alexeytsarev/nginx:1.30.0
     container_name: nginx-stable
@@ -671,6 +673,8 @@ services:
         - APP_SHORT=nginx
         - APP_SRC_URL=https://nginx.org/download/nginx-1.29.8.tar.gz
         - APP_VERSION=1.29.8
+      tags:
+        - alexeytsarev/nginx:mainline
 
     image: alexeytsarev/nginx:1.29.8
     container_name: nginx-mainline
@@ -719,6 +723,8 @@ services:
         - APP_SRC_URL=https://nginx.org/download/nginx-1.28.3.tar.gz
         - APP_VERSION=1.28.3
         - OPENSSL_VERSION=3.6.2
+      tags:
+        - alexeytsarev/nginx:legacy
 
     image: alexeytsarev/nginx:1.28.3
     container_name: nginx-legacy
