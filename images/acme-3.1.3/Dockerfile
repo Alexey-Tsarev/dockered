@@ -1,7 +1,7 @@
 # syntax=docker.io/docker/dockerfile:1
 
 # Global scope
-ARG ACME_VERSION="3.1.2"
+ARG ACME_VERSION="3.1.3"
 ARG ACME_OPTS="--home /opt/acme --cert-home /opt/cert_internal --config-home /opt/conf"
 
 FROM alexeytsarev/toolbox:latest AS toolbox
