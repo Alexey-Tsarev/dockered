@@ -1506,8 +1506,8 @@ services:
   # 3proxy
   # https://github.com/tarampampam/3proxy-docker
   3proxy:
-    # https://hub.docker.com/r/tarampampam/3proxy/
-    image: tarampampam/3proxy:1.12.1
+    # https://hub.docker.com/r/tarampampam/3proxy/tags
+    image: tarampampam/3proxy:1.13.0
     container_name: 3proxy
     network_mode: host
     restart: unless-stopped
