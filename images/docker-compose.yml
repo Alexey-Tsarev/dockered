@@ -2025,7 +2025,7 @@ services:
       driver: journald
       options:
         tag: jackett
-# End Jackett
+  # End Jackett
 
 
   # Jacred
@@ -2073,10 +2073,10 @@ services:
       resources:
         limits:
           memory: 2048M
-# End Jacred
+  # End Jacred
 
 
-# Snikket
+  # Snikket
   # https://snikket.org/service/quickstart/
   snikket_proxy:
     container_name: snikket-proxy
@@ -2118,7 +2118,7 @@ services:
     security_opt:
       - apparmor=unconfined
     restart: "unless-stopped"
-# End Snikket
+  # End Snikket
 
 
   # changedetection
@@ -2164,3 +2164,43 @@ services:
 
     command: /usr/local/bin/entrypoint.sh --port 8084 --sport 8085
   # End chrome (for changedetection)
+
+
+  # mpd
+  mpd:
+    build:
+      context: mpd-0.24.10
+      network: host
+
+    image: alexeytsarev/mpd:0.24.10
+    container_name: mpd
+    restart: unless-stopped
+
+    network_mode: host
+    #network_mode: bridge
+    #ports:
+    #- "6600:6600"
+
+    devices:
+      - /dev/snd/:/dev/snd/
+    group_add:
+      - audio
+
+    environment:
+      - TERM=xterm
+
+    labels:
+      - SERVICE_NAME=mpd
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ${DOCKER_ROOT}/mpd/mpd_local.conf:/usr/local/etc/mpd_local.conf # Create this file
+
+    logging:
+      driver: journald
+      options:
+        tag: mpd
+  # End mpd
