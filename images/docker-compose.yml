@@ -1136,7 +1136,7 @@ services:
 
   # traccar
   traccar:
-    image: traccar/traccar:6.6-debian
+    image: traccar/traccar:6.13.3-debian
     container_name: traccar
     network_mode: host
     restart: unless-stopped
@@ -1157,7 +1157,7 @@ services:
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-      - ${DOCKER_ROOT}/traccar:/opt/traccar/conf
+      - ${DOCKER_ROOT}/traccar/traccar.xml:/opt/traccar/conf/traccar.xml
       - ${DOCKER_ROOT}/log/traccar:/opt/traccar/logs:rw
 
     #ports:
