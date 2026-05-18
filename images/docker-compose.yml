@@ -622,12 +622,12 @@ services:
       args:
         - APP_NAME=nginx-stable
         - APP_SHORT=nginx
-        - APP_SRC_URL=https://nginx.org/download/nginx-1.30.0.tar.gz
-        - APP_VERSION=1.30.0
+        - APP_SRC_URL=https://nginx.org/download/nginx-1.30.1.tar.gz
+        - APP_VERSION=1.30.1
       tags:
         - alexeytsarev/nginx:stable
 
-    image: alexeytsarev/nginx:1.30.0
+    image: alexeytsarev/nginx:1.30.1
     container_name: nginx-stable
     restart: unless-stopped
     security_opt:
@@ -671,12 +671,12 @@ services:
       args:
         - APP_NAME=nginx-mainline
         - APP_SHORT=nginx
-        - APP_SRC_URL=https://nginx.org/download/nginx-1.29.8.tar.gz
-        - APP_VERSION=1.29.8
+        - APP_SRC_URL=https://nginx.org/download/nginx-1.31.0.tar.gz
+        - APP_VERSION=1.31.0
       tags:
         - alexeytsarev/nginx:mainline
 
-    image: alexeytsarev/nginx:1.29.8
+    image: alexeytsarev/nginx:1.31.0
     container_name: nginx-mainline
     restart: unless-stopped
     security_opt:
@@ -1508,7 +1508,7 @@ services:
   3proxy-internal:
     # https://hub.docker.com/r/tarampampam/3proxy/tags
     image: tarampampam/3proxy:2.0.0
-    container_name: 3proxy
+    container_name: 3proxy-internal
     network_mode: host
     restart: unless-stopped
 
@@ -1524,7 +1524,7 @@ services:
     logging:
       driver: journald
       options:
-        tag: 3proxy
+        tag: 3proxy-internal
   # End 3proxy
 
 
