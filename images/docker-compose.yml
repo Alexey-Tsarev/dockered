@@ -1505,9 +1505,9 @@ services:
 
   # 3proxy
   # https://github.com/tarampampam/3proxy-docker
-  3proxy:
+  3proxy-internal:
     # https://hub.docker.com/r/tarampampam/3proxy/tags
-    image: tarampampam/3proxy:1.13.0
+    image: tarampampam/3proxy:2.0.0
     container_name: 3proxy
     network_mode: host
     restart: unless-stopped
@@ -1515,11 +1515,11 @@ services:
     environment:
       TERM: xterm
       EXTRA_CONFIG: internal 127.0.0.1
+      PROXY_PORT: 3129
 
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-      - ${DOCKER_ROOT}/3proxy/3proxy.cfg.mustach:/etc/3proxy/3proxy.cfg.mustach # If first start: comment this
 
     logging:
       driver: journald
@@ -2169,10 +2169,10 @@ services:
   # mpd
   mpd:
     build:
-      context: mpd-0.24.10
+      context: mpd-0.24.12
       network: host
 
-    image: alexeytsarev/mpd:0.24.10
+    image: alexeytsarev/mpd:0.24.12
     container_name: mpd
     restart: unless-stopped
 
