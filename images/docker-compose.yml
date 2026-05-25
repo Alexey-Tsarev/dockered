@@ -1566,13 +1566,13 @@ services:
   # slipstream-rust
   slipstream-rust:
     build:
-      context: slipstream-rust-0.1.0
+      context: slipstream-rust-0.1.1
       network: host
       args:
         - CLEAN=0
         # - CLEAN=1
 
-    image: alexeytsarev/slipstream-rust:0.1.0
+    image: alexeytsarev/slipstream-rust:0.1.1
     container_name: slipstream-rust
     network_mode: host
     #privileged: true

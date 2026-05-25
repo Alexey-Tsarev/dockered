@@ -2,6 +2,7 @@
 
 # Global scope
 ARG SLIPSTREAM_URL="https://github.com/Mygod/slipstream-rust.git"
+ARG SLIPSTREAM_VERSION="0.1.1"
 ARG APP_DIR="/opt/slipstream-rust"
 ARG CLEAN
 
@@ -9,6 +10,7 @@ FROM alexeytsarev/toolbox:latest AS toolbox
 FROM alexeytsarev/debian:13 AS builder
 
 ARG SLIPSTREAM_URL
+ARG SLIPSTREAM_VERSION
 ARG CLEAN
 
 COPY --from=toolbox \
@@ -40,6 +42,7 @@ RUN --mount=type=cache,id=slipstream_var_cache_apt,target=/var/cache/apt,sharing
             cd .. ; \
         fi && \
         cd slipstream-rust && \
+        git checkout v${SLIPSTREAM_VERSION} && \
     echo "=> Git log" && \
         git log -n 1 --pretty=format:"%ci %h%d %s" && echo && \
     echo "=> Git submodule update" && \
