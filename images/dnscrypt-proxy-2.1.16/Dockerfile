@@ -1,6 +1,6 @@
 # syntax=docker.io/docker/dockerfile:1
 
-ARG DNSCRYPT_PXORY_VERSION="2.1.15"
+ARG DNSCRYPT_PXORY_VERSION="2.1.16"
 ARG DNSCRYPT_PROXY_FILE_NAME="dnscrypt-proxy-linux_x86_64-${DNSCRYPT_PXORY_VERSION}.tar.gz"
 ARG APP_DIR="/opt/dnscrypt_proxy"
 

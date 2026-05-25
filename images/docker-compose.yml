@@ -622,12 +622,12 @@ services:
       args:
         - APP_NAME=nginx-stable
         - APP_SHORT=nginx
-        - APP_SRC_URL=https://nginx.org/download/nginx-1.30.1.tar.gz
-        - APP_VERSION=1.30.1
+        - APP_SRC_URL=https://nginx.org/download/nginx-1.30.2.tar.gz
+        - APP_VERSION=1.30.2
       tags:
         - alexeytsarev/nginx:stable
 
-    image: alexeytsarev/nginx:1.30.1
+    image: alexeytsarev/nginx:1.30.2
     container_name: nginx-stable
     restart: unless-stopped
     security_opt:
@@ -671,12 +671,12 @@ services:
       args:
         - APP_NAME=nginx-mainline
         - APP_SHORT=nginx
-        - APP_SRC_URL=https://nginx.org/download/nginx-1.31.0.tar.gz
-        - APP_VERSION=1.31.0
+        - APP_SRC_URL=https://nginx.org/download/nginx-1.31.1.tar.gz
+        - APP_VERSION=1.31.1
       tags:
         - alexeytsarev/nginx:mainline
 
-    image: alexeytsarev/nginx:1.31.0
+    image: alexeytsarev/nginx:1.31.1
     container_name: nginx-mainline
     restart: unless-stopped
     security_opt:
@@ -1208,10 +1208,10 @@ services:
   # rakshasa/rTorrent
   rtorrent:
     build:
-      context: rtorrent-0.15.5
+      context: rtorrent-0.16.12
       network: host
 
-    image: alexeytsarev/rtorrent:0.15.5
+    image: alexeytsarev/rtorrent:0.16.12
     container_name: rtorrent
     network_mode: host
     #privileged: true
@@ -1477,10 +1477,10 @@ services:
   # dnscrypt-proxy
   dnscrypt-proxy:
     build:
-      context: dnscrypt-proxy-2.1.15
+      context: dnscrypt-proxy-2.1.16
       network: host
 
-    image: alexeytsarev/dnscrypt-proxy:2.1.15
+    image: alexeytsarev/dnscrypt-proxy:2.1.16
     container_name: dnscrypt-proxy
     network_mode: host
     restart: unless-stopped
@@ -1831,8 +1831,8 @@ services:
   # Emby
   # https://hub.docker.com/r/emby/embyserver#installation
   emby:
-    # https://hub.docker.com/r/emby/embyserver
-    image: emby/embyserver:4.10.0.11
+    # https://hub.docker.com/r/emby/embyserver/tags
+    image: emby/embyserver:4.10.0.12
     container_name: emby
     restart: unless-stopped
 
@@ -2123,7 +2123,7 @@ services:
 
   # changedetection
   changedetection:
-    image: ghcr.io/dgtlmoon/changedetection.io:0.55.3
+    image: ghcr.io/dgtlmoon/changedetection.io:0.55.7
     container_name: changedetection
     network_mode: host
     restart: unless-stopped
@@ -2204,3 +2204,36 @@ services:
       options:
         tag: mpd
   # End mpd
+
+
+  # Hermes
+  hermes:
+    image: nousresearch/hermes-agent:latest
+    container_name: hermes
+    restart: unless-stopped
+    privileged: true
+    command: gateway run
+    ports:
+      - "8642:8642" # gateway API
+      - "9119:9119" # dashboard (only reached when HERMES_DASHBOARD=1)
+    volumes:
+      - ${DOCKER_ROOT}/hermes:/opt/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - HERMES_UID=${HERMES_UID:-10000}
+      - HERMES_GID=${HERMES_GID:-10000}
+      - HERMES_DASHBOARD=1
+      # Uncomment to forward specific env vars instead of using .env file:
+      # - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      # - OPENAI_API_KEY=${OPENAI_API_KEY}
+      # - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: "2.0"
+    logging:
+      driver: journald
+      options:
+        tag: hermes
+  # End Hermes
