@@ -1134,14 +1134,22 @@ services:
   # End sslh
 
 
-  # traccar
+  # Traccar
+  # https://github.com/traccar/traccar/releases
   traccar:
-    image: traccar/traccar:6.13.3-debian
+    # https://hub.docker.com/r/traccar/traccar/tags
+    image: traccar/traccar:6.14.2-debian
     container_name: traccar
-    network_mode: host
     restart: unless-stopped
     security_opt:
       - apparmor=unconfined
+
+    network_mode: host
+    #network_mode: bridge
+    #ports:
+      #- "5000-5150:5000-5150"
+      #- "5000-5150:5000-5150/udp"
+      #- "8082:8082"
 
     environment:
       - TERM=xterm
@@ -1159,12 +1167,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ${DOCKER_ROOT}/traccar/traccar.xml:/opt/traccar/conf/traccar.xml
       - ${DOCKER_ROOT}/log/traccar:/opt/traccar/logs:rw
-
-    #ports:
-      #- "5000-5150:5000-5150"
-      #- "5000-5150:5000-5150/udp"
-      #- "8082:8082"
-  # End traccar
+  # End Traccar
 
 
   # utorrent
