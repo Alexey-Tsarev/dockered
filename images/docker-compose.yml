@@ -2125,7 +2125,9 @@ services:
 
 
   # changedetection
+  # https://github.com/dgtlmoon/changedetection.io/releases
   changedetection:
+    # https://github.com/dgtlmoon/changedetection.io/pkgs/container/changedetection.io
     image: ghcr.io/dgtlmoon/changedetection.io:0.55.7
     container_name: changedetection
     network_mode: host
