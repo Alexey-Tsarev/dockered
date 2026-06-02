@@ -26,7 +26,7 @@ RUN --mount=type=cache,id=mariadb_var_cache_apt,target=/var/cache/apt,sharing=pr
         cd /root && \
         wget.sh https://mariadb.org/mariadb_release_signing_key.pgp && \
         mkdir -p /etc/apt/keyrings && \
-        cp -av mariadb_release_signing_key.pgp /etc/apt/keyrings/mariadb-keyring.pgp && \
+        cp -av mariadb_release_signing_key.pgp /etc/apt/keyrings/mariadb-keyring.asc && \
         apt update && \
         apt_install.sh mariadb-server && \
     echo "=> Move DB and cfg" && \

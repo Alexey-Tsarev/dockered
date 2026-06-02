@@ -853,10 +853,10 @@ services:
   # MariaDB
   mariadb:
     build:
-      context: mariadb-11.8
+      context: mariadb-12.3
       network: host
 
-    image: alexeytsarev/mariadb:11.8
+    image: alexeytsarev/mariadb:12.3
     container_name: mysql
     network_mode: host
     restart: unless-stopped
