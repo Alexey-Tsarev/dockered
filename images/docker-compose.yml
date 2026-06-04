@@ -1211,10 +1211,10 @@ services:
   # rakshasa/rTorrent
   rtorrent:
     build:
-      context: rtorrent-0.16.12
+      context: rtorrent-0.16.13
       network: host
 
-    image: alexeytsarev/rtorrent:0.16.12
+    image: alexeytsarev/rtorrent:0.16.13
     container_name: rtorrent
     network_mode: host
     #privileged: true
