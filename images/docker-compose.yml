@@ -2096,7 +2096,7 @@ services:
   snikket_proxy:
     container_name: snikket-proxy
     image: snikket/snikket-web-proxy:stable
-    env_file: ${DOCKER_ROOT}/snikket/snikket.conf
+    env_file: ${SNIKKET_ENV_FILE:-.env.01-snikket}
     network_mode: host
     security_opt:
       - apparmor=unconfined
@@ -2108,7 +2108,7 @@ services:
     container_name: snikket-certs
     image: snikket/snikket-cert-manager:stable
     network_mode: host
-    env_file: ${DOCKER_ROOT}/snikket/snikket.conf
+    env_file: ${SNIKKET_ENV_FILE:-.env.01-snikket}
     security_opt:
       - apparmor=unconfined
     volumes:
@@ -2119,7 +2119,7 @@ services:
     container_name: snikket-portal
     image: snikket/snikket-web-portal:stable
     network_mode: host
-    env_file: ${DOCKER_ROOT}/snikket/snikket.conf
+    env_file: ${SNIKKET_ENV_FILE:-.env.01-snikket}
     security_opt:
       - apparmor=unconfined
     restart: "unless-stopped"
@@ -2129,7 +2129,7 @@ services:
     network_mode: host
     volumes:
       - ${DOCKER_ROOT}/snikket/data/:/snikket
-    env_file: ${DOCKER_ROOT}/snikket/snikket.conf
+    env_file: ${SNIKKET_ENV_FILE:-.env.01-snikket}
     security_opt:
       - apparmor=unconfined
     restart: "unless-stopped"
