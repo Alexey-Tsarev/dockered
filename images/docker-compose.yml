@@ -1151,7 +1151,7 @@ services:
   # https://github.com/traccar/traccar/releases
   traccar:
     # https://hub.docker.com/r/traccar/traccar/tags
-    image: traccar/traccar:6.14.2-debian
+    image: traccar/traccar:6.14.4-debian
     container_name: traccar
     restart: unless-stopped
     security_opt:
@@ -1848,7 +1848,7 @@ services:
   # https://hub.docker.com/r/emby/embyserver#installation
   emby:
     # https://hub.docker.com/r/emby/embyserver/tags
-    image: emby/embyserver:4.10.0.12
+    image: emby/embyserver:4.10.0.14
     container_name: emby
     restart: unless-stopped
 
@@ -1879,7 +1879,7 @@ services:
   # OvenMediaEngine
   ome:
     # https://hub.docker.com/r/airensoft/ovenmediaengine/tags
-    image: airensoft/ovenmediaengine:v0.20.0
+    image: airensoft/ovenmediaengine:v0.20.5
     container_name: ome
     restart: always
 
@@ -2261,7 +2261,7 @@ services:
   # https://github.com/Finsys/dockhand/releases
   dockhand:
     # https://hub.docker.com/r/fnsys/dockhand/tags
-    image: fnsys/dockhand:v1.0.31
+    image: fnsys/dockhand:v1.0.32
     container_name: dockhand
     network_mode: host
     restart: unless-stopped
