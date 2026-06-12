@@ -12,13 +12,11 @@ if [ -n "${CLEAN}" ]; then
     docker builder prune --all --force
 fi
 
-./build_base_images.sh
-docker push alexeytsarev/debian:13
-docker push alexeytsarev/toolbox:latest
-
 cd images
-docker compose --progress=plain build --parallel
-docker compose push
+./env.sh
+
+# nproc - maybe a bad idea...
+docker compose --progress plain --parallel "$(nproc)" build
 
 if [ -n "${CLEAN}" ]; then
     docker system prune --all --force

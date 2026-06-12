@@ -1,0 +1,85 @@
+workflow:
+  auto_cancel:
+    on_new_commit: interruptible
+
+
+default:
+  image: docker:29-dind
+  interruptible: true
+
+
+stages:
+  - lint
+  - build_base
+  - build
+  - push
+
+
+docker_compose_config:
+  stage: lint
+  script:
+    - cd images
+    - ./env.sh
+    - echo "=> Render compose file (do not print)"
+    - docker compose config --quiet
+  tags:
+    - docker
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+
+build_base_images:
+  stage: build_base
+  script:
+    - ./build_base_images.sh
+  tags:
+    - docker
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+#      when: manual
+
+
+build_images:
+  stage: build
+  script:
+    - ./build_images.sh
+  tags:
+    - docker
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+#      when: manual
+
+
+push_images:
+  stage: push
+  before_script:
+    - echo "=> Login to the public Docker Hub"
+    - echo "${DOCKER_HUB_TOKEN}" | docker login -u "${DOCKER_HUB_USER}" --password-stdin
+  script:
+    - ./push_images.sh
+    - |
+      if [ -n "${CLEAN}" ]; then
+          docker system prune --all --force
+          docker builder prune --all --force
+      fi
+  tags:
+    - docker
+  rules:
+#    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "master"
+
+
+push_github:
+  stage: push
+  before_script:
+    - echo "=> Add GitHub repo"
+    - git remote add github https://${DOCKERED_GITHUB_TOKEN}@github.com/Alexey-Tsarev/dockered.git
+  script:
+    - 'echo "Branch: ${CI_COMMIT_REF_NAME}"'
+    - git --no-pager log -n 10 --pretty=tformat:'%ci %h%d %s'
+    - git push github "${CI_COMMIT_REF_NAME}"
+  tags:
+    - docker
+  rules:
+#    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "master"

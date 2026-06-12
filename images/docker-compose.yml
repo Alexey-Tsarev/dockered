@@ -49,6 +49,7 @@ services:
     # https://hub.docker.com/r/gitlab/gitlab-ee/tags
     image: gitlab/gitlab-ee:19.0.1-ee.0
     container_name: gitlab
+    stop_grace_period: 5m
     restart: unless-stopped
 
     network_mode: host
@@ -112,7 +113,7 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock
-      - ${DOCKER_ROOT}/gitlab-runner/config:/srv/gitlab-runner/config
+      - ${DOCKER_ROOT}/gitlab-runner:/etc/gitlab-runner
   # End GitLab Runner
 
 
