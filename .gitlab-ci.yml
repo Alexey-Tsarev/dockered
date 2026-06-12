@@ -74,7 +74,9 @@ push_github:
   before_script:
     - echo "=> Add GitHub repo"
     - git remote add github https://${DOCKERED_GITHUB_TOKEN}@github.com/Alexey-Tsarev/dockered.git
+    - git remote --verbose
   script:
+    - git checkout -B "${CI_COMMIT_REF_NAME}"
     - 'echo "Branch: ${CI_COMMIT_REF_NAME}"'
     - git --no-pager log -n 10 --pretty=tformat:'%ci %h%d %s'
     - git push github "${CI_COMMIT_REF_NAME}"
