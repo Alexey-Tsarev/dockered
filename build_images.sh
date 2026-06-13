@@ -15,7 +15,7 @@ fi
 cd images
 ./env.sh
 
-docker compose --progress plain --parallel 8 build
+docker compose --progress plain --parallel 4 build
 
 if [ -n "${CLEAN}" ]; then
     docker system prune --all --force
