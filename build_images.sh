@@ -15,8 +15,7 @@ fi
 cd images
 ./env.sh
 
-# nproc - maybe a bad idea...
-docker compose --progress plain --parallel "$(nproc)" build
+docker compose --progress plain --parallel 8 build
 
 if [ -n "${CLEAN}" ]; then
     docker system prune --all --force

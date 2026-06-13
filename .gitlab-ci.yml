@@ -35,6 +35,7 @@ build_base_images:
   tags:
     - docker
   rules:
+    - if: $BUILD_BASE_IMAGES == "1"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 #      when: manual
 
@@ -46,6 +47,7 @@ build_images:
   tags:
     - docker
   rules:
+    - if: $BUILD_IMAGES == "1"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 #      when: manual
 
