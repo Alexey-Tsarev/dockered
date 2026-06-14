@@ -15,7 +15,11 @@ fi
 cd images
 ./env.sh
 
-docker compose --progress plain --parallel 4 build
+if [ -n "${DOCKER_COMPOSE_PARALLEL_BUILD}" ]; then
+    DOCKER_COMPOSE_OPTS="${DOCKER_COMPOSE_OPTS} --parallel ${DOCKER_COMPOSE_PARALLEL_BUILD}"
+fi
+
+eval docker compose --progress plain "${DOCKER_COMPOSE_OPTS}" build
 
 if [ -n "${CLEAN}" ]; then
     docker system prune --all --force
