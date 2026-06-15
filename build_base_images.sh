@@ -1,5 +1,6 @@
 #!/bin/sh
 
+set -e
 set -x
 
 export DOCKER_DEFAULT_PLATFORM=linux/amd64
