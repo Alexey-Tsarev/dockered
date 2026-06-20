@@ -6,5 +6,7 @@ set -x
 cd images
 ./env.sh
 
-# Make sure you are already logon in registry
+docker push alexeytsarev/debian:13
+docker push alexeytsarev/toolbox:latest
+
 docker compose push
