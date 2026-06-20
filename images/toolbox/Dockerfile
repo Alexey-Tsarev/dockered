@@ -3,7 +3,7 @@
 # Global scope
 ARG ENVSUBST_VERSION="1.4.3"
 ARG SUPERVISORD_VERSION="0.7.3"
-ARG UV_VERSION="0.11.8"
+ARG UV_VERSION="0.11.23"
 ARG WAIT_FOR_VERSION="2.2.4"
 
 # https://github.com/astral-sh/uv/releases
@@ -28,6 +28,8 @@ RUN --mount=type=cache,id=toolbox_var_cache_apt,target=/var/cache/apt,sharing=pr
         chmod 755 /usr/local/bin/* && \
     echo "=> Install packages" && \
         apt_install.sh mc netcat-traditional wget curl && \
+    echo "=> Install packages for GitLab" && \
+        apt_install.sh git openssh-client rsync && \
     echo "=> Install wait-for" && \
         cd /root && \
         mkdir -p "wait-for_v${WAIT_FOR_VERSION}" && \
