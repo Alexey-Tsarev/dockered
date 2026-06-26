@@ -23,7 +23,7 @@ else
 
     cd "${TMP_DIR_NAME}" || exit $?
 
-    wget --timeout 10 "$@"
+    wget --timeout 15 --tries 10 "$@"
     ec=$?
 
     if [ "${ec}" -ne 0 ]; then
