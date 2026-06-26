@@ -860,7 +860,6 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /etc/locale.gen:/etc/locale.gen:ro
       - /home/:/home/:ro
-      - /var/tmp/host/:/var/tmp/host/
       - ${BACKUP_ROOT}/backup/:/backup/
       - ${BACKUP_ROOT}/backup_storage/:/backup_storage/
 
