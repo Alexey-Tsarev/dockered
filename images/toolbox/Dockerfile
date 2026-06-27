@@ -29,7 +29,7 @@ RUN --mount=type=cache,id=toolbox_var_cache_apt,target=/var/cache/apt,sharing=pr
     echo "=> Install packages" && \
         apt_install.sh mc netcat-traditional wget curl && \
     echo "=> Install packages for GitLab" && \
-        apt_install.sh git openssh-client rsync && \
+        apt_install.sh git openssh-client rsync docker-compose && \
     echo "=> Install wait-for" && \
         cd /root && \
         mkdir -p "wait-for_v${WAIT_FOR_VERSION}" && \
