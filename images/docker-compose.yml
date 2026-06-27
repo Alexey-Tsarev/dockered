@@ -908,10 +908,10 @@ services:
   # rakshasa/rTorrent
   rtorrent:
     build:
-      context: rtorrent-0.16.13
+      context: rtorrent-0.16.15
       network: host
 
-    image: alexeytsarev/rtorrent:0.16.13
+    image: alexeytsarev/rtorrent:0.16.15
     container_name: rtorrent
     network_mode: host
     stop_grace_period: 30s
