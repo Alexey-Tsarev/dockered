@@ -1,0 +1,203 @@
+services:
+  # cAdvisor
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor
+    container_name: cadvisor
+    # network_mode: host
+    privileged: true
+    restart: unless-stopped
+
+    logging:
+      driver: journald
+      options:
+        tag: cadvisor
+
+    volumes:
+      - /:/rootfs/:ro
+      - /var/run/:/var/run/:ro
+      - /sys/:/sys/:ro
+      - /var/lib/docker/:/var/lib/docker/:ro
+      - /dev/disk/:/dev/disk/:ro
+
+    devices:
+      - /dev/kmsg:/dev/kmsg
+  # End cAdvisor
+
+
+  # crazymax/rTorrent
+  rtorrent-crazymax:
+    image: crazymax/rtorrent-rutorrent:5.2.9-0.15.4
+    container_name: rtorrent-crazymax
+    network_mode: host
+    restart: unless-stopped
+
+    environment:
+      - TERM=xterm
+      - RUTORRENT_PORT=8890
+
+    volumes:
+      - ${DOCKER_ROOT}/rtorrent-crazymax/data/:/data/
+      - ${DOCKER_ROOT}/rtorrent-crazymax/downloads:/downloads/
+      - ${DOCKER_ROOT}/rtorrent-crazymax/passwd/:/passwd/
+
+    logging:
+      driver: journald
+      options:
+        tag: rtorrent-crazymax
+  # End crazymax/rTorrent
+
+
+  # Grafana
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    network_mode: host
+    restart: unless-stopped
+
+    environment:
+      GF_SERVER_ROOT_URL: http://172.22.0.99:3000
+      GF_DATABASE_TYPE: postgres
+      GF_DATABASE_HOST: 127.0.0.1:5432
+      GF_DATABASE_NAME: grafana
+      GF_DATABASE_USER: postgres
+      GF_DATABASE_PASSWORD: postgres
+      GF_DATABASE_SSL_MODE: disable
+
+    volumes:
+      - ${DOCKER_ROOT}/grafana/:/var/lib/grafana/
+
+    logging:
+      driver: journald
+      options:
+        tag: grafana
+  # End Grafana
+
+
+  # Jackett
+  # https://github.com/Jackett/Jackett
+  jackett:
+    # https://hub.docker.com/r/linuxserver/jackett/tags
+    image: lscr.io/linuxserver/jackett:0.24.1528
+    container_name: jackett
+    restart: unless-stopped
+
+    network_mode: host
+    #network_mode: bridge
+    #ports:
+    #  - "9117:9117"
+
+    environment:
+      - PUID=65534
+      - PGID=65534
+      #- AUTO_UPDATE=true #optional
+      #- RUN_OPTS= #optional
+
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ${DOCKER_ROOT}/jackett/:/config/
+      - ${DOCKER_ROOT}/jackett/downloads/:/downloads/
+
+    logging:
+      driver: journald
+      options:
+        tag: jackett
+  # End Jackett
+
+
+  # Jacred
+  # https://github.com/jacred-fdb/jacred
+  jacred:
+    # https://github.com/jacred-fdb/jacred/pkgs/container/jacred
+    image: ghcr.io/jacred-fdb/jacred:latest
+    container_name: jacred
+    restart: unless-stopped
+
+    network_mode: host
+    #network_mode: bridge
+    #ports:
+    #  - "9117:9117"
+
+    environment:
+      - UMASK=0027
+
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ${DOCKER_ROOT}/jacred/config/:/app/config/
+      - ${DOCKER_ROOT}/jacred/data/:/app/Data/
+
+    logging:
+      driver: journald
+      options:
+        tag: jacred
+
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "-s", "-m", "10", "http://127.0.0.1:9117/health" ]
+      interval: 30s
+      timeout: 15s
+      retries: 3
+      start_period: 45s
+
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
+  # End Jacred
+
+
+  # Postgres
+  postgres:
+    image: postgres
+    container_name: postgres
+    network_mode: host
+    restart: always
+
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+    logging:
+      driver: journald
+      options:
+        tag: postgres
+
+    volumes:
+      - ${DOCKER_ROOT}/postgresql/:/var/lib/postgresql/data/
+  # End Postgres
+
+
+  # Prometheus
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    network_mode: host
+    restart: unless-stopped
+
+    volumes:
+      - ${DOCKER_ROOT}/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+
+    logging:
+      driver: journald
+      options:
+        tag: prometheus
+  # End Prometheus
+
+
+  # VictoriaMetrics
+  victoria-metrics:
+    image: victoriametrics/victoria-metrics
+    container_name: victoria-metrics
+    network_mode: host
+    restart: unless-stopped
+
+    logging:
+      driver: journald
+      options:
+        tag: victoria-metrics
+
+    volumes:
+      - ${DOCKER_ROOT}/victoria-metrics/scrape.yaml:/victoria-metrics-data/scrape.yaml
+
+    command: -promscrape.config=/victoria-metrics-data/scrape.yaml
+  # End VictoriaMetrics

@@ -1,81 +1,35 @@
 services:
-  # Blynk
-  blynk:
+  # acme
+  # https://github.com/acmesh-official/acme.sh/releases
+  acme:
     build:
-      context: blynk-server-0.41.17
+      context: acme-3.1.3
       network: host
 
-    image: alexeytsarev/blynk-server:0.41.17
-    container_name: blynk
+    image: alexeytsarev/acme:3.1.3
+    container_name: acme
     restart: unless-stopped
 
-    network_mode: host
-    #network_mode: bridge
-    #ports:
-    #  - "8080:8080" # HTTP API and WebSockets server
-    #  - "9443:9443" # HTTPS API, WebSockets and Admin page server
-    #  - "8440:8440" # Mqtt hardware server
+    #network_mode: host
+    network_mode: bridge
 
     environment:
       - TERM=xterm
-      - BLYNK_CONFIG=config/server.properties
-      #- DEBUG=1
-      #- WAIT_FOR=127.0.0.1:5432 # Wait for Postgres
-      #- WAIT_FOR_TIMEOUT=60 # Wait for Postgres
-
-    volumes:
-      - /etc/letsencrypt/:/etc/letsencrypt/:ro
-      - ${DOCKER_ROOT}/blynk/config/:/opt/blynk/config/:ro
-      - ${DOCKER_ROOT}/blynk/data/:/opt/blynk/data/
-      - ${DOCKER_ROOT}/log/blynk/:/opt/blynk/logs/
-
-    logging:
-      driver: journald
-      options:
-        tag: blynk
-
-    #command: /blynk.sh -serverConfig new_config/server.properties
-  # End Blynk
-
-
-  # Ivideon
-  ivideon:
-    #build:
-    #  context: ivideon-3.9.0
-    #  network: host
-
-    image: alexeytsarev/ivideon:3.9.0
-    container_name: ivideon
-    restart: unless-stopped
-    init: true
-
-    network_mode: host
-    #network_mode: bridge
-    #ports:
-    #  - "8080:8080"
-    #  - "3101:3101"
-    #  - "443:443"
-    #  - "80:80"
-
-
-    # environment variables:
-    # gui=0 (or "gui" variable not provided) - Start Ivideon Server only. Run GUI manually: docker exec -ti ivideon /ivideon.sh gui
-    # gui=1                                  - Start Ivideon Server and GUI
-    environment:
-      - TERM=xterm
-      #- gui=1 # See comments above
 
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-      - ${DOCKER_ROOT}/ivideon_archive/:/mnt/archive/
-      - ${DOCKER_ROOT}/ivideon/:/root/.IvideonServer/ # Comment this during initial startup. This keeps Ivideon settings. Uncomment after initial configuration and configs copy
+      #- ${DOCKER_ROOT}/acme/acme.cfg:/acme.cfg
+      #- ${DOCKER_ROOT}/acme/cert_internal/:/opt/cert_internal/
+      #- ${DOCKER_ROOT}/log/acme/:/opt/log/
+      #- ${DOCKER_ROOT}/nginx/sites-enabled/:/opt/sites/nginx/
+      #- ${DOCKER_ROOT}/cert/:/opt/cert/
 
     logging:
       driver: journald
       options:
-        tag: ivideon
-  # End Ivideon"
+        tag: acme
+  # End acme
 
 
   # Apache 2.4, php 5.6
@@ -510,22 +464,302 @@ services:
   # End Apache 2.4, php 8.5
 
 
-  # Nginx stable
+  # Blynk
+  blynk:
+    build:
+      context: blynk-server-0.41.17
+      network: host
+
+    image: alexeytsarev/blynk-server:0.41.17
+    container_name: blynk
+    restart: unless-stopped
+
+    network_mode: host
+    #network_mode: bridge
+    #ports:
+    #  - "8080:8080" # HTTP API and WebSockets server
+    #  - "9443:9443" # HTTPS API, WebSockets and Admin page server
+    #  - "8440:8440" # Mqtt hardware server
+
+    environment:
+      - TERM=xterm
+      - BLYNK_CONFIG=config/server.properties
+      #- DEBUG=1
+      #- WAIT_FOR=127.0.0.1:5432 # Wait for Postgres
+      #- WAIT_FOR_TIMEOUT=60 # Wait for Postgres
+
+    volumes:
+      - /etc/letsencrypt/:/etc/letsencrypt/:ro
+      - ${DOCKER_ROOT}/blynk/config/:/opt/blynk/config/:ro
+      - ${DOCKER_ROOT}/blynk/data/:/opt/blynk/data/
+      - ${DOCKER_ROOT}/log/blynk/:/opt/blynk/logs/
+
+    logging:
+      driver: journald
+      options:
+        tag: blynk
+
+    #command: /blynk.sh -serverConfig new_config/server.properties
+  # End Blynk
+
+
+  # cam_streamer
+  cam_streamer:
+    build:
+      context: cam_streamer
+      network: host
+
+    image: alexeytsarev/cam_streamer:latest
+    container_name: cam_streamer
+    network_mode: host
+    restart: unless-stopped
+    privileged: true
+
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /dev/snd/:/dev/snd/
+      - /dev/v4l/:/dev/v4l/
+      - ${DOCKER_ROOT}/cam_streamer/:/opt/cam_streamer/cfg/ # first start: comment this line: configs are needed
+      - ${DOCKER_ROOT}/log/cam_streamer/:/opt/cam_streamer/log/
+      - /mnt/hdd/cam/:/opt/cam_streamer/store/
+      #- ~/dev/cam_streamer/cam_streamer.py:/opt/cam_streamer/cam_streamer.py # debug only!
+
+    logging:
+      driver: journald
+      options:
+        tag: cam_streamer
+
+    # command: sleep inf
+    # command: cam_streamer.sh -log_level DEBUG
+  # End cam_streamer
+
+
+  # dante-server
+  dante-server:
+    build:
+      context: dante-server-1.4.4
+      network: host
+
+    image: alexeytsarev/dante-server:1.4.4
+    container_name: dante-server
+    network_mode: host
+    restart: unless-stopped
+
+    environment:
+      TERM: xterm
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ${DOCKER_ROOT}/dante-server/:/opt/dante-server/
+      - ${DOCKER_ROOT}/log/dante-server/:/opt/dante-server/log/
+
+    logging:
+      driver: journald
+      options:
+        tag: dante-server
+  # End dante-server
+
+
+  # dnscrypt-proxy
+  dnscrypt-proxy:
+    build:
+      context: dnscrypt-proxy-2.1.16
+      network: host
+
+    image: alexeytsarev/dnscrypt-proxy:2.1.16
+    container_name: dnscrypt-proxy
+    network_mode: host
+    restart: unless-stopped
+
+    environment:
+      - TERM=xterm
+      - DNSCRYPT_PROXY_LISTEN_ADDRESS_REG=^listen_addresses = .*$
+      - DNSCRYPT_PROXY_LISTEN_ADDRESS_VAL=listen_addresses = ['127.0.0.1:53053']
+      - DNSCRYPT_PROXY_MAX_CLIENTS_REG=^max_clients = .*$
+      - DNSCRYPT_PROXY_MAX_CLIENTS_VAL=max_clients = 999
+
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+
+    logging:
+      driver: journald
+      options:
+        tag: dnscrypt-proxy
+  # End dnscrypt-proxy
+
+
+  # Fail2Ban
+  fail2ban:
+    build:
+      context: fail2ban-1.1.0
+      network: host
+
+    image: alexeytsarev/fail2ban:1.1.0
+    container_name: fail2ban
+    privileged: true
+    network_mode: host
+    restart: unless-stopped
+
+    environment:
+      - TERM=xterm
+      - FAIL2BAN_PRE_EXEC
+
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /var/log/:/var/log/
+      - ${DOCKER_ROOT}/log/fail2ban/:/var/log/fail2ban/
+      - ${DOCKER_ROOT}/log/nginx/:/var/log/nginx/:ro
+      - ${DOCKER_ROOT}/log/apache/:/var/log/apache2/:ro
+      #- ${DOCKER_ROOT}/fail2ban/jail.local:/etc/fail2ban/jail.local:ro
+
+    logging:
+      driver: journald
+      options:
+        tag: fail2ban
+  # End Fail2Ban
+
+
+  # Ivideon
+  ivideon:
+    #build:
+    #  context: ivideon-3.9.0
+    #  network: host
+
+    image: alexeytsarev/ivideon:3.9.0
+    container_name: ivideon
+    restart: unless-stopped
+    init: true
+
+    network_mode: host
+    #network_mode: bridge
+    #ports:
+    #  - "8080:8080"
+    #  - "3101:3101"
+    #  - "443:443"
+    #  - "80:80"
+
+
+    # environment variables:
+    # gui=0 (or "gui" variable not provided) - Start Ivideon Server only. Run GUI manually: docker exec -ti ivideon /ivideon.sh gui
+    # gui=1                                  - Start Ivideon Server and GUI
+    environment:
+      - TERM=xterm
+      #- gui=1 # See comments above
+
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ${DOCKER_ROOT}/ivideon_archive/:/mnt/archive/
+      - ${DOCKER_ROOT}/ivideon/:/root/.IvideonServer/ # Comment this during initial startup. This keeps Ivideon settings. Uncomment after initial configuration and configs copy
+
+    logging:
+      driver: journald
+      options:
+        tag: ivideon
+  # End Ivideon
+
+
+  # MariaDB
+  mariadb:
+    build:
+      context: mariadb-12.3
+      network: host
+
+    image: alexeytsarev/mariadb:12.3
+    container_name: mysql
+    restart: unless-stopped
+
+    network_mode: host
+    #network_mode: bridge
+    #ports:
+    #  - "3306:3306"
+
+    environment:
+      - TERM=xterm
+      - MYSQL_USER
+      - MYSQL_MAX_CONNECTIONS
+      - MYSQL_RUN_BEFORE
+      - MYSQL_LISTEN_PORT=3306
+
+    logging:
+      driver: journald
+      options:
+        tag: mysql
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /run/mysqld/:/run/mysqld/
+      - /tmp/:/tmp/
+      - ${DOCKER_ROOT}/mysql/:/etc/mysql/
+      - ${DOCKER_ROOT}/mysql_db/:/var/lib/mysql/
+      - ${DOCKER_ROOT}/log/mysql/:/var/log/mysql/
+  # End MariaDB
+
+
+  # mpd
+  mpd:
+    build:
+      context: mpd-0.24.12
+      network: host
+
+    image: alexeytsarev/mpd:0.24.12
+    container_name: mpd
+    restart: unless-stopped
+
+    network_mode: host
+    #network_mode: bridge
+    #ports:
+    #- "6600:6600"
+
+    devices:
+      - /dev/snd/:/dev/snd/
+
+    group_add:
+      - audio
+
+    environment:
+      - TERM=xterm
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ${DOCKER_ROOT}/mpd/mpd_local.conf:/usr/local/etc/mpd_local.conf # Create this file
+
+    logging:
+      driver: journald
+      options:
+        tag: mpd
+  # End mpd
+
+
+  # Nginx legacy
   # https://nginx.org/en/download.html
-  nginx-stable:
+  nginx-legacy:
     build:
       context: nginx_and_forks-x.y.z
       network: host
       args:
-        - APP_NAME=nginx-stable
+        - APP_NAME=nginx-legacy
         - APP_SHORT=nginx
-        - APP_SRC_URL=https://nginx.org/download/nginx-1.30.2.tar.gz
-        - APP_VERSION=1.30.2
+        - APP_SRC_URL=https://nginx.org/download/nginx-1.28.3.tar.gz
+        - APP_VERSION=1.28.3
+        - OPENSSL_VERSION=3.6.2
       tags:
-        - alexeytsarev/nginx:stable
+        - alexeytsarev/nginx:legacy
 
-    image: alexeytsarev/nginx:1.30.2
-    container_name: nginx-stable
+    image: alexeytsarev/nginx:1.28.3
+    container_name: nginx-legacy
     restart: unless-stopped
 
     #network_mode: host
@@ -542,16 +776,16 @@ services:
       - /etc/group:/etc/group:ro
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-      #- ${DOCKER_ROOT}/nginx-stable/sites-enabled/:/opt/nginx/conf/sites-enabled/
+      #- ${DOCKER_ROOT}/nginx-legacy/sites-enabled/:/opt/nginx/conf/sites-enabled/
       #- ${DOCKER_ROOT}/cert/:/opt/cert/
-      #- ${DOCKER_ROOT}/log/nginx-stable/:/opt/nginx/log/
+      #- ${DOCKER_ROOT}/log/nginx-legacy/:/opt/nginx/log/
       #- /home/:/home/
 
     logging:
       driver: journald
       options:
-        tag: nginx-stable
-  # End Nginx stable
+        tag: nginx-legacy
+  # End Nginx legacy
 
 
   # Nginx mainline
@@ -598,23 +832,22 @@ services:
   # End Nginx mainline
 
 
-  # Nginx legacy
+  # Nginx stable
   # https://nginx.org/en/download.html
-  nginx-legacy:
+  nginx-stable:
     build:
       context: nginx_and_forks-x.y.z
       network: host
       args:
-        - APP_NAME=nginx-legacy
+        - APP_NAME=nginx-stable
         - APP_SHORT=nginx
-        - APP_SRC_URL=https://nginx.org/download/nginx-1.28.3.tar.gz
-        - APP_VERSION=1.28.3
-        - OPENSSL_VERSION=3.6.2
+        - APP_SRC_URL=https://nginx.org/download/nginx-1.30.2.tar.gz
+        - APP_VERSION=1.30.2
       tags:
-        - alexeytsarev/nginx:legacy
+        - alexeytsarev/nginx:stable
 
-    image: alexeytsarev/nginx:1.28.3
-    container_name: nginx-legacy
+    image: alexeytsarev/nginx:1.30.2
+    container_name: nginx-stable
     restart: unless-stopped
 
     #network_mode: host
@@ -631,16 +864,194 @@ services:
       - /etc/group:/etc/group:ro
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-      #- ${DOCKER_ROOT}/nginx-legacy/sites-enabled/:/opt/nginx/conf/sites-enabled/
+      #- ${DOCKER_ROOT}/nginx-stable/sites-enabled/:/opt/nginx/conf/sites-enabled/
       #- ${DOCKER_ROOT}/cert/:/opt/cert/
-      #- ${DOCKER_ROOT}/log/nginx-legacy/:/opt/nginx/log/
+      #- ${DOCKER_ROOT}/log/nginx-stable/:/opt/nginx/log/
       #- /home/:/home/
 
     logging:
       driver: journald
       options:
-        tag: nginx-legacy
-  # End Nginx legacy
+        tag: nginx-stable
+  # End Nginx stable
+
+
+  # rakshasa/rTorrent
+  rtorrent:
+    build:
+      context: rtorrent-0.16.15
+      network: host
+
+    image: alexeytsarev/rtorrent:0.16.15
+    container_name: rtorrent
+    network_mode: host
+    stop_grace_period: 30s
+    restart: unless-stopped
+
+    environment:
+      - TERM=xterm
+      - RTORRENT_USER
+      - RTORRENT_GROUP
+      - RTORRENT_HTTP_LISTEN_PORT
+      - RTORRENT_HTTP_ALIAS
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ${DOCKER_ROOT}/rtorrent/.rtorrent.rc:/opt/rtorrent/.rtorrent.rc
+      - ${DOCKER_ROOT}/rtorrent/.session/:/opt/rtorrent/.session/
+      - ${DOCKER_ROOT}/rtorrent/data/:/opt/rtorrent/data/
+      - ${DOCKER_ROOT}/rtorrent/watch/load/:/opt/rtorrent/watch/load/
+      - ${DOCKER_ROOT}/rtorrent/watch/start/:/opt/rtorrent/watch/start/
+      - ${DOCKER_ROOT}/log/rtorrent/:/opt/rtorrent/log/
+
+    logging:
+      driver: journald
+      options:
+        tag: rtorrent
+  # End rakshasa/rTorrent
+
+
+  # shadowsocks
+  shadowsocks:
+    build:
+      context: shadowsocks-libev-3.3.5_v2ray-plugin-1.3.1
+      network: host
+
+    image: alexeytsarev/shadowsocks-libev_v2ray-plugin:3.3.5_1.3.1
+    container_name: shadowsocks
+    network_mode: host
+    restart: unless-stopped
+
+    environment:
+      - TERM=xterm
+      - SS_PORT=${SS_PORT:-9999}
+      - SS_PASSWORD
+      - SS_METHOD
+
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+
+      #- ${DOCKER_ROOT}/shadowsocks-libev:/etc/shadowsocks-libev
+
+    logging:
+      driver: journald
+      options:
+        tag: shadowsocks
+  # End shadowsocks
+
+
+  # slipstream-rust
+  slipstream-rust:
+    build:
+      context: slipstream-rust-0.1.1
+      network: host
+      args:
+        - CLEAN=0
+        #- CLEAN=1
+
+    image: alexeytsarev/slipstream-rust:0.1.1
+    container_name: slipstream-rust
+    network_mode: host
+    restart: unless-stopped
+
+    environment:
+      TERM: xterm
+      #DNS_LISTEN_HOST: 0.0.0.0
+      DOMAIN: "${SLIPSTREAM_DOMAIN:-ns.example.com}"
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ${DOCKER_ROOT}/slipstream-rust/:/opt/slipstream-rust/conf/
+
+    logging:
+      driver: journald
+      options:
+        tag: slipstream-rust
+  # End slipstream-rust
+
+
+  # sshd
+  sshd:
+    build:
+      context: sshd-10.0
+      network: host
+      args:
+        - PACKAGES=msmtp curl wget
+
+    image: alexeytsarev/sshd:10.0
+    container_name: sshd
+    restart: unless-stopped
+
+    network_mode: host
+    #network_mode: bridge
+    #ports:
+    #  - "2222:2222"
+
+    environment:
+      - TERM=xterm
+      - SSHD_OPTS=-e -p 2222
+      - PRE_CMD=[ ! -f /bin/bash-2222 ] && set -x && cd /bin && ln -s bash bash-2222 && { set +x; } 2>/dev/null
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/shadow:/etc/shadow:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/locale.gen:/etc/locale.gen:ro
+      - /home/:/home/:ro
+      - ${BACKUP_ROOT}/backup/:/backup/
+      - ${BACKUP_ROOT}/backup_storage/:/backup_storage/
+
+    logging:
+      driver: journald
+      options:
+        tag: sshd
+  # End sshd
+
+
+  # stickz/rTorrent
+  rtorrent-fork:
+    build:
+      context: rtorrent-7.2-0.9.8-0.13.8
+      network: host
+
+    image: alexeytsarev/rtorrent-fork:7.2-0.9.8-0.13.8
+    container_name: rtorrent-fork
+    network_mode: host
+    restart: unless-stopped
+
+    environment:
+      - TERM=xterm
+      - RTORRENT_USER
+      - RTORRENT_GROUP
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /var/www/html/ruTorrent/:/var/www/html/ruTorrent/
+      - /var/www/tmp/:/var/www/tmp/
+      - ${DOCKER_ROOT}/rtorrent/.rtorrent.rc:/opt/rtorrent/.rtorrent.rc
+      - ${DOCKER_ROOT}/rtorrent/.session/:/opt/rtorrent/.session/
+      - ${DOCKER_ROOT}/rtorrent/data/:/opt/rtorrent/data/
+      - ${DOCKER_ROOT}/rtorrent/watch/load/:/opt/rtorrent/watch/load/
+      - ${DOCKER_ROOT}/rtorrent/watch/start/:/opt/rtorrent/watch/start/
+      - ${DOCKER_ROOT}/log/rtorrent/:/opt/rtorrent/log/
+
+    logging:
+      driver: journald
+      options:
+        tag: rtorrent
+  # End stickz/rTorrent
 
 
   # Tengine
@@ -689,185 +1100,45 @@ services:
   # End Tengine
 
 
-  # acme
-  # https://github.com/acmesh-official/acme.sh/releases
-  acme:
+  # transmission
+  transmission:
     build:
-      context: acme-3.1.3
-      network: host
-
-    image: alexeytsarev/acme:3.1.3
-    container_name: acme
-    restart: unless-stopped
-
-    #network_mode: host
-    network_mode: bridge
-
-    environment:
-      - TERM=xterm
-
-    volumes:
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-      #- ${DOCKER_ROOT}/acme/acme.cfg:/acme.cfg
-      #- ${DOCKER_ROOT}/acme/cert_internal/:/opt/cert_internal/
-      #- ${DOCKER_ROOT}/log/acme/:/opt/log/
-      #- ${DOCKER_ROOT}/nginx/sites-enabled/:/opt/sites/nginx/
-      #- ${DOCKER_ROOT}/cert/:/opt/cert/
-
-    logging:
-      driver: journald
-      options:
-        tag: acme
-  # End acme
-
-
-  # MariaDB
-  mariadb:
-    build:
-      context: mariadb-12.3
-      network: host
-
-    image: alexeytsarev/mariadb:12.3
-    container_name: mysql
-    restart: unless-stopped
-
-    network_mode: host
-    #network_mode: bridge
-    #ports:
-    #  - "3306:3306"
-
-    environment:
-      - TERM=xterm
-      - MYSQL_USER
-      - MYSQL_MAX_CONNECTIONS
-      - MYSQL_RUN_BEFORE
-      - MYSQL_LISTEN_PORT=3306
-
-    logging:
-      driver: journald
-      options:
-        tag: mysql
-
-    volumes:
-      - /etc/passwd:/etc/passwd:ro
-      - /etc/group:/etc/group:ro
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-      - /run/mysqld/:/run/mysqld/
-      - /tmp/:/tmp/
-      - ${DOCKER_ROOT}/mysql/:/etc/mysql/
-      - ${DOCKER_ROOT}/mysql_db/:/var/lib/mysql/
-      - ${DOCKER_ROOT}/log/mysql/:/var/log/mysql/
-  # End MariaDB
-
-
-  # vsftpd
-  vsftpd:
-    build:
-      context: vsftpd-3.0.5
-      network: host
-
-    image: alexeytsarev/vsftpd:3.0.5
-    container_name: vsftpd
-    restart: unless-stopped
-    init: true
-
-    network_mode: host
-    #network_mode: bridge
-    #ports:
-    #  - "21:21"
-
-    environment:
-      - TERM=xterm
-
-    volumes:
-      - /etc/passwd:/etc/passwd:ro
-      - /etc/group:/etc/group:ro
-      - /etc/shadow:/etc/shadow:ro
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-      - /home/:/home/
-      - ${DOCKER_ROOT}/vsftpd/:/etc/vsftpd/
-      - ${DOCKER_ROOT}/log/vsftpd/:/var/log/vsftpd/
-
-    logging:
-      driver: journald
-      options:
-        tag: vsftpd
-  # End vsftpd
-
-
-  # Fail2Ban
-  fail2ban:
-    build:
-      context: fail2ban-1.1.0
-      network: host
-
-    image: alexeytsarev/fail2ban:1.1.0
-    container_name: fail2ban
-    privileged: true
-    network_mode: host
-    restart: unless-stopped
-
-    environment:
-      - TERM=xterm
-      - FAIL2BAN_PRE_EXEC
-
-    volumes:
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-      - /var/log/:/var/log/
-      - ${DOCKER_ROOT}/log/fail2ban/:/var/log/fail2ban/
-      - ${DOCKER_ROOT}/log/nginx/:/var/log/nginx/:ro
-      - ${DOCKER_ROOT}/log/apache/:/var/log/apache2/:ro
-      #- ${DOCKER_ROOT}/fail2ban/jail.local:/etc/fail2ban/jail.local:ro
-
-    logging:
-      driver: journald
-      options:
-        tag: fail2ban
-  # End Fail2Ban
-
-
-  # sshd
-  sshd:
-    build:
-      context: sshd-10.0
+      context: transmission-4.1.2
       network: host
       args:
-        - PACKAGES=msmtp curl wget
+        - CLEAN=0
+        #- CLEAN=1
 
-    image: alexeytsarev/sshd:10.0
-    container_name: sshd
-    restart: unless-stopped
-
+    image: alexeytsarev/transmission:4.1.2
+    container_name: transmission
     network_mode: host
-    #network_mode: bridge
-    #ports:
-    #  - "2222:2222"
+    restart: unless-stopped
+    stop_grace_period: 30s
 
     environment:
       - TERM=xterm
-      - SSHD_OPTS=-e -p 2222
-      - PRE_CMD=[ ! -f /bin/bash-2222 ] && set -x && cd /bin && ln -s bash bash-2222 && { set +x; } 2>/dev/null
+      - FLOOD_BASE_URI=/flood
+      - TRANSMISSION_USER
+      - TRANSMISSION_GROUP
+      - TRANSMISSION_OPTIONS=--foreground --sequential-download --lpd
+      #- TRANSMISSION_OPTIONS=--foreground
 
     volumes:
       - /etc/passwd:/etc/passwd:ro
       - /etc/group:/etc/group:ro
-      - /etc/shadow:/etc/shadow:ro
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-      - /etc/locale.gen:/etc/locale.gen:ro
-      - /home/:/home/:ro
-      - ${BACKUP_ROOT}/backup/:/backup/
-      - ${BACKUP_ROOT}/backup_storage/:/backup_storage/
+      - ${DOCKER_ROOT}/transmission/downloads/:/opt/transmission/Downloads/
+      - ${DOCKER_ROOT}/transmission/config/:/opt/transmission/.config/
+      - ${DOCKER_ROOT}/log/transmission/:/opt/transmission/log/
+      - ${DOCKER_ROOT}/flood/:/opt/flood/
+      - ${DOCKER_ROOT}/log/flood/:/opt/flood/log/
 
     logging:
       driver: journald
       options:
-        tag: sshd
-  # End sshd
+        tag: transmission
+  # End transmission
 
 
   # utorrent
@@ -905,143 +1176,40 @@ services:
   # End utorrent
 
 
-  # rakshasa/rTorrent
-  rtorrent:
+  # vsftpd
+  vsftpd:
     build:
-      context: rtorrent-0.16.15
+      context: vsftpd-3.0.5
       network: host
 
-    image: alexeytsarev/rtorrent:0.16.15
-    container_name: rtorrent
-    network_mode: host
-    stop_grace_period: 30s
+    image: alexeytsarev/vsftpd:3.0.5
+    container_name: vsftpd
     restart: unless-stopped
+    init: true
+
+    network_mode: host
+    #network_mode: bridge
+    #ports:
+    #  - "21:21"
 
     environment:
       - TERM=xterm
-      - RTORRENT_USER
-      - RTORRENT_GROUP
-      - RTORRENT_HTTP_LISTEN_PORT
-      - RTORRENT_HTTP_ALIAS
 
     volumes:
       - /etc/passwd:/etc/passwd:ro
       - /etc/group:/etc/group:ro
+      - /etc/shadow:/etc/shadow:ro
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-      - ${DOCKER_ROOT}/rtorrent/.rtorrent.rc:/opt/rtorrent/.rtorrent.rc
-      - ${DOCKER_ROOT}/rtorrent/.session/:/opt/rtorrent/.session/
-      - ${DOCKER_ROOT}/rtorrent/data/:/opt/rtorrent/data/
-      - ${DOCKER_ROOT}/rtorrent/watch/load/:/opt/rtorrent/watch/load/
-      - ${DOCKER_ROOT}/rtorrent/watch/start/:/opt/rtorrent/watch/start/
-      - ${DOCKER_ROOT}/log/rtorrent/:/opt/rtorrent/log/
+      - /home/:/home/
+      - ${DOCKER_ROOT}/vsftpd/:/etc/vsftpd/
+      - ${DOCKER_ROOT}/log/vsftpd/:/var/log/vsftpd/
 
     logging:
       driver: journald
       options:
-        tag: rtorrent
-  # End rakshasa/rTorrent
-
-
-  # stickz/rTorrent
-  rtorrent-fork:
-    build:
-      context: rtorrent-7.2-0.9.8-0.13.8
-      network: host
-
-    image: alexeytsarev/rtorrent-fork:7.2-0.9.8-0.13.8
-    container_name: rtorrent-fork
-    network_mode: host
-    restart: unless-stopped
-
-    environment:
-      - TERM=xterm
-      - RTORRENT_USER
-      - RTORRENT_GROUP
-
-    volumes:
-      - /etc/passwd:/etc/passwd:ro
-      - /etc/group:/etc/group:ro
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-      - /var/www/html/ruTorrent/:/var/www/html/ruTorrent/
-      - /var/www/tmp/:/var/www/tmp/
-      - ${DOCKER_ROOT}/rtorrent/.rtorrent.rc:/opt/rtorrent/.rtorrent.rc
-      - ${DOCKER_ROOT}/rtorrent/.session/:/opt/rtorrent/.session/
-      - ${DOCKER_ROOT}/rtorrent/data/:/opt/rtorrent/data/
-      - ${DOCKER_ROOT}/rtorrent/watch/load/:/opt/rtorrent/watch/load/
-      - ${DOCKER_ROOT}/rtorrent/watch/start/:/opt/rtorrent/watch/start/
-      - ${DOCKER_ROOT}/log/rtorrent/:/opt/rtorrent/log/
-
-    logging:
-      driver: journald
-      options:
-        tag: rtorrent
-  # End stickz/rTorrent
-
-
-  # crazymax/rTorrent
-  rtorrent-crazymax:
-    image: crazymax/rtorrent-rutorrent:5.2.9-0.15.4
-    container_name: rtorrent-crazymax
-    network_mode: host
-    restart: unless-stopped
-
-    environment:
-      - TERM=xterm
-      - RUTORRENT_PORT=8890
-
-    volumes:
-      - ${DOCKER_ROOT}/rtorrent-crazymax/data/:/data/
-      - ${DOCKER_ROOT}/rtorrent-crazymax/downloads:/downloads/
-      - ${DOCKER_ROOT}/rtorrent-crazymax/passwd/:/passwd/
-
-    logging:
-      driver: journald
-      options:
-        tag: rtorrent-crazymax
-  # End stickz/rTorrent
-
-
-  # transmission
-  transmission:
-    build:
-      context: transmission-4.1.2
-      network: host
-      args:
-         - CLEAN=0
-        # - CLEAN=1
-
-    image: alexeytsarev/transmission:4.1.2
-    container_name: transmission
-    network_mode: host
-    restart: unless-stopped
-    stop_grace_period: 30s
-
-    environment:
-      - TERM=xterm
-      - FLOOD_BASE_URI=/flood
-      - TRANSMISSION_USER
-      - TRANSMISSION_GROUP
-      - TRANSMISSION_OPTIONS=--foreground --sequential-download --lpd
-      #- TRANSMISSION_OPTIONS=--foreground
-
-    volumes:
-      - /etc/passwd:/etc/passwd:ro
-      - /etc/group:/etc/group:ro
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-      - ${DOCKER_ROOT}/transmission/downloads/:/opt/transmission/Downloads/
-      - ${DOCKER_ROOT}/transmission/config/:/opt/transmission/.config/
-      - ${DOCKER_ROOT}/log/transmission/:/opt/transmission/log/
-      - ${DOCKER_ROOT}/flood/:/opt/flood/
-      - ${DOCKER_ROOT}/log/flood/:/opt/flood/log/
-
-    logging:
-      driver: journald
-      options:
-        tag: transmission
-  # End transmission
+        tag: vsftpd
+  # End vsftpd
 
 
   # wg-easy
@@ -1097,377 +1265,3 @@ services:
 
     command: /bin/sh -c "template_envsubst.sh /opt/nginx/conf/sites-enabled/template /opt/nginx/conf/sites-enabled ; dumb-init node server.js"
   # End wg-easy
-
-
-  # shadowsocks
-  shadowsocks:
-    build:
-      context: shadowsocks-libev-3.3.5_v2ray-plugin-1.3.1
-      network: host
-
-    image: alexeytsarev/shadowsocks-libev_v2ray-plugin:3.3.5_1.3.1
-    container_name: shadowsocks
-    network_mode: host
-    restart: unless-stopped
-
-    environment:
-      - TERM=xterm
-      - SS_PORT=${SS_PORT:-9999}
-      - SS_PASSWORD
-      - SS_METHOD
-
-    volumes:
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-
-      #- ${DOCKER_ROOT}/shadowsocks-libev:/etc/shadowsocks-libev
-
-    logging:
-      driver: journald
-      options:
-        tag: shadowsocks
-  # End shadowsocks
-
-
-  # dnscrypt-proxy
-  dnscrypt-proxy:
-    build:
-      context: dnscrypt-proxy-2.1.16
-      network: host
-
-    image: alexeytsarev/dnscrypt-proxy:2.1.16
-    container_name: dnscrypt-proxy
-    network_mode: host
-    restart: unless-stopped
-
-    environment:
-      - TERM=xterm
-      - DNSCRYPT_PROXY_LISTEN_ADDRESS_REG=^listen_addresses = .*$
-      - DNSCRYPT_PROXY_LISTEN_ADDRESS_VAL=listen_addresses = ['127.0.0.1:53053']
-      - DNSCRYPT_PROXY_MAX_CLIENTS_REG=^max_clients = .*$
-      - DNSCRYPT_PROXY_MAX_CLIENTS_VAL=max_clients = 999
-
-    volumes:
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-
-    logging:
-      driver: journald
-      options:
-        tag: dnscrypt-proxy
-  # End dnscrypt-proxy
-
-
-  # dante-server
-  dante-server:
-    build:
-      context: dante-server-1.4.4
-      network: host
-
-    image: alexeytsarev/dante-server:1.4.4
-    container_name: dante-server
-    network_mode: host
-    restart: unless-stopped
-
-    environment:
-      TERM: xterm
-
-    volumes:
-      - /etc/passwd:/etc/passwd:ro
-      - /etc/group:/etc/group:ro
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-      - ${DOCKER_ROOT}/dante-server/:/opt/dante-server/
-      - ${DOCKER_ROOT}/log/dante-server/:/opt/dante-server/log/
-
-    logging:
-      driver: journald
-      options:
-        tag: dante-server
-  # End dante-server
-
-
-  # slipstream-rust
-  slipstream-rust:
-    build:
-      context: slipstream-rust-0.1.1
-      network: host
-      args:
-        - CLEAN=0
-        # - CLEAN=1
-
-    image: alexeytsarev/slipstream-rust:0.1.1
-    container_name: slipstream-rust
-    network_mode: host
-    restart: unless-stopped
-
-    environment:
-      TERM: xterm
-      #DNS_LISTEN_HOST: 0.0.0.0
-      DOMAIN: "${SLIPSTREAM_DOMAIN:-ns.example.com}"
-
-    volumes:
-      - /etc/passwd:/etc/passwd:ro
-      - /etc/group:/etc/group:ro
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-      - ${DOCKER_ROOT}/slipstream-rust/:/opt/slipstream-rust/conf/
-
-    logging:
-      driver: journald
-      options:
-        tag: slipstream-rust
-  # End slipstream-rust
-
-
-  # Grafana
-  grafana:
-    image: grafana/grafana
-    container_name: grafana
-    network_mode: host
-    restart: unless-stopped
-
-    environment:
-      GF_SERVER_ROOT_URL: http://172.22.0.99:3000
-      GF_DATABASE_TYPE: postgres
-      GF_DATABASE_HOST: 127.0.0.1:5432
-      GF_DATABASE_NAME: grafana
-      GF_DATABASE_USER: postgres
-      GF_DATABASE_PASSWORD: postgres
-      GF_DATABASE_SSL_MODE: disable
-
-    volumes:
-      - ${DOCKER_ROOT}/grafana/:/var/lib/grafana/
-
-    logging:
-      driver: journald
-      options:
-        tag: grafana
-  # End Grafana
-
-
-  # Postgres
-  postgres:
-    image: postgres
-    container_name: postgres
-    network_mode: host
-    restart: always
-
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-
-    logging:
-      driver: journald
-      options:
-        tag: postgres
-
-    volumes:
-      - ${DOCKER_ROOT}/postgresql/:/var/lib/postgresql/data/
-  # End Postgres
-
-
-  # Prometheus
-  prometheus:
-    image: prom/prometheus
-    container_name: prometheus
-    network_mode: host
-    restart: unless-stopped
-
-    volumes:
-      - ${DOCKER_ROOT}/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-
-    logging:
-      driver: journald
-      options:
-        tag: prometheus
-  # End Prometheus
-
-
-  # VictoriaMetrics
-  victoria-metrics:
-    image: victoriametrics/victoria-metrics
-    container_name: victoria-metrics
-    network_mode: host
-    restart: unless-stopped
-
-    logging:
-      driver: journald
-      options:
-        tag: victoria-metrics
-
-    volumes:
-      - ${DOCKER_ROOT}/victoria-metrics/scrape.yaml:/victoria-metrics-data/scrape.yaml
-
-    command: -promscrape.config=/victoria-metrics-data/scrape.yaml
-  # End VictoriaMetrics
-
-
-  # cAdvisor
-  cadvisor:
-    image: gcr.io/cadvisor/cadvisor
-    container_name: cadvisor
-    # network_mode: host
-    privileged: true
-    restart: unless-stopped
-
-    logging:
-      driver: journald
-      options:
-        tag: cadvisor
-
-    volumes:
-      - /:/rootfs/:ro
-      - /var/run/:/var/run/:ro
-      - /sys/:/sys/:ro
-      - /var/lib/docker/:/var/lib/docker/:ro
-      - /dev/disk/:/dev/disk/:ro
-
-    devices:
-      - /dev/kmsg:/dev/kmsg
-  # End cAdvisor
-
-
-  # cam_streamer
-  cam_streamer:
-    build:
-      context: cam_streamer
-      network: host
-
-    image: alexeytsarev/cam_streamer:latest
-    container_name: cam_streamer
-    network_mode: host
-    restart: unless-stopped
-    privileged: true
-
-    volumes:
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-      - /dev/snd/:/dev/snd/
-      - /dev/v4l/:/dev/v4l/
-      - ${DOCKER_ROOT}/cam_streamer/:/opt/cam_streamer/cfg/ # first start: comment this line: configs are needed
-      - ${DOCKER_ROOT}/log/cam_streamer/:/opt/cam_streamer/log/
-      - /mnt/hdd/cam/:/opt/cam_streamer/store/
-      #- ~/dev/cam_streamer/cam_streamer.py:/opt/cam_streamer/cam_streamer.py # debug only!
-
-    logging:
-      driver: journald
-      options:
-        tag: cam_streamer
-
-    # command: sleep inf
-    # command: cam_streamer.sh -log_level DEBUG
-  # End cam_streamer
-
-
-  # Jackett
-  # https://github.com/Jackett/Jackett
-  jackett:
-    # https://hub.docker.com/r/linuxserver/jackett/tags
-    image: lscr.io/linuxserver/jackett:0.24.1528
-    container_name: jackett
-    restart: unless-stopped
-
-    network_mode: host
-    #network_mode: bridge
-    #ports:
-    #  - "9117:9117"
-
-    environment:
-      - PUID=65534
-      - PGID=65534
-      #- AUTO_UPDATE=true #optional
-      #- RUN_OPTS= #optional
-
-    volumes:
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-      - ${DOCKER_ROOT}/jackett/:/config/
-      - ${DOCKER_ROOT}/jackett/downloads/:/downloads/
-
-    logging:
-      driver: journald
-      options:
-        tag: jackett
-  # End Jackett
-
-
-  # Jacred
-  # https://github.com/jacred-fdb/jacred
-  jacred:
-    # https://github.com/jacred-fdb/jacred/pkgs/container/jacred
-    image: ghcr.io/jacred-fdb/jacred:latest
-    container_name: jacred
-    restart: unless-stopped
-
-    network_mode: host
-    #network_mode: bridge
-    #ports:
-    #  - "9117:9117"
-
-    environment:
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-      - UMASK=0027
-
-    volumes:
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-      - ${DOCKER_ROOT}/jacred/config/:/app/config/
-      - ${DOCKER_ROOT}/jacred/data/:/app/Data/
-
-    logging:
-      driver: journald
-      options:
-        tag: jacred
-
-    healthcheck:
-      test: ["CMD", "curl", "-f", "-s", "-m", "10", "http://127.0.0.1:9117/health"]
-      interval: 30s
-      timeout: 15s
-      retries: 3
-      start_period: 45s
-
-    deploy:
-      resources:
-        limits:
-          memory: 2048M
-  # End Jacred
-
-
-  # mpd
-  mpd:
-    build:
-      context: mpd-0.24.12
-      network: host
-
-    image: alexeytsarev/mpd:0.24.12
-    container_name: mpd
-    restart: unless-stopped
-
-    network_mode: host
-    #network_mode: bridge
-    #ports:
-    #- "6600:6600"
-
-    devices:
-      - /dev/snd/:/dev/snd/
-
-    group_add:
-      - audio
-
-    environment:
-      - TERM=xterm
-
-    volumes:
-      - /etc/passwd:/etc/passwd:ro
-      - /etc/group:/etc/group:ro
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-      - ${DOCKER_ROOT}/mpd/mpd_local.conf:/usr/local/etc/mpd_local.conf # Create this file
-
-    logging:
-      driver: journald
-      options:
-        tag: mpd
-  # End mpd
