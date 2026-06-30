@@ -4,9 +4,7 @@ FROM alexeytsarev/toolbox:latest AS toolbox
 FROM alexeytsarev/debian:13
 
 # https://github.com/transmission/transmission/releases
-ARG TRANSMISSION_VERSION="4.1.2"
-#ARG TRANSMISSION_VERSION="main"
-#ARG TRANSMISSION_VERSION="4.0.6"
+ARG TRANSMISSION_VERSION="4.1.3"
 
 ARG TRANSMISSION_URL="https://github.com/transmission/transmission.git"
 

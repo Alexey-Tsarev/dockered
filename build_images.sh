@@ -33,7 +33,7 @@ EOF
         --driver docker-container \
         --driver-opt network=host \
         --config "${BUILDER_CONF}"
-    
+
     docker buildx inspect --bootstrap
 fi
 
