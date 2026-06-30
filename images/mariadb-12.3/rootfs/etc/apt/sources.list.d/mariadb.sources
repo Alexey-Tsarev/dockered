@@ -1,10 +1,12 @@
-# MariaDB 12.3 repository list - created 2026-06-02 09:59 UTC
+# https://mariadb.org/download/?t=repo-config&d=Debian+13+%22Trixie%22&v=12.3&r_m=truenetwork
+
+# MariaDB 12.3 repository list - created 2026-06-30 12:22 UTC
 # https://mariadb.org/download/
 X-Repolib-Name: MariaDB
 Types: deb
 # deb.mariadb.org is a dynamic mirror if your preferred mirror goes offline. See https://mariadb.org/mirrorbits/ for details.
 # URIs: https://deb.mariadb.org/12.3/debian
-URIs: https://mirror.docker.ru/mariadb/repo/12.3/debian
+URIs: https://mirror.truenetwork.ru/mariadb/repo/12.3/debian
 Suites: trixie
 Components: main
 Signed-By: /etc/apt/keyrings/mariadb-keyring.asc

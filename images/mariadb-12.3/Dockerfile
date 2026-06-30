@@ -23,11 +23,13 @@ RUN --mount=type=cache,id=mariadb_var_cache_apt,target=/var/cache/apt,sharing=pr
         chmod 644 /etc/apt/sources.list.d/mariadb.sources && \
     echo "=> Install packages" && \
         apt_install.sh ${TMP_PACKAGES} cron logrotate pigz wget netcat-traditional && \
+    echo "=> Install mariadb-keyring.asc" && \
         cd /root && \
-        wget.sh https://mariadb.org/mariadb_release_signing_key.pgp && \
+        wget.sh https://mirror.truenetwork.ru/mariadb/PublicKey && \
         mkdir -p /etc/apt/keyrings && \
-        cp -av mariadb_release_signing_key.pgp /etc/apt/keyrings/mariadb-keyring.asc && \
+        cp -av PublicKey /etc/apt/keyrings/mariadb-keyring.asc && \
         apt update && \
+    echo "=> Install mariadb-server" && \
         apt_install.sh mariadb-server && \
     echo "=> Move DB and cfg" && \
         /mariadb.sh build && \
