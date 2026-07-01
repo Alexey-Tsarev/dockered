@@ -57,6 +57,9 @@ RUN --mount=type=cache,id=fail2ban_var_cache_apt,target=/var/cache/apt,sharing=p
     echo "=> Enable compress" && \
         sed -i 's/#compress/compress/' /etc/logrotate.conf
 
+HEALTHCHECK --start-period=5s --retries=3 \
+    CMD fail2ban-client ping || exit 1
+
 VOLUME /var/log/fail2ban
 
 #CMD ["sleep", "inf"]

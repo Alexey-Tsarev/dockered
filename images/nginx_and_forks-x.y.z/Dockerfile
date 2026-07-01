@@ -135,6 +135,10 @@ WORKDIR /opt/app
 # ${HTTP_PORT:-80}, ${HTTPS_PORT:-443}
 EXPOSE 80 443
 
+HEALTHCHECK --start-period=5s --retries=3 \
+    CMD curl --max-time 10 --fail --silent --output /dev/null --write-out "http=%{http_code}\n"     "http://127.0.0.1:${HTTP_PORT:-80}" && \
+        curl --max-time 10 --fail --silent --output /dev/null --write-out "https=%{http_code}\n" -k "https://127.0.0.1:${HTTPS_PORT:-443}" || exit 1
+
 VOLUME /opt/${APP_SHORT}/conf/sites-enabled /opt/${APP_SHORT}/log /opt/cert
 
 #CMD ["sleep", "inf"]

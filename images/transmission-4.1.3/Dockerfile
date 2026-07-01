@@ -75,5 +75,15 @@ RUN --mount=type=cache,id=transmission_var_cache_apt,target=/var/cache/apt,shari
 
 WORKDIR "${APP_DIR_TRANSMISSION}"
 
+# ${FLOOD_OPTION_port:-3000}
+# ${TRANSMISSION_PORT:-9091}
+# Do not use TRANSMISSION_OPTIONS as: --port NEW_PORT
+EXPOSE 3000 \
+       9091
+
+HEALTHCHECK --start-period=5s --retries=3 \
+    CMD curl --max-time 10 --fail --silent --output /dev/null --write-out "transmission=%{http_code}\n" "http://127.0.0.1:${TRANSMISSION_PORT:-9091}/transmission/web/" && \
+        curl --max-time 10 --fail --silent --output /dev/null --write-out "flood=%{http_code}\n"        "http://127.0.0.1:${FLOOD_OPTION_port:-3000}${FLOOD_BASE_URI}/" || exit 1
+
 #CMD ["sleep", "inf"]
 CMD ["supervisord"]

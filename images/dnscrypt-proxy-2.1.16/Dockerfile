@@ -37,7 +37,12 @@ COPY --from=builder /root/temp/*/ ./
 COPY rootfs/ /
 
 RUN echo "=> Set permissions" && \
-        chmod 755 /dnscrypt-proxy.sh
+        chmod 755 /dnscrypt-proxy.sh && \
+    echo "=> Symlink" && \
+        ln -s "${APP_DIR}/dnscrypt-proxy" /usr/local/bin
+
+HEALTHCHECK --start-period=5s --retries=3 \
+    CMD dnscrypt-proxy -resolve google.com || exit 1
 
 #CMD ["sleep", "inf"]
 CMD ["/dnscrypt-proxy.sh"]

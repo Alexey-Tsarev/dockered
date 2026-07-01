@@ -21,7 +21,10 @@ RUN --mount=type=cache,id=sshd_var_cache_apt,target=/var/cache/apt,sharing=priva
     echo "=> Clean" && \
         clean_and_keep.sh
 
-EXPOSE 2222
+EXPOSE 22
+
+HEALTHCHECK --start-period=5s --retries=3 \
+    CMD ssh-keyscan -T 10 -p "$(sshd -T ${SSHD_OPTS} | sed -n 's/^port //p')" 127.0.0.1 || exit 1
 
 #CMD ["sleep", "inf"]
 CMD ["/sshd.sh"]

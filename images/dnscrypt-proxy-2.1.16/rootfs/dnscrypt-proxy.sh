@@ -24,4 +24,5 @@ for REG_VAR_NAME in ${REG_VARS}; do
     fi
 done
 
-exec ./dnscrypt-proxy
+dnscrypt-proxy -check
+exec dnscrypt-proxy

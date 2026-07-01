@@ -69,6 +69,9 @@ RUN --mount=type=cache,id=${SERVER_NAME}_var_cache_apt,target=/var/cache/apt,sha
 # ${HTTP_PORT:-80}
 EXPOSE 80
 
+HEALTHCHECK --start-period=5s --retries=3 \
+    CMD curl --max-time 10 --fail --silent --output /dev/null --write-out "http=%{http_code}\n" "http://127.0.0.1:${HTTP_PORT:-80}" || exit 1
+
 VOLUME /var/log/apache2
 
 #CMD ["sleep", "inf"]

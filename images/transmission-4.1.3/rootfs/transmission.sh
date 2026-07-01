@@ -10,6 +10,11 @@ if [ -n "${TRANSMISSION_OPTIONS}" ]; then
     CMD="${CMD} ${TRANSMISSION_OPTIONS}"
 fi
 
+# keep TRANSMISSION_PORT the last to get HEALTHCHECK working
+if [ -n "${TRANSMISSION_PORT}" ]; then
+    CMD="${CMD} --port ${TRANSMISSION_PORT}"
+fi
+
 if [ -n "${TRANSMISSION_USER}" ] && [ -n "${TRANSMISSION_GROUP}" ]; then
     rm -f .config/transmission-daemon/*.tmp.*
 

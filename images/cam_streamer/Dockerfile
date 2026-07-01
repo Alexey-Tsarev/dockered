@@ -44,5 +44,8 @@ ENV PATH="${PATH}:${APP_DIR}"
 
 WORKDIR "${APP_DIR}"
 
+HEALTHCHECK --start-period=5s --retries=3 \
+    CMD test -s "${CFG_DIR:-cfg}/${CFG_FILENAME:-main.cfg}" && pgrep -f "[c]am_streamer.py" > /dev/null || exit 1
+
 #CMD ["sleep", "inf"]
 CMD ["cam_streamer.sh"]
