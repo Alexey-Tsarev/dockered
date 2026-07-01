@@ -24,7 +24,7 @@ RUN --mount=type=cache,id=sshd_var_cache_apt,target=/var/cache/apt,sharing=priva
 EXPOSE 22
 
 HEALTHCHECK --start-period=5s --retries=3 \
-    CMD ssh-keyscan -T 10 -p "$(sshd -T ${SSHD_OPTS} | sed -n 's/^port //p')" 127.0.0.1 || exit 1
+    CMD bash -c 'port="$(sshd -T ${SSHD_OPTS} | sed -n "s/^port //p")" ; test -n "${port}" && echo > "/dev/tcp/127.0.0.1/${port}"' || exit 1
 
 #CMD ["sleep", "inf"]
 CMD ["/sshd.sh"]
