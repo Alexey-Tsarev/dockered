@@ -15,16 +15,16 @@ COPY rootfs/ /
 RUN --mount=type=cache,id=sshd_var_cache_apt,target=/var/cache/apt,sharing=private \
     --mount=type=cache,id=sshd_var_lib_apt,target=/var/lib/apt,sharing=private \
     echo "=> Set permissions" && \
-        chmod 755 /etc /etc/ssh /etc/ssh/sshd_config.d /sshd.sh && \
+        chmod 755 /etc /etc/ssh /etc/ssh/sshd_config.d /sshd.sh /sshd_healthcheck.sh && \
     echo "=> Install packages" && \
-        apt_install.sh openssh-server rsync mc locales dialog whiptail ${PACKAGES} && \
+        apt_install.sh openssh-server iproute2 rsync mc locales dialog whiptail ${PACKAGES} && \
     echo "=> Clean" && \
         clean_and_keep.sh
 
 EXPOSE 22
 
 HEALTHCHECK --start-period=5s --retries=3 \
-    CMD bash -c 'port="$(sshd -T ${SSHD_OPTS} | sed -n "s/^port //p")" ; test -n "${port}" && echo > "/dev/tcp/127.0.0.1/${port}"' || exit 1
+    CMD /sshd_healthcheck.sh
 
 #CMD ["sleep", "inf"]
 CMD ["/sshd.sh"]
