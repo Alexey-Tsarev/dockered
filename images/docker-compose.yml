@@ -13,9 +13,6 @@ services:
     #network_mode: host
     network_mode: bridge
 
-    environment:
-      TERM: xterm
-
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
@@ -48,9 +45,6 @@ services:
     network_mode: bridge
     ports:
       - "80:80"
-
-    environment:
-      TERM: xterm
 
     volumes:
       - /etc/passwd:/etc/passwd:ro
@@ -85,9 +79,6 @@ services:
     ports:
       - "80:80"
 
-    environment:
-      TERM: xterm
-
     volumes:
       - /etc/passwd:/etc/passwd:ro
       - /etc/group:/etc/group:ro
@@ -120,9 +111,6 @@ services:
     network_mode: bridge
     ports:
       - "80:80"
-
-    environment:
-      TERM: xterm
 
     volumes:
       - /etc/passwd:/etc/passwd:ro
@@ -157,9 +145,6 @@ services:
     ports:
       - "80:80"
 
-    environment:
-      TERM: xterm
-
     volumes:
       - /etc/passwd:/etc/passwd:ro
       - /etc/group:/etc/group:ro
@@ -192,9 +177,6 @@ services:
     network_mode: bridge
     ports:
       - "80:80"
-
-    environment:
-      TERM: xterm
 
     volumes:
       - /etc/passwd:/etc/passwd:ro
@@ -229,9 +211,6 @@ services:
     ports:
       - "80:80"
 
-    environment:
-      TERM: xterm
-
     volumes:
       - /etc/passwd:/etc/passwd:ro
       - /etc/group:/etc/group:ro
@@ -264,9 +243,6 @@ services:
     network_mode: bridge
     ports:
       - "80:80"
-
-    environment:
-      TERM: xterm
 
     volumes:
       - /etc/passwd:/etc/passwd:ro
@@ -301,9 +277,6 @@ services:
     ports:
       - "80:80"
 
-    environment:
-      TERM: xterm
-
     volumes:
       - /etc/passwd:/etc/passwd:ro
       - /etc/group:/etc/group:ro
@@ -336,9 +309,6 @@ services:
     network_mode: bridge
     ports:
       - "80:80"
-
-    environment:
-      TERM: xterm
 
     volumes:
       - /etc/passwd:/etc/passwd:ro
@@ -373,9 +343,6 @@ services:
     ports:
       - "80:80"
 
-    environment:
-      TERM: xterm
-
     volumes:
       - /etc/passwd:/etc/passwd:ro
       - /etc/group:/etc/group:ro
@@ -409,9 +376,6 @@ services:
     ports:
       - "80:80"
 
-    environment:
-      TERM: xterm
-
     volumes:
       - /etc/passwd:/etc/passwd:ro
       - /etc/group:/etc/group:ro
@@ -444,9 +408,6 @@ services:
     network_mode: bridge
     ports:
       - "80:80"
-
-    environment:
-      TERM: xterm
 
     volumes:
       - /etc/passwd:/etc/passwd:ro
@@ -482,7 +443,6 @@ services:
     #  - "8440:8440" # Mqtt hardware server
 
     environment:
-      TERM: xterm
       BLYNK_CONFIG: config/server.properties
       #DEBUG: 1
       #WAIT_FOR: 127.0.0.1:5432 # Wait for Postgres
@@ -546,9 +506,6 @@ services:
     network_mode: host
     restart: unless-stopped
 
-    environment:
-      TERM: xterm
-
     volumes:
       - /etc/passwd:/etc/passwd:ro
       - /etc/group:/etc/group:ro
@@ -576,7 +533,6 @@ services:
     restart: unless-stopped
 
     environment:
-      TERM: xterm
       DNSCRYPT_PROXY_LISTEN_ADDRESS_REG: ^listen_addresses = .*$
       DNSCRYPT_PROXY_LISTEN_ADDRESS_VAL: listen_addresses = ['127.0.0.1:53053']
       DNSCRYPT_PROXY_MAX_CLIENTS_REG: ^max_clients = .*$
@@ -606,7 +562,6 @@ services:
     restart: unless-stopped
 
     environment:
-      TERM: xterm
       FAIL2BAN_PRE_EXEC:
 
     volumes:
@@ -645,11 +600,8 @@ services:
     #  - "80:80"
 
 
-    environment:
-      TERM: xterm
-      #gui: 1 #                                  - Start Ivideon Server and GUI
-      #gui: 0 # (or "gui" variable not provided) - Start Ivideon Server only. Run GUI manually: docker exec -ti ivideon /ivideon.sh gui
-
+    #gui: 1 #                                  - Start Ivideon Server and GUI
+    #gui: 0 # (or "gui" variable not provided) - Start Ivideon Server only. Run GUI manually: docker exec -ti ivideon /ivideon.sh gui
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
@@ -679,7 +631,6 @@ services:
     #  - "3306:3306"
 
     environment:
-      TERM: xterm
       MYSQL_USER:
       MYSQL_MAX_CONNECTIONS:
       MYSQL_RUN_BEFORE:
@@ -724,9 +675,6 @@ services:
     group_add:
       - audio
 
-    environment:
-      TERM: xterm
-
     volumes:
       - /etc/passwd:/etc/passwd:ro
       - /etc/group:/etc/group:ro
@@ -765,9 +713,6 @@ services:
     ports:
       - "80:80"
       - "443:443"
-
-    environment:
-      TERM: xterm
 
     volumes:
       - /etc/passwd:/etc/passwd:ro
@@ -810,9 +755,6 @@ services:
       - "80:80"
       - "443:443"
 
-    environment:
-      TERM: xterm
-
     volumes:
       - /etc/passwd:/etc/passwd:ro
       - /etc/group:/etc/group:ro
@@ -854,9 +796,6 @@ services:
       - "80:80"
       - "443:443"
 
-    environment:
-      TERM: xterm
-
     volumes:
       - /etc/passwd:/etc/passwd:ro
       - /etc/group:/etc/group:ro
@@ -887,7 +826,6 @@ services:
     restart: unless-stopped
 
     environment:
-      TERM: xterm
       RTORRENT_USER:
       RTORRENT_GROUP:
       RTORRENT_HTTP_LISTEN_PORT:
@@ -924,7 +862,6 @@ services:
     restart: unless-stopped
 
     environment:
-      TERM: xterm
       SS_PORT: ${SS_PORT:-9999}
       SS_PASSWORD:
       SS_METHOD:
@@ -957,7 +894,6 @@ services:
     restart: unless-stopped
 
     environment:
-      TERM: xterm
       #DNS_LISTEN_HOST: 0.0.0.0
       DOMAIN: "${SLIPSTREAM_DOMAIN:-ns.example.com}"
 
@@ -993,7 +929,6 @@ services:
     #  - "2222:2222"
 
     environment:
-      TERM: xterm
       SSHD_OPTS: -e -p 2222
       PRE_CMD: "[ ! -f /bin/bash-2222 ] && set -x && cd /bin && ln -s bash bash-2222 && { set +x; } 2>/dev/null"
 
@@ -1027,7 +962,6 @@ services:
     restart: unless-stopped
 
     environment:
-      TERM: xterm
       RTORRENT_USER:
       RTORRENT_GROUP:
 
@@ -1078,9 +1012,6 @@ services:
       - "80:80"
       - "443:443"
 
-    environment:
-      TERM: xterm
-
     volumes:
       - /etc/passwd:/etc/passwd:ro
       - /etc/group:/etc/group:ro
@@ -1114,7 +1045,6 @@ services:
     stop_grace_period: 30s
 
     environment:
-      TERM: xterm
       FLOOD_BASE_URI: /flood
       TRANSMISSION_USER:
       TRANSMISSION_GROUP:
@@ -1151,7 +1081,6 @@ services:
     restart: unless-stopped
 
     environment:
-      TERM: xterm
       UTORRENT_USER:
       UTORRENT_GROUP:
 
@@ -1190,9 +1119,6 @@ services:
     #ports:
     #  - "21:21"
 
-    environment:
-      TERM: xterm
-
     volumes:
       - /etc/passwd:/etc/passwd:ro
       - /etc/group:/etc/group:ro
@@ -1228,7 +1154,6 @@ services:
 
 
     environment:
-      TERM: xterm
       WG_HOST:
       WG_HOST_ALIASES:
       WG_PORT: ${WG_PORT:-51820}

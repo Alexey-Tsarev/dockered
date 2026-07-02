@@ -32,7 +32,6 @@ services:
     restart: unless-stopped
 
     environment:
-      TERM: xterm
       RUTORRENT_PORT: 8890
 
     volumes:
