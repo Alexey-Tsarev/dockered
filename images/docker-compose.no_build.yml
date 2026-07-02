@@ -32,8 +32,8 @@ services:
     restart: unless-stopped
 
     environment:
-      - TERM=xterm
-      - RUTORRENT_PORT=8890
+      TERM: xterm
+      RUTORRENT_PORT: 8890
 
     volumes:
       - ${DOCKER_ROOT}/rtorrent-crazymax/data/:/data/
@@ -87,10 +87,10 @@ services:
     #  - "9117:9117"
 
     environment:
-      - PUID=65534
-      - PGID=65534
-      #- AUTO_UPDATE=true #optional
-      #- RUN_OPTS= #optional
+      PUID: 65534
+      PGID: 65534
+      #AUTO_UPDATE: true #optional
+      #RUN_OPTS: #optional
 
     volumes:
       - /etc/timezone:/etc/timezone:ro
@@ -119,7 +119,7 @@ services:
     #  - "9117:9117"
 
     environment:
-      - UMASK=0027
+      UMASK: 0027
 
     volumes:
       - /etc/timezone:/etc/timezone:ro
@@ -154,8 +154,8 @@ services:
     restart: always
 
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
 
     logging:
       driver: journald
