@@ -871,7 +871,7 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
 
-      #- ${DOCKER_ROOT}/shadowsocks-libev:/etc/shadowsocks-libev
+      #- ${DOCKER_ROOT}/shadowsocks-libev/:/etc/shadowsocks-libev/
 
     logging:
       driver: journald
