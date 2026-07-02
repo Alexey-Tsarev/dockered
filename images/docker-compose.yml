@@ -599,9 +599,10 @@ services:
     #  - "443:443"
     #  - "80:80"
 
+    environment:
+      #gui: 1 #                                       - Start Ivideon Server and GUI
+      gui: 0 # (or if "gui" variable is not provided) - Start Ivideon Server only. Run GUI manually: docker exec -ti ivideon /ivideon.sh gui
 
-    #gui: 1 #                                  - Start Ivideon Server and GUI
-    #gui: 0 # (or "gui" variable not provided) - Start Ivideon Server only. Run GUI manually: docker exec -ti ivideon /ivideon.sh gui
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
@@ -1151,7 +1152,6 @@ services:
     #ports:
     #  - "51820:51820/udp"
     #  - "51821:51821"
-
 
     environment:
       WG_HOST:
