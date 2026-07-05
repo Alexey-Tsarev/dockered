@@ -4,7 +4,7 @@ FROM alexeytsarev/toolbox:latest AS toolbox
 FROM alexeytsarev/debian:12 AS builder
 
 # https://github.com/rakshasa/rtorrent/releases
-ARG RTORRENT_VERSION="0.16.15"
+ARG RTORRENT_VERSION="0.16.16"
 
 # https://github.com/Novik/ruTorrent/releases
 ARG RUTORRENT_VERSION="5.3.4"
