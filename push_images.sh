@@ -6,7 +6,9 @@ set -x
 cd images
 ./env.sh
 
-docker push alexeytsarev/debian:13
-docker push alexeytsarev/toolbox:latest
+for profile in $(docker compose config --profiles | sort); do
+    service="${profile#*-}"
+    docker compose --profile "${profile}" push "${service}"
+done
 
 docker compose push

@@ -521,6 +521,19 @@ services:
   # End dante-server
 
 
+  # debian
+  debian:
+    profiles:
+      - 01-debian
+
+    build:
+      context: debian-13
+      network: host
+
+    image: alexeytsarev/debian:13
+  # End debian
+
+
   # dnscrypt-proxy
   dnscrypt-proxy:
     build:
@@ -851,6 +864,42 @@ services:
   # End rakshasa/rTorrent
 
 
+  # stickz/rTorrent
+  rtorrent-fork:
+    build:
+      context: rtorrent-7.2-0.9.8-0.13.8
+      network: host
+
+    image: alexeytsarev/rtorrent-fork:7.2-0.9.8-0.13.8
+    container_name: rtorrent-fork
+    network_mode: host
+    restart: unless-stopped
+
+    environment:
+      RTORRENT_USER:
+      RTORRENT_GROUP:
+
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /var/www/html/ruTorrent/:/var/www/html/ruTorrent/
+      - /var/www/tmp/:/var/www/tmp/
+      - ${DOCKER_ROOT}/rtorrent/.rtorrent.rc:/opt/rtorrent/.rtorrent.rc
+      - ${DOCKER_ROOT}/rtorrent/.session/:/opt/rtorrent/.session/
+      - ${DOCKER_ROOT}/rtorrent/data/:/opt/rtorrent/data/
+      - ${DOCKER_ROOT}/rtorrent/watch/load/:/opt/rtorrent/watch/load/
+      - ${DOCKER_ROOT}/rtorrent/watch/start/:/opt/rtorrent/watch/start/
+      - ${DOCKER_ROOT}/log/rtorrent/:/opt/rtorrent/log/
+
+    logging:
+      driver: journald
+      options:
+        tag: rtorrent
+  # End stickz/rTorrent
+
+
   # shadowsocks
   shadowsocks:
     build:
@@ -951,42 +1000,6 @@ services:
   # End sshd
 
 
-  # stickz/rTorrent
-  rtorrent-fork:
-    build:
-      context: rtorrent-7.2-0.9.8-0.13.8
-      network: host
-
-    image: alexeytsarev/rtorrent-fork:7.2-0.9.8-0.13.8
-    container_name: rtorrent-fork
-    network_mode: host
-    restart: unless-stopped
-
-    environment:
-      RTORRENT_USER:
-      RTORRENT_GROUP:
-
-    volumes:
-      - /etc/passwd:/etc/passwd:ro
-      - /etc/group:/etc/group:ro
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-      - /var/www/html/ruTorrent/:/var/www/html/ruTorrent/
-      - /var/www/tmp/:/var/www/tmp/
-      - ${DOCKER_ROOT}/rtorrent/.rtorrent.rc:/opt/rtorrent/.rtorrent.rc
-      - ${DOCKER_ROOT}/rtorrent/.session/:/opt/rtorrent/.session/
-      - ${DOCKER_ROOT}/rtorrent/data/:/opt/rtorrent/data/
-      - ${DOCKER_ROOT}/rtorrent/watch/load/:/opt/rtorrent/watch/load/
-      - ${DOCKER_ROOT}/rtorrent/watch/start/:/opt/rtorrent/watch/start/
-      - ${DOCKER_ROOT}/log/rtorrent/:/opt/rtorrent/log/
-
-    logging:
-      driver: journald
-      options:
-        tag: rtorrent
-  # End stickz/rTorrent
-
-
   # Tengine
   # https://github.com/alibaba/tengine/releases
   tengine:
@@ -1028,6 +1041,19 @@ services:
       options:
         tag: tengine
   # End Tengine
+
+
+  # toolbox
+  toolbox:
+    profiles:
+      - 02-toolbox
+
+    build:
+      context: toolbox
+      network: host
+
+    image: alexeytsarev/toolbox:latest
+  # End toolbox
 
 
   # transmission
