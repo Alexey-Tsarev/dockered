@@ -537,10 +537,10 @@ services:
   # dnscrypt-proxy
   dnscrypt-proxy:
     build:
-      context: dnscrypt-proxy-2.1.16
+      context: dnscrypt-proxy-2.1.17
       network: host
 
-    image: alexeytsarev/dnscrypt-proxy:2.1.16
+    image: alexeytsarev/dnscrypt-proxy:2.1.17
     container_name: dnscrypt-proxy
     network_mode: host
     restart: unless-stopped
@@ -671,10 +671,10 @@ services:
   # mpd
   mpd:
     build:
-      context: mpd-0.24.12
+      context: mpd-0.24.13
       network: host
 
-    image: alexeytsarev/mpd:0.24.12
+    image: alexeytsarev/mpd:0.24.13
     container_name: mpd
     restart: unless-stopped
 
@@ -830,10 +830,10 @@ services:
   # rakshasa/rTorrent
   rtorrent:
     build:
-      context: rtorrent-0.16.16
+      context: rtorrent-0.16.17
       network: host
 
-    image: alexeytsarev/rtorrent:0.16.16
+    image: alexeytsarev/rtorrent:0.16.17
     container_name: rtorrent
     network_mode: host
     stop_grace_period: 30s

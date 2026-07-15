@@ -1,6 +1,6 @@
 # syntax=docker.io/docker/dockerfile:1
 
-ARG MPD_VERSION="0.24.10"
+ARG MPD_VERSION="0.24.13"
 ARG MPD_URL="https://github.com/MusicPlayerDaemon/MPD/archive/refs/tags/v${MPD_VERSION}.tar.gz"
 
 FROM alexeytsarev/toolbox:latest AS toolbox
