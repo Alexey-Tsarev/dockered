@@ -4,10 +4,10 @@ FROM alexeytsarev/toolbox:latest AS toolbox
 FROM alexeytsarev/debian:12 AS builder
 
 # https://github.com/rakshasa/rtorrent/releases
-ARG RTORRENT_VERSION="0.16.17"
+ARG RTORRENT_VERSION="0.16.18"
 
 # https://github.com/Novik/ruTorrent/releases
-ARG RUTORRENT_VERSION="5.3.4"
+ARG RUTORRENT_VERSION="5.3.9"
 
 ARG LIBTORRENT_URL="https://github.com/rakshasa/rtorrent/releases/download/v${RTORRENT_VERSION}/libtorrent-${RTORRENT_VERSION}.tar.gz"
 ARG RTORRENT_URL="https://github.com/rakshasa/rtorrent/releases/download/v${RTORRENT_VERSION}/rtorrent-${RTORRENT_VERSION}.tar.gz"

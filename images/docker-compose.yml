@@ -3,10 +3,10 @@ services:
   # https://github.com/acmesh-official/acme.sh/releases
   acme:
     build:
-      context: acme-3.1.3
+      context: acme-3.1.4
       network: host
 
-    image: alexeytsarev/acme:3.1.3
+    image: alexeytsarev/acme:3.1.4
     container_name: acme
     restart: unless-stopped
 
@@ -537,10 +537,10 @@ services:
   # dnscrypt-proxy
   dnscrypt-proxy:
     build:
-      context: dnscrypt-proxy-2.1.17
+      context: dnscrypt-proxy-2.1.18
       network: host
 
-    image: alexeytsarev/dnscrypt-proxy:2.1.17
+    image: alexeytsarev/dnscrypt-proxy:2.1.18
     container_name: dnscrypt-proxy
     network_mode: host
     restart: unless-stopped
@@ -754,12 +754,12 @@ services:
       args:
         - APP_NAME=nginx-mainline
         - APP_SHORT=nginx
-        - APP_SRC_URL=https://nginx.org/download/nginx-1.31.1.tar.gz
-        - APP_VERSION=1.31.1
+        - APP_SRC_URL=https://nginx.org/download/nginx-1.31.3.tar.gz
+        - APP_VERSION=1.31.3
       tags:
         - alexeytsarev/nginx:mainline
 
-    image: alexeytsarev/nginx:1.31.1
+    image: alexeytsarev/nginx:1.31.3
     container_name: nginx-mainline
     restart: unless-stopped
 
@@ -795,12 +795,12 @@ services:
       args:
         - APP_NAME=nginx-stable
         - APP_SHORT=nginx
-        - APP_SRC_URL=https://nginx.org/download/nginx-1.30.2.tar.gz
-        - APP_VERSION=1.30.2
+        - APP_SRC_URL=https://nginx.org/download/nginx-1.30.4.tar.gz
+        - APP_VERSION=1.30.4
       tags:
         - alexeytsarev/nginx:stable
 
-    image: alexeytsarev/nginx:1.30.2
+    image: alexeytsarev/nginx:1.30.4
     container_name: nginx-stable
     restart: unless-stopped
 
@@ -830,10 +830,10 @@ services:
   # rakshasa/rTorrent
   rtorrent:
     build:
-      context: rtorrent-0.16.17
+      context: rtorrent-0.16.18
       network: host
 
-    image: alexeytsarev/rtorrent:0.16.17
+    image: alexeytsarev/rtorrent:0.16.18
     container_name: rtorrent
     network_mode: host
     stop_grace_period: 30s
