@@ -9,4 +9,5 @@ Types: deb
 URIs: https://mirror.truenetwork.ru/mariadb/repo/12.3/debian
 Suites: trixie
 Components: main
-Signed-By: /etc/apt/keyrings/mariadb-keyring.asc
+# This line should be added during the image build:
+# Signed-By: /etc/apt/keyrings/mariadb-keyring.asc

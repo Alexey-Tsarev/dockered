@@ -28,7 +28,10 @@ RUN --mount=type=cache,id=mariadb_var_cache_apt,target=/var/cache/apt,sharing=pr
         wget.sh https://mirror.truenetwork.ru/mariadb/PublicKey && \
         mkdir -p /etc/apt/keyrings && \
         cp -av PublicKey /etc/apt/keyrings/mariadb-keyring.asc && \
-        apt update && \
+    echo "=> Add Signed-By to /etc/apt/sources.list.d/mariadb.sources" && \
+        echo "Signed-By: /etc/apt/keyrings/mariadb-keyring.asc" >> /etc/apt/sources.list.d/mariadb.sources && \
+    echo "=> File /etc/apt/sources.list.d/mariadb.sources" && \
+        cat /etc/apt/sources.list.d/mariadb.sources && \
     echo "=> Install mariadb-server" && \
         apt_install.sh mariadb-server && \
     echo "=> Move DB and cfg" && \
