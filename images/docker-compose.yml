@@ -18,6 +18,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       #- ${DOCKER_ROOT}/acme/acme.cfg:/acme.cfg
       #- ${DOCKER_ROOT}/acme/cert_internal/:/opt/cert_internal/
+      #- ${DOCKER_ROOT}/acme/conf/:/opt/conf/
       #- ${DOCKER_ROOT}/log/acme/:/opt/log/
       #- ${DOCKER_ROOT}/nginx/sites-enabled/:/opt/sites/nginx/
       #- ${DOCKER_ROOT}/cert/:/opt/cert/

@@ -1,5 +1,7 @@
+# bash needs for ${RANDOM}
 SHELL=/bin/bash
-PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/bin:/usr/local/sbin
 
 # Example of job definition:
 # .---------------- minute (0 - 59)
@@ -10,4 +12,4 @@ PATH=/sbin:/bin:/usr/sbin:/usr/bin
 # |  |  |  |  |
 # *  *  *  *  *     command to be executed
 
-  0  8  *  *  *     sleep "${RANDOM}" && acme.sh ${ACME_OPTS} --cron >> /opt/log/acme_cron.log
+  0  8  *  *  *     sleep "${RANDOM}" && eval acme.sh "${ACME_OPTS}" --cron >> /opt/log/acme_cron.log 2>&1
