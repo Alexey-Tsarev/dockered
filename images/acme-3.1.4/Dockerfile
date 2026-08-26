@@ -1,8 +1,10 @@
 # syntax=docker.io/docker/dockerfile:1
 
 # Global scope
-ARG ACME_VERSION="3.1.4"
 ARG ACME_OPTS="--home /opt/acme --cert-home /opt/cert_internal --config-home /opt/conf"
+
+# https://github.com/acmesh-official/acme.sh/releases
+ARG ACME_VERSION="3.1.4"
 
 FROM alexeytsarev/toolbox:latest AS toolbox
 FROM alexeytsarev/debian:13 AS builder

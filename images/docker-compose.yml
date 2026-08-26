@@ -566,10 +566,10 @@ services:
   # Fail2Ban
   fail2ban:
     build:
-      context: fail2ban-1.1.0
+      context: fail2ban-1.1.1
       network: host
 
-    image: alexeytsarev/fail2ban:1.1.0
+    image: alexeytsarev/fail2ban:1.1.1
     container_name: fail2ban
     privileged: true
     network_mode: host
@@ -672,10 +672,10 @@ services:
   # mpd
   mpd:
     build:
-      context: mpd-0.24.13
+      context: mpd-0.24.14
       network: host
 
-    image: alexeytsarev/mpd:0.24.13
+    image: alexeytsarev/mpd:0.24.14
     container_name: mpd
     restart: unless-stopped
 
@@ -755,12 +755,12 @@ services:
       args:
         - APP_NAME=nginx-mainline
         - APP_SHORT=nginx
-        - APP_SRC_URL=https://nginx.org/download/nginx-1.31.3.tar.gz
-        - APP_VERSION=1.31.3
+        - APP_SRC_URL=https://nginx.org/download/nginx-1.31.4.tar.gz
+        - APP_VERSION=1.31.4
       tags:
         - alexeytsarev/nginx:mainline
 
-    image: alexeytsarev/nginx:1.31.3
+    image: alexeytsarev/nginx:1.31.4
     container_name: nginx-mainline
     restart: unless-stopped
 
@@ -831,10 +831,10 @@ services:
   # rakshasa/rTorrent
   rtorrent:
     build:
-      context: rtorrent-0.16.18
+      context: rtorrent-0.16.21
       network: host
 
-    image: alexeytsarev/rtorrent:0.16.18
+    image: alexeytsarev/rtorrent:0.16.21
     container_name: rtorrent
     network_mode: host
     stop_grace_period: 30s

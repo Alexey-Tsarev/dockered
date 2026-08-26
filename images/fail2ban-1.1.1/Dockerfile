@@ -3,7 +3,8 @@
 FROM alexeytsarev/toolbox:latest AS toolbox
 FROM alexeytsarev/debian:13 AS builder
 
-ARG FAIL2BAN_VERSION="1.1.0"
+# https://github.com/fail2ban/fail2ban/releases
+ARG FAIL2BAN_VERSION="1.1.1"
 
 COPY --from=toolbox \
     /usr/local/bin/apt_install.sh \
