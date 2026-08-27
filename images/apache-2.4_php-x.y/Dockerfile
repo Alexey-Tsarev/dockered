@@ -48,7 +48,7 @@ RUN --mount=type=cache,id=${SERVER_NAME}_var_cache_apt,target=/var/cache/apt,sha
     echo "=> Symlink php config" && \
         ln -s /etc/php/99-my.ini /etc/php/*/apache2/conf.d && \
     echo "=> Enable modules" && \
-        a2enmod remoteip setenvif && \
+        a2enmod remoteip setenvif dav dav_fs && \
     echo "=> Enable dateext" && \
         sed -i 's/#dateext/dateext/' /etc/logrotate.conf && \
     echo "=> Enable compress" && \
@@ -70,7 +70,7 @@ RUN --mount=type=cache,id=${SERVER_NAME}_var_cache_apt,target=/var/cache/apt,sha
 EXPOSE 80
 
 HEALTHCHECK --start-period=5s --retries=3 \
-    CMD curl --max-time 10 --fail --silent --output /dev/null --write-out "http=%{http_code}\n" "http://127.0.0.1:${HTTP_PORT:-80}" || exit 1
+    CMD curl --max-time 10 --fail --silent --head --output /dev/null --write-out "http=%{http_code}\n" "http://127.0.0.1:${HTTP_PORT:-80}/?health" || exit 1
 
 VOLUME /var/log/apache2
 
