@@ -672,10 +672,10 @@ services:
   # mpd
   mpd:
     build:
-      context: mpd-0.24.14
+      context: mpd-0.24.15
       network: host
 
-    image: alexeytsarev/mpd:0.24.14
+    image: alexeytsarev/mpd:0.24.15
     container_name: mpd
     restart: unless-stopped
 
