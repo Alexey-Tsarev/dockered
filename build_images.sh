@@ -5,7 +5,8 @@ set -x
 
 BUILDER_MAX_PARALLELISM="${BUILDER_MAX_PARALLELISM:-2}"
 DOCKER_COMPOSE_BUILD_RETRIES=${DOCKER_COMPOSE_BUILD_RETRIES:-5}
-BUILDER_CONF="${BUILDER_CONF:-/tmp/builder-with-max-parallelism.toml}"
+BUILDER_NAME="${BUILDER_NAME:-builder-with-max-parallelism}"
+BUILDER_CONF="${BUILDER_CONF:-/tmp/${BUILDER_NAME}.toml}"
 
 export DOCKER_DEFAULT_PLATFORM=linux/amd64
 
@@ -51,13 +52,17 @@ if [ -n "${BUILDER_MAX_PARALLELISM}" ] && [ "${BUILDER_MAX_PARALLELISM}" != "0" 
     max-parallelism = ${BUILDER_MAX_PARALLELISM}
 EOF
 
-    docker buildx create \
-        --use \
-        --name builder-with-max-parallelism \
-        --driver docker-container \
-        --driver-opt network=host \
-        --config "${BUILDER_CONF}"
+    cat "${BUILDER_CONF}"
 
+    # Only create ${BUILDER_NAME} if it doesn't exist
+    if ! docker buildx inspect "${BUILDER_NAME}"; then
+        docker buildx create \
+            --name "${BUILDER_NAME}" \
+            --driver docker-container \
+            --config "${BUILDER_CONF}"
+    fi
+
+    docker buildx use "${BUILDER_NAME}"
     docker buildx inspect --bootstrap
 fi
 

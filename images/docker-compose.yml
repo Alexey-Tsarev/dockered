@@ -755,12 +755,12 @@ services:
       args:
         - APP_NAME=nginx-mainline
         - APP_SHORT=nginx
-        - APP_SRC_URL=https://nginx.org/download/nginx-1.31.4.tar.gz
-        - APP_VERSION=1.31.4
+        - APP_SRC_URL=https://nginx.org/download/nginx-1.31.5.tar.gz
+        - APP_VERSION=1.31.5
       tags:
         - alexeytsarev/nginx:mainline
 
-    image: alexeytsarev/nginx:1.31.4
+    image: alexeytsarev/nginx:1.31.5
     container_name: nginx-mainline
     restart: unless-stopped
 
