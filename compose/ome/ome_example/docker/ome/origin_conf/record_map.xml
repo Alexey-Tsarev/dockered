@@ -4,8 +4,8 @@
 	<Record>
 		<Enable>true</Enable>
 		<StreamName>*</StreamName>
-		<FilePath>${VirtualHost}/${Application}/${Stream}/${Stream}_${StartTime:YYYY}-${StartTime:MM}-${StartTime:DD}_${StartTime:hh}-${StartTime:mm}-${StartTime:ss}_-_${EndTime:YYYY}-${EndTime:MM}-${EndTime:DD}_${EndTime:hh}-${EndTime:mm}-${EndTime:ss}.mp4</FilePath>
-		<InfoPath>${VirtualHost}/${Application}/${Stream}/info/${Stream}_${StartTime:YYYY}-${StartTime:MM}-${StartTime:DD}_${StartTime:hh}-${StartTime:mm}-${StartTime:ss}_-_${EndTime:YYYY}-${EndTime:MM}-${EndTime:DD}_${EndTime:hh}-${EndTime:mm}-${EndTime:ss}.mp4.xml</InfoPath>
+		<FilePath>${VirtualHost}/${Application}/${Stream}/${Stream}_${StartTime:YYYY}-${StartTime:MM}-${StartTime:DD}_${StartTime:hh}-${StartTime:mm}-${StartTime:ss}_-_${EndTime:YYYY}-${EndTime:MM}-${EndTime:DD}_${EndTime:hh}-${EndTime:mm}-${EndTime:ss}.ts</FilePath>
+		<InfoPath>${VirtualHost}/${Application}/${Stream}/info/${Stream}_${StartTime:YYYY}-${StartTime:MM}-${StartTime:DD}_${StartTime:hh}-${StartTime:mm}-${StartTime:ss}_-_${EndTime:YYYY}-${EndTime:MM}-${EndTime:DD}_${EndTime:hh}-${EndTime:mm}-${EndTime:ss}.ts.xml</InfoPath>
 		<SegmentSchedule>0 0 0</SegmentSchedule>
 		<!--
 		<SegmentSchedule>*/30 * *</SegmentSchedule>
