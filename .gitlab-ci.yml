@@ -4,7 +4,9 @@ workflow:
 
 
 default:
-  image: docker:29-dind
+  # https://hub.docker.com/_/docker/tags
+  # docker:29-dind fails the build with "additional privileges requested: pass --allow=network.host"
+  image: docker:29.8.0-dind
   interruptible: true
 
 
