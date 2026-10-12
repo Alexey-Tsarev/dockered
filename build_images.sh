@@ -3,6 +3,7 @@
 set -e
 set -x
 
+BUILDX_IMAGE="${BUILDX_IMAGE:-moby/buildkit:v0.34.0}" # https://hub.docker.com/r/moby/buildkit/tags
 BUILDER_MAX_PARALLELISM="${BUILDER_MAX_PARALLELISM:-2}"
 DOCKER_COMPOSE_BUILD_RETRIES=${DOCKER_COMPOSE_BUILD_RETRIES:-5}
 BUILDER_NAME="${BUILDER_NAME:-builder-with-max-parallelism}"
@@ -54,11 +55,21 @@ EOF
 
     cat "${BUILDER_CONF}"
 
+    echo "=> Docker versions ==="
+    docker version
+    docker buildx version
+    docker buildx ls
+
+    echo "=> Docker context"
+    docker context ls
+    docker context inspect
+
     # Only create ${BUILDER_NAME} if it doesn't exist
     if ! docker buildx inspect "${BUILDER_NAME}"; then
         docker buildx create \
             --name "${BUILDER_NAME}" \
             --driver docker-container \
+            --driver-opt "image=${BUILDX_IMAGE}" \
             --config "${BUILDER_CONF}"
     fi
 
