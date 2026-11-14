@@ -8,7 +8,7 @@ ARG APP_SHORT
 ARG APP_SRC_URL
 ARG APP_VERSION
 ARG CONFIGURE_OPTS
-ARG OPENSSL_VERSION="4.0.2"
+ARG OPENSSL_VERSION="4.1.0"
 ARG PKGS_BUILDTIME
 
 COPY --from=toolbox \
@@ -56,6 +56,9 @@ RUN --mount=type=cache,id=${APP_NAME}_var_cache_apt,target=/var/cache/apt,sharin
             --with-http_v2_module \
             --with-openssl=../openssl-${OPENSSL_VERSION} \
             --with-pcre \
+            --with-stream \
+            --with-stream_realip_module \
+            --with-stream_ssl_preread_module \
             --with-threads \
             ${CONFIGURE_OPTS} && \
         make -j $(nproc) && \
@@ -124,8 +127,9 @@ RUN --mount=type=cache,id=${APP_NAME}_var_cache_apt,target=/var/cache/apt,sharin
         cp -a -v -r -L /opt/conf/${APP_NAME}/* "/opt/${APP_SHORT}/conf" && \
         rm -r -f /opt/conf && \
     echo "=> Remove .gitkeep" && \
-        rm -f /opt/app/conf/template/.gitkeep && \
         rm -f /opt/app/conf/common/template/.gitkeep && \
+        rm -f /opt/app/conf/streams-enabled/.gitkeep && \
+        rm -f /opt/app/conf/template/.gitkeep && \
     echo "=> Clean" && \
         apt -y autoremove && \
         clean_and_keep.sh /usr/local/bin/envsubst /usr/local/bin/template_envsubst.sh

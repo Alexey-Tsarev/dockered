@@ -715,7 +715,7 @@ services:
         - APP_SHORT=nginx
         - APP_SRC_URL=https://nginx.org/download/nginx-1.28.3.tar.gz
         - APP_VERSION=1.28.3
-        - OPENSSL_VERSION=3.6.2
+        - OPENSSL_VERSION=3.6.5
       tags:
         - alexeytsarev/nginx:legacy
 
@@ -755,12 +755,12 @@ services:
       args:
         - APP_NAME=nginx-mainline
         - APP_SHORT=nginx
-        - APP_SRC_URL=https://nginx.org/download/nginx-1.31.5.tar.gz
-        - APP_VERSION=1.31.5
+        - APP_SRC_URL=https://nginx.org/download/nginx-1.31.8.tar.gz
+        - APP_VERSION=1.31.8
       tags:
         - alexeytsarev/nginx:mainline
 
-    image: alexeytsarev/nginx:1.31.5
+    image: alexeytsarev/nginx:1.31.8
     container_name: nginx-mainline
     restart: unless-stopped
 
@@ -796,12 +796,12 @@ services:
       args:
         - APP_NAME=nginx-stable
         - APP_SHORT=nginx
-        - APP_SRC_URL=https://nginx.org/download/nginx-1.30.4.tar.gz
-        - APP_VERSION=1.30.4
+        - APP_SRC_URL=https://nginx.org/download/nginx-1.30.6.tar.gz
+        - APP_VERSION=1.30.6
       tags:
         - alexeytsarev/nginx:stable
 
-    image: alexeytsarev/nginx:1.30.4
+    image: alexeytsarev/nginx:1.30.6
     container_name: nginx-stable
     restart: unless-stopped
 
